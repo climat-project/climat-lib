@@ -1,0 +1,63 @@
+{
+  "definitions": {
+    "Node": {
+      "title": "Node",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "parameters": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "optional": {
+                "type": "boolean",
+                "default": false
+              },
+              "shorthand":  {
+                "type": "string"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "string",
+                  "bool",
+                  "double",
+                  "int"
+                ]
+              },
+              "description": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "name",
+              "mandatory",
+              "type"
+            ]
+          }
+        },
+        "action": {
+          "type": "string"
+        },
+        "children": {
+          "type": "array",
+          "$recursiveRef": "#/definitions/Node"
+        }
+      },
+      "required": [
+        "name",
+        "action"
+      ]
+    }
+  },
+  "$ref": "#/definitions/Node"
+}

@@ -1,0 +1,74 @@
+{
+
+  "name": "cli-alias-aggregator",
+  "description": "",
+  "action": "",
+  "children": [
+    {
+      "name": "new",
+      "description": "Creates a new cli",
+
+      "parameters": [
+        {
+          "name": "interactive",
+          "shorthand": "i",
+          "type": "bool"
+        }
+      ],
+
+      "action": "echo 'abcd'",
+
+      "children": [
+        {
+          "name": "template",
+          "parameters": [
+            {
+              "name": "param1",
+              "type": "string"
+            },
+            {
+              "name": "param2",
+              "type": "string"
+            }
+          ],
+          "action": "echo '$(interactive)' '$(param1)' '$(param2)'"
+        }
+      ]
+    },
+    {
+      "name": "renew",
+      "description": "Updates an existing cli with the new json file",
+
+      "action": "echo 'qwe'"
+    },
+    {
+      "name": "remove",
+      "parameters": [
+        {
+          "name": "force",
+          "type": "bool",
+          "shorthand": "f"
+        }
+      ],
+
+      "description": "Removes an existing cli",
+
+      "action": "echo 'what ever'"
+    },
+    {
+      "name": "export",
+      "description": "Exports the cli",
+
+      "parameters": [
+        {
+          "name": "type",
+          "type": "bool",
+          "shorthand": "t"
+        }
+      ],
+
+      "action": "echo 'abcd'"
+    }
+
+  ]
+}
