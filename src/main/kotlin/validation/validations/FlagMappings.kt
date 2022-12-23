@@ -17,6 +17,6 @@ class FlagMappings : IValidation {
             .filter { it.type != Toolchain.Type.bool }
             .map {
                 "Parameter `${it.name}` is used " +
-                "as a flag mapping, therefore should have type ${Toolchain.Type.bool.name}"
+                    "as a flag mapping, therefore should have type ${Toolchain.Type.bool.name}"
             }
 }

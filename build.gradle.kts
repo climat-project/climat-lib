@@ -1,5 +1,5 @@
-import net.pwall.json.kotlin.codegen.gradle.JSONSchemaCodegenPlugin
 import net.pwall.json.kotlin.codegen.gradle.JSONSchemaCodegen // only required if "configure" block included
+import net.pwall.json.kotlin.codegen.gradle.JSONSchemaCodegenPlugin
 
 val mavenUser: String by project
 val mavenPassword: String by project
@@ -26,6 +26,7 @@ buildscript {
 plugins {
     kotlin("js") version "1.7.20"
     kotlin("plugin.serialization") version "1.7.20"
+    id("org.jlleitschuh.gradle.ktlint") version "11.0.0"
 }
 apply<JSONSchemaCodegenPlugin>()
 

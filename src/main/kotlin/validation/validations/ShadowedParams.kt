@@ -12,9 +12,9 @@ class ShadowedParams : IValidation {
 
     override fun validate(ctx: ValidationContext): Sequence<String> =
         ctx.scopeParams
-           .values.asSequence()
-           .filter { it.size >= 2 }
-           .map {
-               "Parameter `${it.first().name}` is shadowed"
-           }
+            .values.asSequence()
+            .filter { it.size >= 2 }
+            .map {
+                "Parameter `${it.first().name}` is shadowed"
+            }
 }

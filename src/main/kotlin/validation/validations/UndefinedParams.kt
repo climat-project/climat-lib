@@ -13,10 +13,10 @@ class UndefinedParams : IValidation {
 
     override fun validate(ctx: ValidationContext): Sequence<String> =
         ctx.regexMatches
-           .map { it.groupValues[1] }
-           .distinct()
-           .filter(not(ctx.scopeParams::contains))
-           .map {
-               "Parameter `$it` is not defined in the current scope"
-           }
+            .map { it.groupValues[1] }
+            .distinct()
+            .filter(not(ctx.scopeParams::contains))
+            .map {
+                "Parameter `$it` is not defined in the current scope"
+            }
 }

@@ -1,4 +1,4 @@
-import kotlinx.cli.CLIEntity
+
 import kotlinx.cli.ExperimentalCli
 import kotlinx.cli.Subcommand
 
@@ -30,8 +30,7 @@ class ToolchainSubcommand(private val toolchain: Toolchain) :
             child_process.exec(toolchain.action)
             println("executed ${toolchain.name}")
             println("fullcommandname: $fullCommandName")
-        }
-        else {
+        } else {
             executedChild.executed = false
         }
         executed = true

@@ -1,7 +1,11 @@
 package validation
 
 import Toolchain
-import validation.validations.*
+import validation.validations.DuplicateChildrenNames
+import validation.validations.DuplicateParamNames
+import validation.validations.FlagMappings
+import validation.validations.ShadowedParams
+import validation.validations.UndefinedParams
 
 private val actionRe = Regex("\\\$\\(([\\w.]+)(?::([^ ()]+))?\\)")
 private val validators = listOf(
@@ -12,19 +16,23 @@ private val validators = listOf(
     UndefinedParams()
 )
 
-private fun computeValidations(current: Toolchain,
-              paramsDefinedAbove: Set<Toolchain.Parameter> = emptySet()): Sequence<ValidationResult> =
+private fun computeValidations(
+    current: Toolchain,
+    paramsDefinedAbove: Set<Toolchain.Parameter> = emptySet()
+): Sequence<ValidationResult> =
     ValidationContext(
         scopeParams = (paramsDefinedAbove + current.parameters.orEmpty()).groupBy { it.name },
         regexMatches = actionRe.findAll(current.action),
         toolchain = current
     ).let { context ->
-        validators.flatMap { validator -> validator.validate(context).map {
-            ValidationResult(it, validator.type, current)
-        } } +
-        current.children.orEmpty().flatMap {
-            computeValidations(it, context.scopeParams.values.flatten().toSet())
-        }
+        validators.flatMap { validator ->
+            validator.validate(context).map {
+                ValidationResult(it, validator.type, current)
+            }
+        } +
+            current.children.orEmpty().flatMap {
+                computeValidations(it, context.scopeParams.values.flatten().toSet())
+            }
     }.asSequence()
 
 fun validate(toolchain: Toolchain) {

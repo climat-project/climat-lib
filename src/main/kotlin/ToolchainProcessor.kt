@@ -18,5 +18,4 @@ class ToolchainProcessor(private val toolchain: Toolchain) {
     fun execute(args: Array<String>) {
         parser.parse(args)
     }
-
 }
