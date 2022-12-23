@@ -6,10 +6,8 @@ import validation.ValidationContext
 import validation.ValidationResult
 
 class FlagMappings : IValidation {
-    override val type
-        get() = ValidationResult.ValidationEntryType.Error
-    override val code: String
-        get() = "0004"
+    override val type get() = ValidationResult.ValidationEntryType.Error
+    override val code get() = "0004"
 
     override fun validate(ctx: ValidationContext): Sequence<String> =
         getParamReferences(ctx.toolchain.action)

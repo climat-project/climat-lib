@@ -1,5 +1,4 @@
 {
-
   "name": "cli-alias-aggregator",
   "description": "",
   "action": "",
@@ -7,42 +6,37 @@
     {
       "name": "new",
       "description": "Creates a new cli",
-
       "parameters": [
         {
           "name": "interactive",
           "shorthand": "i",
-          "type": "bool"
+          "type": "bool",
+          "optional": true
         }
       ],
-
       "action": "echo 'abcd'",
-
       "children": [
         {
           "name": "template",
           "parameters": [
             {
               "name": "param1",
-              "type": "string"
+              "type": "string",
+              "optional": true
             },
             {
               "name": "param2",
-              "type": "string"
-            },
-            {
-              "name": "interactive",
-              "type": "string"
+              "type": "string",
+              "optional": true
             }
           ],
-          "action": "echo '$(interactive)' '$(param1)' '$(param2:-v)'"
+          "action": "echo '$(interactive)' '$(param1)'"
         }
       ]
     },
     {
       "name": "renew",
       "description": "Updates an existing cli with the new json file",
-
       "action": "echo 'qwe'"
     },
     {
@@ -54,15 +48,12 @@
           "shorthand": "f"
         }
       ],
-
       "description": "Removes an existing cli",
-
       "action": "echo 'what ever'"
     },
     {
       "name": "export",
       "description": "Exports the cli",
-
       "parameters": [
         {
           "name": "type",
@@ -70,9 +61,7 @@
           "shorthand": "t"
         }
       ],
-
       "action": "echo 'abcd'"
     }
-
   ]
 }

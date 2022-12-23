@@ -1,3 +1,4 @@
+import child_process.ExecSyncOptions
 import kotlinx.cli.CLIEntity
 import kotlinx.cli.ExperimentalCli
 import kotlinx.cli.Subcommand
@@ -37,7 +38,12 @@ class ToolchainSubcommand(
         if (executedChild == null) {
             val command = getActualCommand(toolchain.action, getParamValueMap())
             println("Executing `$command`")
-            child_process.exec(command)
+
+            val options: dynamic = object {}
+            options["stdio"] = arrayOf("ignore", "inherit", "inherit")
+            // Suppressing because normal API doesn't work
+            @Suppress("UNCHECKED_CAST_TO_EXTERNAL_INTERFACE")
+            child_process.execSync(command, options as ExecSyncOptions)
         } else {
             executedChild.executed = false
         }
