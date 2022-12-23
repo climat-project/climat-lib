@@ -8,3 +8,5 @@ fun toolchainParameterTypeToCliArgType(it: Toolchain.Type) = when (it) {
 }
 
 fun <T> not(predicate: (T) -> Boolean): (T) -> Boolean = { it: T -> !predicate(it) }
+
+fun emptyString(): String = ""

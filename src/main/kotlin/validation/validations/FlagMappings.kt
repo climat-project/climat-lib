@@ -1,5 +1,6 @@
 package validation.validations
 
+import template.getParamReferences
 import validation.IValidation
 import validation.ValidationContext
 import validation.ValidationResult
@@ -11,8 +12,9 @@ class FlagMappings : IValidation {
         get() = "0004"
 
     override fun validate(ctx: ValidationContext): Sequence<String> =
-        ctx.regexMatches.filter { println(it.groups); it.groups[2] != null }
-            .map { it.groupValues[1] }
+        getParamReferences(ctx.toolchain.action)
+            .filter { it.flagMapTarget != null }
+            .map { it.paramName }
             .mapNotNull { ctx.scopeParams[it]?.last() }
             .filter { it.type != Toolchain.Type.bool }
             .map {

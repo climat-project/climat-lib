@@ -1,6 +1,7 @@
 package validation.validations
 
 import not
+import template.getParamReferences
 import validation.IValidation
 import validation.ValidationContext
 import validation.ValidationResult
@@ -12,8 +13,8 @@ class UndefinedParams : IValidation {
         get() = "0001"
 
     override fun validate(ctx: ValidationContext): Sequence<String> =
-        ctx.regexMatches
-            .map { it.groupValues[1] }
+        getParamReferences(ctx.toolchain.action)
+            .map { it.paramName }
             .distinct()
             .filter(not(ctx.scopeParams::contains))
             .map {

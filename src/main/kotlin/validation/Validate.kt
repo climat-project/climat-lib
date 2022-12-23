@@ -4,25 +4,22 @@ import Toolchain
 import validation.validations.DuplicateChildrenNames
 import validation.validations.DuplicateParamNames
 import validation.validations.FlagMappings
-import validation.validations.ShadowedParams
 import validation.validations.UndefinedParams
 
-private val actionRe = Regex("\\\$\\(([\\w.]+)(?::([^ ()]+))?\\)")
 private val validators = listOf(
     DuplicateChildrenNames(),
     DuplicateParamNames(),
     FlagMappings(),
-    ShadowedParams(),
     UndefinedParams()
 )
 
-private fun computeValidations(
+// Made public only for testing
+fun computeValidations(
     current: Toolchain,
     paramsDefinedAbove: Set<Toolchain.Parameter> = emptySet()
 ): Sequence<ValidationResult> =
     ValidationContext(
         scopeParams = (paramsDefinedAbove + current.parameters.orEmpty()).groupBy { it.name },
-        regexMatches = actionRe.findAll(current.action),
         toolchain = current
     ).let { context ->
         validators.flatMap { validator ->
@@ -35,6 +32,9 @@ private fun computeValidations(
             }
     }.asSequence()
 
+// TODO implement warning for unused variables
+// TODO implement warning for having the same name as an ancestor
+// TODO implement warning for a flag mapped twice
 fun validate(toolchain: Toolchain) {
     val validations = computeValidations(toolchain)
     val warnings = validations.filter { it.type == ValidationResult.ValidationEntryType.Warning }

@@ -1,13 +1,18 @@
-
+import kotlinx.cli.CLIEntity
 import kotlinx.cli.ExperimentalCli
 import kotlinx.cli.Subcommand
+import template.getActualCommand
 
 @OptIn(ExperimentalCli::class)
-class ToolchainSubcommand(private val toolchain: Toolchain) :
+class ToolchainSubcommand(
+    private val toolchain: Toolchain,
+    upperScopeParams: Map<String, CLIEntity<out Comparable<*>?>> = emptyMap()
+) :
     Subcommand(toolchain.name, toolchain.description ?: "") {
 
     private var executed = false
-    private val arguments = toolchain.parameters.orEmpty().associate {
+
+    private val params = upperScopeParams + toolchain.parameters.orEmpty().associate {
         val type = toolchainParameterTypeToCliArgType(it.type)
         it.name to if (it.optional) {
             option(type, it.name, it.shorthand, it.description)
@@ -15,8 +20,12 @@ class ToolchainSubcommand(private val toolchain: Toolchain) :
             argument(type, it.name, it.description)
         }
     }
+
     private val toolchainSubcommands =
-        toolchain.children.orEmpty().map { ToolchainSubcommand(it) }.toTypedArray()
+        toolchain.children.orEmpty().map { ToolchainSubcommand(it, params) }.toTypedArray()
+
+    private fun getParamValueMap(): Map<String, String> =
+        params.map { it.key to it.value.value.toString() }.toMap()
 
     init {
         autoTerminate = false
@@ -26,10 +35,9 @@ class ToolchainSubcommand(private val toolchain: Toolchain) :
     override fun execute() {
         val executedChild = toolchainSubcommands.find { it.executed }
         if (executedChild == null) {
-
-            child_process.exec(toolchain.action)
-            println("executed ${toolchain.name}")
-            println("fullcommandname: $fullCommandName")
+            val command = getActualCommand(toolchain.action, getParamValueMap())
+            println("Executing `$command`")
+            child_process.exec(command)
         } else {
             executedChild.executed = false
         }
