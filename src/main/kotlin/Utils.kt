@@ -6,3 +6,5 @@ fun toolchainParameterTypeToCliArgType(it: Toolchain.Type) = when (it) {
     Toolchain.Type.double -> ArgType.Double
     Toolchain.Type.int -> ArgType.Int
 }
+
+fun <T>not(predicate: (T) -> Boolean): (T) -> Boolean = { it: T -> !predicate(it) }

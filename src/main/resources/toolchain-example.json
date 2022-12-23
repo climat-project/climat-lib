@@ -28,7 +28,7 @@
             },
             {
               "name": "param2",
-              "type": "bool"
+              "type": "string"
             },
             {
               "name": "interactive",
