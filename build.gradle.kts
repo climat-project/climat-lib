@@ -1,10 +1,17 @@
 import net.pwall.json.kotlin.codegen.gradle.JSONSchemaCodegenPlugin
 import net.pwall.json.kotlin.codegen.gradle.JSONSchemaCodegen // only required if "configure" block included
 
+val mavenUser: String by project
+val mavenPassword: String by project
+
 repositories {
     mavenCentral()
     maven {
-        url = uri("file:///home/wilversings/.m2/repository")
+        url = uri("https://maven.pkg.github.com/wilversings/kotlinx-cli")
+        credentials {
+            username = mavenUser
+            password = mavenPassword
+        }
     }
     // Needed for kotlinx-nodejs
     jcenter()
@@ -33,7 +40,7 @@ group = "me.marius"
 version = "1.0-SNAPSHOT"
 
 dependencies {
-    implementation("org.jetbrains.kotlinx:kotlinx-cli:0.3.5-SNAPSHOT")
+    implementation("org.jetbrains.kotlinx:kotlinx-cli:0.3.5-develop-0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
     implementation("org.jetbrains.kotlinx:kotlinx-nodejs:0.0.7")
 

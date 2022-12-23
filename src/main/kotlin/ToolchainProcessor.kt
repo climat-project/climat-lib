@@ -35,7 +35,7 @@ class ToolchainProcessor(private val toolchain: Toolchain) {
     }
 
     public fun execute(args: Array<String>) {
-        parser.parse(args)
+        println("commandName: ${parser.parse(args).commandName}")
     }
 
 }

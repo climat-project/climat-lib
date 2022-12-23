@@ -6,6 +6,7 @@ import kotlinx.cli.Subcommand
 class ToolchainSubcommand(private val toolchain: Toolchain) :
     Subcommand(toolchain.name, toolchain.description ?: "") {
 
+    private var executed = false
     private val arguments = toolchain.parameters.orEmpty().map {
         val type = toolchainParameterTypeToCliArgType(it.type)
         if (it.optional) {
@@ -15,14 +16,23 @@ class ToolchainSubcommand(private val toolchain: Toolchain) :
             argument(type, it.name, it.description)
         }
     }
+    private val toolchainSubcommands =
+        toolchain.children.orEmpty().map { ToolchainSubcommand(it) }.toTypedArray()
 
     init {
-        val subcommands =
-            toolchain.children.orEmpty().map { ToolchainSubcommand(it) }.toTypedArray()
-        this.subcommands(*subcommands)
+        autoTerminate = false
+        this.subcommands(*toolchainSubcommands)
     }
 
     override fun execute() {
-        println("executed ${toolchain.name}")
+        val executedChild = toolchainSubcommands.find { it.executed }
+        if (executedChild == null) {
+            println("executed ${toolchain.name}")
+            println("fullcommandname: $fullCommandName")
+        }
+        else {
+            executedChild.executed = false
+        }
+        executed = true
     }
 }
