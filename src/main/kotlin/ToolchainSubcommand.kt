@@ -7,12 +7,11 @@ class ToolchainSubcommand(private val toolchain: Toolchain) :
     Subcommand(toolchain.name, toolchain.description ?: "") {
 
     private var executed = false
-    private val arguments = toolchain.parameters.orEmpty().map {
+    private val arguments = toolchain.parameters.orEmpty().associate {
         val type = toolchainParameterTypeToCliArgType(it.type)
-        if (it.optional) {
+        it.name to if (it.optional) {
             option(type, it.name, it.shorthand, it.description)
-        }
-        else {
+        } else {
             argument(type, it.name, it.description)
         }
     }
@@ -27,6 +26,8 @@ class ToolchainSubcommand(private val toolchain: Toolchain) :
     override fun execute() {
         val executedChild = toolchainSubcommands.find { it.executed }
         if (executedChild == null) {
+
+            child_process.exec(toolchain.action)
             println("executed ${toolchain.name}")
             println("fullcommandname: $fullCommandName")
         }

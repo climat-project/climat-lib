@@ -28,10 +28,14 @@
             },
             {
               "name": "param2",
+              "type": "bool"
+            },
+            {
+              "name": "interactive",
               "type": "string"
             }
           ],
-          "action": "echo '$(interactive)' '$(param1)' '$(param2)'"
+          "action": "echo '$(interactive)' '$(param1)' '$(param2:-v)'"
         }
       ]
     },
