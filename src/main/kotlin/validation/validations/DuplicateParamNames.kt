@@ -1,10 +1,10 @@
 package validation.validations
 
-import validation.IValidation
+import validation.ValidationBase
 import validation.ValidationContext
 import validation.ValidationResult
 
-class DuplicateParamNames : IValidation {
+class DuplicateParamNames : ValidationBase() {
     override val type get() = ValidationResult.ValidationEntryType.Error
     override val code get() = "0003"
 
