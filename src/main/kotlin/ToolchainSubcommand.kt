@@ -1,4 +1,5 @@
-import kotlinx.cli.CLIEntity
+import domain.ParameterWithValue
+import domain.Toolchain
 import kotlinx.cli.ExperimentalCli
 import kotlinx.cli.Subcommand
 import template.getActualCommand
@@ -9,14 +10,6 @@ internal class ToolchainSubcommand(
     upperScopeParams: Map<String, ParameterWithValue> = emptyMap()
 ) :
     Subcommand(toolchain.name, toolchain.description ?: "") {
-
-    data class ParameterWithValue(
-        val definition: Toolchain.Parameter,
-        private val delegate: CLIEntity<out Comparable<*>?>
-    ) {
-        private val delegateValue by delegate
-        val value get() = delegateValue.toString()
-    }
 
     private var executed = false
 

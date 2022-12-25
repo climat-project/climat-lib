@@ -1,6 +1,6 @@
 package validation
 
-import Toolchain
+import domain.Toolchain
 import newLine
 import validation.validations.AncestorSubommandWithSameName
 import validation.validations.DuplicateChildrenNames

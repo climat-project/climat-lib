@@ -1,6 +1,6 @@
 package validation
 
-import Toolchain
+import domain.Toolchain
 
 internal data class ValidationContext(
     val toolchain: Toolchain,

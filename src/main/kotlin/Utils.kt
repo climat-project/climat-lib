@@ -1,3 +1,4 @@
+import domain.Toolchain
 import kotlinx.cli.ArgType
 
 internal fun toolchainParameterTypeToCliArgType(it: Toolchain.Type) = when (it) {

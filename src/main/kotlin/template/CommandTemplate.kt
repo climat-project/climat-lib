@@ -1,5 +1,7 @@
 package template
 
+import domain.ParameterWithValue
+import domain.Toolchain
 import emptyString
 import not
 
@@ -30,7 +32,7 @@ internal fun getParamReferences(template: String): Sequence<ParamReference> =
 
 internal fun getActualCommand(
     template: String,
-    paramValues: Map<String, ToolchainSubcommand.ParameterWithValue>
+    paramValues: Map<String, ParameterWithValue>
 ): String {
     val missingValues = getParamReferences(template)
         .map { it.paramName }
