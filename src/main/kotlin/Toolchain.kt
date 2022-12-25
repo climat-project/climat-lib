@@ -11,6 +11,7 @@
 import kotlinx.serialization.Serializable
 
 @Serializable
+@JsExport
 data class Toolchain(
     val name: String,
     val description: String? = null,

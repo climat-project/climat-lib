@@ -2,7 +2,7 @@ package validation
 
 import Toolchain
 
-data class ValidationResult(
+internal data class ValidationResult(
     private val message: String,
     val type: ValidationEntryType,
     private val toolchain: Toolchain

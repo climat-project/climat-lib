@@ -2,7 +2,7 @@ package validation
 
 import Toolchain
 
-data class ValidationContext(
+internal data class ValidationContext(
     val toolchain: Toolchain,
     val pathToRoot: List<Toolchain>
 )

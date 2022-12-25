@@ -1,12 +1,15 @@
 import kotlinx.cli.ArgType
 
-fun toolchainParameterTypeToCliArgType(it: Toolchain.Type) = when (it) {
+internal fun toolchainParameterTypeToCliArgType(it: Toolchain.Type) = when (it) {
     Toolchain.Type.string -> ArgType.String
     Toolchain.Type.bool -> ArgType.Boolean
     Toolchain.Type.double -> ArgType.Double
     Toolchain.Type.int -> ArgType.Int
 }
 
-fun <T> not(predicate: (T) -> Boolean): (T) -> Boolean = { it: T -> !predicate(it) }
+internal fun <T> not(predicate: (T) -> Boolean): (T) -> Boolean = { it: T -> !predicate(it) }
 
-fun emptyString(): String = ""
+internal fun emptyString(): String = ""
+
+// TODO support multiplatform?
+internal fun newLine(): String = "\n"

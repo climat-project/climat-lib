@@ -1,6 +1,7 @@
 package validation
 
 import Toolchain
+import newLine
 import validation.validations.AncestorSubommandWithSameName
 import validation.validations.DuplicateChildrenNames
 import validation.validations.DuplicateParamNames
@@ -20,35 +21,37 @@ private val validators = listOf(
 )
 
 // Made public only for testing
-fun computeValidations(
+internal fun computeValidations(
     current: Toolchain,
     pathToRoot: List<Toolchain> = emptyList()
 ): Sequence<ValidationResult> =
-    ValidationContext(
-        pathToRoot = pathToRoot + listOf(current),
-        toolchain = current
-    ).let { context ->
+    (
         validators.flatMap { validator ->
-            validator.validate(context).map {
+            validator.validate(
+                ValidationContext(
+                    pathToRoot = pathToRoot,
+                    toolchain = current
+                )
+            ).map {
                 ValidationResult(it, validator.type, current)
             }
         } +
             current.children.orEmpty().flatMap {
-                computeValidations(it, context.pathToRoot)
+                computeValidations(it, pathToRoot + listOf(current))
             }
-    }.asSequence()
+        ).asSequence()
 
 // TODO implement warning for unused variables
 // TODO implement warning for a flag mapped twice
-fun validate(toolchain: Toolchain) {
+internal fun validate(toolchain: Toolchain) {
     val validations = computeValidations(toolchain)
     val warnings = validations.filter { it.type == ValidationResult.ValidationEntryType.Warning }
     if (warnings.any()) {
-        println(warnings.joinToString(", "))
+        println(warnings.joinToString(newLine()))
     }
 
     val errors = validations.filter { it.type == ValidationResult.ValidationEntryType.Error }
     if (errors.any()) {
-        throw Exception(errors.joinToString(", "))
+        throw Exception(errors.joinToString(newLine()))
     }
 }

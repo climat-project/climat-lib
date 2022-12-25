@@ -4,7 +4,7 @@ import validation.ValidationBase
 import validation.ValidationContext
 import validation.ValidationResult
 
-class DuplicateParamNames : ValidationBase() {
+internal class DuplicateParamNames : ValidationBase() {
     override val type get() = ValidationResult.ValidationEntryType.Error
     override val code get() = "0003"
 

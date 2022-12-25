@@ -132,6 +132,7 @@ class TestValidation {
             )
 
         val validationResults = getErrors(toolchain)
+        print(validationResults.joinToString())
         assertEquals(3, validationResults.count())
     }
 

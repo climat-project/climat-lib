@@ -1,11 +1,11 @@
-import child_process.ExecSyncOptions
+
 import kotlinx.cli.CLIEntity
 import kotlinx.cli.ExperimentalCli
 import kotlinx.cli.Subcommand
 import template.getActualCommand
 
 @OptIn(ExperimentalCli::class)
-class ToolchainSubcommand(
+internal class ToolchainSubcommand(
     private val toolchain: Toolchain,
     upperScopeParams: Map<String, CLIEntity<out Comparable<*>?>> = emptyMap()
 ) :
@@ -39,11 +39,11 @@ class ToolchainSubcommand(
             val command = getActualCommand(toolchain.action, getParamValueMap())
             println("Executing `$command`")
 
-            val options: dynamic = object {}
-            options["stdio"] = arrayOf("ignore", "inherit", "inherit")
-            // Suppressing because normal API doesn't work
-            @Suppress("UNCHECKED_CAST_TO_EXTERNAL_INTERFACE")
-            child_process.execSync(command, options as ExecSyncOptions)
+//            val options: dynamic = object {}
+//            options["stdio"] = arrayOf("ignore", "inherit", "inherit")
+//            // Suppressing because normal API doesn't work
+//            @Suppress("UNCHECKED_CAST_TO_EXTERNAL_INTERFACE")
+//            child_process.execSync(command, options as ExecSyncOptions)
         } else {
             executedChild.executed = false
         }

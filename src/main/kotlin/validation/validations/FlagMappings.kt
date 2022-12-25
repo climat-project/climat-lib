@@ -5,7 +5,7 @@ import validation.ValidationBase
 import validation.ValidationContext
 import validation.ValidationResult
 
-class FlagMappings : ValidationBase() {
+internal class FlagMappings : ValidationBase() {
     override val type get() = ValidationResult.ValidationEntryType.Error
     override val code get() = "0004"
 

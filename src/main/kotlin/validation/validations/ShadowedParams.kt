@@ -4,7 +4,7 @@ import validation.ValidationBase
 import validation.ValidationContext
 import validation.ValidationResult
 
-class ShadowedParams : ValidationBase() {
+internal class ShadowedParams : ValidationBase() {
     // Check if it needs to be warning or error
     override val type get() = ValidationResult.ValidationEntryType.Warning
     override val code get() = "0005"

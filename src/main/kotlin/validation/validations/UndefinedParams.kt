@@ -6,7 +6,7 @@ import validation.ValidationBase
 import validation.ValidationContext
 import validation.ValidationResult
 
-class UndefinedParams : ValidationBase() {
+internal class UndefinedParams : ValidationBase() {
     override val type get() = ValidationResult.ValidationEntryType.Error
     override val code get() = "0001"
 

@@ -43,15 +43,24 @@ version = "1.0-SNAPSHOT"
 dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-cli:0.3.5-develop-0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
-    implementation("org.jetbrains.kotlinx:kotlinx-nodejs:0.0.7")
 
     testImplementation(kotlin("test"))
 }
 
 kotlin {
     js {
-        binaries.executable()
+        browser {
+            webpackTask {
+                outputFileName = "main.js"
+                output.libraryTarget = "commonjs2"
+            }
+            binaries.library()
+            testTask {
+                useKarma {
+                    useFirefox()
+                }
+            }
+        }
         useCommonJs()
-        nodejs()
     }
 }
