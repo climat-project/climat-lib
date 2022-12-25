@@ -6,26 +6,35 @@ import template.getActualCommand
 @OptIn(ExperimentalCli::class)
 internal class ToolchainSubcommand(
     private val toolchain: Toolchain,
-    upperScopeParams: Map<String, CLIEntity<out Comparable<*>?>> = emptyMap()
+    upperScopeParams: Map<String, ParameterWithValue> = emptyMap()
 ) :
     Subcommand(toolchain.name, toolchain.description ?: "") {
+
+    data class ParameterWithValue(
+        val definition: Toolchain.Parameter,
+        private val delegate: CLIEntity<out Comparable<*>?>
+    ) {
+        private val delegateValue by delegate
+        val value get() = delegateValue.toString()
+    }
 
     private var executed = false
 
     private val params = upperScopeParams + toolchain.parsedParameters.associate {
         val type = toolchainParameterTypeToCliArgType(it.type)
-        it.name to if (it.optional) {
-            option(type, it.name, it.shorthand, it.description)
-        } else {
-            argument(type, it.name, it.description)
-        }
+        it.name to
+            ParameterWithValue(
+                it,
+                if (it.optional) {
+                    option(type, it.name, it.shorthand, it.description)
+                } else {
+                    argument(type, it.name, it.description)
+                }
+            )
     }
 
     private val toolchainSubcommands =
         toolchain.children.orEmpty().map { ToolchainSubcommand(it, params) }.toTypedArray()
-
-    private fun getParamValueMap(): Map<String, String> =
-        params.map { it.key to it.value.value.toString() }.toMap()
 
     init {
         autoTerminate = false
@@ -35,7 +44,7 @@ internal class ToolchainSubcommand(
     override fun execute() {
         val executedChild = toolchainSubcommands.find { it.executed }
         if (executedChild == null) {
-            val command = getActualCommand(toolchain.action, getParamValueMap())
+            val command = getActualCommand(toolchain.action, params)
             println("Executing `$command`")
 
 //            val options: dynamic = object {}

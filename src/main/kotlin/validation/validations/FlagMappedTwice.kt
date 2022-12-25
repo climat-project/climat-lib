@@ -11,10 +11,10 @@ internal class FlagMappedTwice : ValidationBase() {
     override val code get() = "0008"
     override fun validate(ctx: ValidationContext): Sequence<String> =
         getParamReferences(ctx.toolchain.action)
-            .filter { it.flagMapTarget != null }
-            .groupBy { it.flagMapTarget }
+            .filter { it.mapTarget != null }
+            .groupBy { it.mapTarget }
             .values.asSequence()
             .filter { it.size >= 2 }
             .map { it.first() }
-            .map { "Flag ${it.flagMapTarget} was mapped more than once" }
+            .map { "Flag ${it.mapTarget} was mapped more than once" }
 }

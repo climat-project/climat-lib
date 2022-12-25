@@ -17,15 +17,14 @@ import kotlin.js.JsExport
 data class Toolchain(
     val name: String,
     val description: String? = null,
-    private val parameters: List<String>? = null,
+    private val parameters: Array<String>? = null,
     val action: String,
-    val children: List<Toolchain>? = null
+    val children: Array<Toolchain>? = null
 ) {
     @Transient
     val parsedParameters: List<Parameter> = parameters.orEmpty().map {
         val match = cg_regex0.find(it)
         requireNotNull(match) { "parameters item does not match pattern $cg_regex0 - $it" }
-        println(match.groups[4])
         Parameter(
             name = match.groupValues[3],
             optional = when (match.groupValues[1]) {

@@ -6,14 +6,12 @@ import validation.validations.AncestorSubommandWithSameName
 import validation.validations.DuplicateChildrenNames
 import validation.validations.DuplicateParamNames
 import validation.validations.FlagMappedTwice
-import validation.validations.FlagMappings
 import validation.validations.ShadowedParams
 import validation.validations.UndefinedParams
 
 private val validators = listOf(
     DuplicateChildrenNames(),
     DuplicateParamNames(),
-    FlagMappings(),
     UndefinedParams(),
     FlagMappedTwice(),
     AncestorSubommandWithSameName(),

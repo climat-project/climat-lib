@@ -3,24 +3,24 @@ package template
 import emptyString
 import not
 
-data class ParamReference(
+internal data class ParamReference(
     val paramName: String,
-    val flagMapTarget: String?,
+    val mapTarget: String?,
     val range: IntRange
 )
 
 private val actionRe = Regex("\\\$\\(([\\w.]+)(?::([^ ()]+))?\\)")
 
-fun MatchResult.isFlagMapping() = this.groups[2] != null
+internal fun MatchResult.isMapping() = this.groups[2] != null
 
-fun MatchResult.getParamName() = this.groupValues[1]
+internal fun MatchResult.getParamName() = this.groupValues[1]
 
-fun MatchResult.getMappedFlag() = this.groupValues[2]
+internal fun MatchResult.getMappedFlag() = this.groupValues[2]
 
-fun getParamReferences(template: String): Sequence<ParamReference> =
+internal fun getParamReferences(template: String): Sequence<ParamReference> =
     actionRe.findAll(template)
         .map { match ->
-            val flagMapTarget = if (match.isFlagMapping()) {
+            val flagMapTarget = if (match.isMapping()) {
                 match.groupValues[2]
             } else {
                 null
@@ -28,7 +28,10 @@ fun getParamReferences(template: String): Sequence<ParamReference> =
             ParamReference(match.getParamName(), flagMapTarget, match.range)
         }
 
-fun getActualCommand(template: String, paramValues: Map<String, String>): String {
+internal fun getActualCommand(
+    template: String,
+    paramValues: Map<String, ToolchainSubcommand.ParameterWithValue>
+): String {
     val missingValues = getParamReferences(template)
         .map { it.paramName }
         .distinct()
@@ -43,15 +46,23 @@ fun getActualCommand(template: String, paramValues: Map<String, String>): String
     }
 
     return actionRe.replace(template) { match ->
-        val value = paramValues[match.getParamName()]
-        if (match.isFlagMapping()) {
-            if (value.toBoolean()) {
-                match.getMappedFlag()
+        val value = paramValues[match.getParamName()]!!
+        if (match.isMapping()) {
+            if (value.definition.type == Toolchain.Type.Flag) {
+                if (value.value.toBoolean()) {
+                    match.getMappedFlag()
+                } else {
+                    emptyString()
+                }
             } else {
-                emptyString()
+                if (value.value != emptyString()) {
+                    "${match.getMappedFlag()}='${value.value}'"
+                } else {
+                    emptyString()
+                }
             }
         } else {
-            value!!
+            value.value
         }
     }
 }
