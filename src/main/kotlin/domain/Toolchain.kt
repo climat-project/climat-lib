@@ -12,6 +12,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import kotlin.js.JsExport
 
+@OptIn(ExperimentalJsExport::class)
 @Serializable
 @JsExport
 data class Toolchain(
@@ -22,9 +23,9 @@ data class Toolchain(
     val children: Array<Toolchain>? = null
 ) {
     @Transient
-    val parsedParameters: List<Parameter> = parameters.orEmpty().map {
-        val match = cg_regex0.find(it)
-        requireNotNull(match) { "parameters item does not match pattern $cg_regex0 - $it" }
+    val parsedParameters: Array<Parameter> = parameters.orEmpty().map {
+        val match = ParameterRegex.find(it)
+        requireNotNull(match) { "parameters item does not match pattern $ParameterRegex - $it" }
         Parameter(
             name = match.groupValues[3],
             optional = when (match.groupValues[1]) {
@@ -40,7 +41,7 @@ data class Toolchain(
             },
             description = match.groups[5]?.value
         )
-    }
+    }.toTypedArray()
 
     enum class Type {
         Flag,
@@ -48,6 +49,6 @@ data class Toolchain(
     }
 
     companion object {
-        private val cg_regex0 = Regex("^(req|opt):(flag|arg):(\\w+)(:\\w)?(?:: *(.*))?\$")
+        private val ParameterRegex = Regex("^(req|opt):(flag|arg):(\\w+)(:\\w)?(?:: *(.*))?\$")
     }
 }

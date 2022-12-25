@@ -20,8 +20,12 @@ class ToolchainProcessor(json: String) {
         parser.subcommands(*subcommands)
     }
 
-    fun execute(args: Array<String>) = parser.parse(args)
+    fun execute(args: Array<String>) {
+        parser.parse(args)
+    }
 
     //    fun execute(args: List<String>) = execute(args.toTypedArray())
-    fun executeFromString(args: String) = execute(args.split(Regex("\\s+")).toTypedArray())
+    fun executeFromString(args: String) {
+        execute(args.split(Regex("\\s+")).toTypedArray())
+    }
 }
