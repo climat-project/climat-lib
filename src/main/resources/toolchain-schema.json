@@ -13,36 +13,8 @@
         "parameters": {
           "type": "array",
           "items": {
-            "type": "object",
-            "properties": {
-              "name": {
-                "type": "string"
-              },
-              "optional": {
-                "type": "boolean",
-                "default": false
-              },
-              "shorthand":  {
-                "type": "string"
-              },
-              "type": {
-                "type": "string",
-                "enum": [
-                  "string",
-                  "bool",
-                  "double",
-                  "int"
-                ]
-              },
-              "description": {
-                "type": "string"
-              }
-            },
-            "required": [
-              "name",
-              "mandatory",
-              "type"
-            ]
+            "type": "string",
+            "pattern": "^(req|opt):(flag|arg):(\\w+)(:\\w)?(?::\\ *(.*))?$"
           }
         },
         "action": {

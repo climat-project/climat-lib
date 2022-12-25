@@ -9,7 +9,7 @@ internal class DuplicateParamNames : ValidationBase() {
     override val code get() = "0003"
 
     override fun validate(ctx: ValidationContext): Sequence<String> =
-        ctx.toolchain.parameters
+        ctx.toolchain.parsedParameters
             .orEmpty()
             .groupBy { it.name }
             .asSequence()

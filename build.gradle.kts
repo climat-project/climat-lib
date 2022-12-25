@@ -49,15 +49,16 @@ dependencies {
 
 kotlin {
     js {
+        binaries.library()
+//      nodejs()
         browser {
             webpackTask {
                 outputFileName = "main.js"
-                output.libraryTarget = "commonjs2"
             }
-            binaries.library()
             testTask {
                 useKarma {
-                    useFirefox()
+                    useSourceMapSupport()
+                    useFirefoxHeadless()
                 }
             }
         }

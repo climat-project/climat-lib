@@ -1,4 +1,3 @@
-
 import kotlinx.cli.CLIEntity
 import kotlinx.cli.ExperimentalCli
 import kotlinx.cli.Subcommand
@@ -13,7 +12,7 @@ internal class ToolchainSubcommand(
 
     private var executed = false
 
-    private val params = upperScopeParams + toolchain.parameters.orEmpty().associate {
+    private val params = upperScopeParams + toolchain.parsedParameters.associate {
         val type = toolchainParameterTypeToCliArgType(it.type)
         it.name to if (it.optional) {
             option(type, it.name, it.shorthand, it.description)

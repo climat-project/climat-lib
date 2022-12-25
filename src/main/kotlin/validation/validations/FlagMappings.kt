@@ -15,10 +15,10 @@ internal class FlagMappings : ValidationBase() {
                 .filter { it.flagMapTarget != null }
                 .map { it.paramName }
                 .mapNotNull { scopeParams[it]?.last() }
-                .filter { it.type != Toolchain.Type.bool }
+                .filter { it.type != Toolchain.Type.Flag }
                 .map {
                     "Parameter `${it.name}` is used " +
-                        "as a flag mapping, therefore should have type ${Toolchain.Type.bool.name}"
+                        "as a flag mapping, therefore should have type ${Toolchain.Type.Flag.name}"
                 }
         }
 }

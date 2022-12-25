@@ -64,19 +64,12 @@ class TestValidation {
             Toolchain(
                 name = "root",
                 action = "dummy action",
-                parameters = listOf(
-                    Toolchain.Parameter(name = "param", type = Toolchain.Type.bool),
-                    Toolchain.Parameter(name = "param", type = Toolchain.Type.int)
-                ),
+                parameters = listOf("opt:flag:param", "opt:arg:param"),
                 children = listOf(
                     Toolchain(
                         name = "root_child",
                         action = "dummy action 2",
-                        parameters = listOf(
-                            Toolchain.Parameter(name = "param1", type = Toolchain.Type.bool),
-                            Toolchain.Parameter(name = "param2", type = Toolchain.Type.int),
-                            Toolchain.Parameter(name = "param3", type = Toolchain.Type.int)
-                        )
+                        parameters = listOf("opt:flag:param1", "opt:arg:param2", "opt:arg:param3")
                     ),
                     Toolchain(
                         name = "root_child_2",
@@ -95,11 +88,7 @@ class TestValidation {
                     Toolchain(
                         name = "root_child_3",
                         action = "dummy action 4",
-                        parameters = listOf(
-                            Toolchain.Parameter(name = "param1", type = Toolchain.Type.bool),
-                            Toolchain.Parameter(name = "param2", type = Toolchain.Type.int),
-                            Toolchain.Parameter(name = "param1", type = Toolchain.Type.int)
-                        )
+                        parameters = listOf("opt:flag:param1", "opt:arg:param2", "opt:arg:param1")
                     )
                 )
             )
@@ -114,19 +103,12 @@ class TestValidation {
             Toolchain(
                 name = "root",
                 action = "grep $(intParam:-v) $(intParam:-i) $(boolParam:-I)",
-                parameters = listOf(
-                    Toolchain.Parameter(name = "boolParam", type = Toolchain.Type.bool),
-                    Toolchain.Parameter(name = "intParam", type = Toolchain.Type.int)
-                ),
+                parameters = listOf("opt:flag:boolParam", "opt:arg:intParam"),
                 children = listOf(
                     Toolchain(
                         name = "root_child",
                         action = "dummy --file $(param3) $(param2:--quiet) $(param1:--verbose)",
-                        parameters = listOf(
-                            Toolchain.Parameter(name = "param1", type = Toolchain.Type.bool),
-                            Toolchain.Parameter(name = "param2", type = Toolchain.Type.double),
-                            Toolchain.Parameter(name = "param3", type = Toolchain.Type.string)
-                        )
+                        parameters = listOf("opt:flag:param1", "opt:arg:param2", "opt:arg:param3")
                     )
                 )
             )
@@ -142,19 +124,12 @@ class TestValidation {
             Toolchain(
                 name = "root",
                 action = "dummy $(undef)",
-                parameters = listOf(
-                    Toolchain.Parameter(name = "param1", type = Toolchain.Type.bool),
-                    Toolchain.Parameter(name = "param2", type = Toolchain.Type.int)
-                ),
+                parameters = listOf("opt:flag:param1", "opt:arg:param2"),
                 children = listOf(
                     Toolchain(
                         name = "root_child",
                         action = "dummy $(param1) $(param2) $(param_2) $(undef) $(undef2)",
-                        parameters = listOf(
-                            Toolchain.Parameter(name = "param1", type = Toolchain.Type.bool),
-                            Toolchain.Parameter(name = "param_2", type = Toolchain.Type.int),
-                            Toolchain.Parameter(name = "param3", type = Toolchain.Type.int)
-                        )
+                        parameters = listOf("opt:flag:param1", "opt:arg:param_2", "opt:arg:param3")
                     )
                 )
             )
