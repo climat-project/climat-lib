@@ -8,26 +8,34 @@ import not
 internal data class ParamReference(
     val paramName: String,
     val mapTarget: String?,
+    val isFlipped: Boolean,
     val range: IntRange
 )
 
-private val actionRe = Regex("\\\$\\(([\\w.]+)(?::([^ ()]+))?\\)")
+private val actionRe = Regex("\\\$\\((!)?([\\w.]+)(?::([^ ()]+))?\\)")
 
-internal fun MatchResult.isMapping() = this.groups[2] != null
+internal fun MatchResult.isMapping() = this.groups[3] != null
 
-internal fun MatchResult.getParamName() = this.groupValues[1]
+internal fun MatchResult.isFlipped() = this.groups[1] != null
 
-internal fun MatchResult.getMappedFlag() = this.groupValues[2]
+internal fun MatchResult.getParamName() = this.groupValues[2]
+
+internal fun MatchResult.getMappedFlag() = this.groupValues[3]
 
 internal fun getParamReferences(template: String): Sequence<ParamReference> =
     actionRe.findAll(template)
         .map { match ->
             val flagMapTarget = if (match.isMapping()) {
-                match.groupValues[2]
+                match.getParamName()
             } else {
                 null
             }
-            ParamReference(match.getParamName(), flagMapTarget, match.range)
+            ParamReference(
+                match.getParamName(),
+                flagMapTarget,
+                match.isFlipped(),
+                match.range
+            )
         }
 
 internal fun getActualCommand(

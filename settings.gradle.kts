@@ -1,2 +1,1 @@
-
-rootProject.name = "toolchain-cli"
+rootProject.name = "climat-lib"

@@ -22,6 +22,9 @@ class TestExecution {
                 "param1": "opt:arg",
                 "param2": "opt:arg"
               },
+              "paramDefaults": {
+                "param1": "default"
+              },
               "action": "echo '$(interactive)' '$(param1)'"
             }
           ]
@@ -63,7 +66,8 @@ class TestExecution {
         val executed = listOf(
             "new",
             "new --interactive template --param1 abc",
-            "new template --param2 we"
+            "new template --param2 we",
+            "new --interactive template --param2 we --param1 nondefault"
         )
             .map(::exec)
             .toTypedArray()
@@ -72,7 +76,8 @@ class TestExecution {
             arrayOf(
                 "echo 'abcd'",
                 "echo 'true' 'abc'",
-                "echo 'null' 'null'"
+                "echo 'false' 'default'",
+                "echo 'true' 'nondefault'"
             ),
             executed
         )

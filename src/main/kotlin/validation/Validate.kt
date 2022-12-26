@@ -2,7 +2,9 @@ package validation
 
 import domain.Toolchain
 import newLine
+import validation.validations.*
 import validation.validations.AncestorSubommandWithSameName
+import validation.validations.DefaultForUndefinedParam
 import validation.validations.DuplicateChildrenNames
 import validation.validations.DuplicateParamNames
 import validation.validations.FlagMappedTwice
@@ -10,12 +12,16 @@ import validation.validations.ShadowedParams
 import validation.validations.UndefinedParams
 
 private val validators = listOf(
+    AncestorSubommandWithSameName(),
+    BooleanFlippedMappings(),
+    DefaultForFlag(),
+    DefaultForRequiredParam(),
+    DefaultForUndefinedParam(),
     DuplicateChildrenNames(),
     DuplicateParamNames(),
-    UndefinedParams(),
     FlagMappedTwice(),
-    AncestorSubommandWithSameName(),
-    ShadowedParams()
+    ShadowedParams(),
+    UndefinedParams()
 )
 
 // Made public only for testing

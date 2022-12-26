@@ -1,7 +1,7 @@
 import domain.Toolchain
 import kotlinx.cli.ArgType
 
-internal fun toolchainParameterTypeToCliArgType(it: Toolchain.Type) = when (it) {
+internal fun toolchainParameterTypeToCliArgType(it: Toolchain.Type): ArgType<*> = when (it) {
     Toolchain.Type.Arg -> ArgType.String
     Toolchain.Type.Flag -> ArgType.Boolean
 }
