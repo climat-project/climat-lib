@@ -15,12 +15,13 @@ import kotlinx.serialization.Transient
 data class Toolchain(
     val name: String,
     val description: String? = null,
-    private val parameters: Map<String, String>? = null,
+    private val params: Map<String, String>? = null,
+    val paramDefaults: Map<String, String>? = null,
     val action: String,
     val children: Array<Toolchain>? = null
 ) {
     @Transient
-    val parsedParameters: Array<Parameter> = parameters.orEmpty().map { (name, definition) ->
+    val parsedParameters: Array<Parameter> = params.orEmpty().map { (name, definition) ->
         require(ParamNameRegex.matches(name)) {
             "Param name does not match the pattern $ParamNameRegex - $name"
         }

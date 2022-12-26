@@ -10,13 +10,15 @@
         "description": {
           "type": "string"
         },
-        "parameters": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "patternProperties": {
-              "\\w+": "^(req|opt):(flag|arg)(:\\w)?(?::\\ *(.*))?$"
-            }
+        "params": {
+          "type": "object",
+          "patternProperties": {
+            "\\w+": "^(req|opt):(flag|arg)(:\\w)?(?::\\ *(.*))?$"
+        },
+        "paramDefaults": {
+          "type": "object",
+          "patternProperties": {
+            "\\w+": ".*"
           }
         },
         "action": {

@@ -11,14 +11,14 @@ class TestExecution {
         {
           "name": "new",
           "description": "Creates a new cli",
-          "parameters": {
+          "params": {
             "interactive": "opt:flag:i"
           },
           "action": "echo 'abcd'",
           "children": [
             {
               "name": "template",
-              "parameters": {
+              "params": {
                 "param1": "opt:arg",
                 "param2": "opt:arg"
               },
@@ -33,7 +33,7 @@ class TestExecution {
         },
         {
           "name": "remove",
-          "parameters": {
+          "params": {
             "force": "opt:flag:f"
           },
           "description": "Removes an existing cli",
@@ -42,7 +42,7 @@ class TestExecution {
         {
           "name": "export",
           "description": "Exports the cli",
-          "parameters": {
+          "params": {
             "type": "opt:flag:t"
           },
           "action": "echo 'abcd'"

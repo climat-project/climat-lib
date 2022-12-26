@@ -65,12 +65,12 @@ class TestValidation {
             Toolchain(
                 name = "root",
                 action = "dummy $(undef)",
-                parameters = mapOf("param1" to "opt:flag", "param2" to "opt:arg"),
+                params = mapOf("param1" to "opt:flag", "param2" to "opt:arg"),
                 children = arrayOf(
                     Toolchain(
                         name = "root_child",
                         action = "dummy $(param1) $(param2) $(param_2) $(undef) $(undef2)",
-                        parameters = mapOf("param1" to "opt:flag", "param_2" to "opt:arg", "param3" to "opt:arg")
+                        params = mapOf("param1" to "opt:flag", "param_2" to "opt:arg", "param3" to "opt:arg")
                     )
                 )
             )
