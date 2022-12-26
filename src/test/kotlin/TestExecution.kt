@@ -11,17 +11,17 @@ class TestExecution {
         {
           "name": "new",
           "description": "Creates a new cli",
-          "parameters": [
-            "opt:flag:interactive:i"
-          ],
+          "parameters": {
+            "interactive": "opt:flag:i"
+          },
           "action": "echo 'abcd'",
           "children": [
             {
               "name": "template",
-              "parameters": [
-                "opt:arg:param1",
-                "opt:arg:param2"
-              ],
+              "parameters": {
+                "param1": "opt:arg",
+                "param2": "opt:arg"
+              },
               "action": "echo '$(interactive)' '$(param1)'"
             }
           ]
@@ -33,18 +33,18 @@ class TestExecution {
         },
         {
           "name": "remove",
-          "parameters": [
-            "opt:flag:force:f"
-          ],
+          "parameters": {
+            "force": "opt:flag:f"
+          },
           "description": "Removes an existing cli",
           "action": "echo 'what ever'"
         },
         {
           "name": "export",
           "description": "Exports the cli",
-          "parameters": [
-            "opt:flag:type:t"
-          ],
+          "parameters": {
+            "type": "opt:flag:t"
+          },
           "action": "echo 'abcd'"
         }
       ]
@@ -71,7 +71,8 @@ class TestExecution {
         assertContentEquals(
             arrayOf(
                 "echo 'abcd'",
-                "echo 'true' 'abc'"
+                "echo 'true' 'abc'",
+                "echo 'null' 'null'"
             ),
             executed
         )
