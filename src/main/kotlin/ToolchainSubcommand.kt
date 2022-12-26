@@ -7,6 +7,7 @@ import template.getActualCommand
 @OptIn(ExperimentalCli::class)
 internal class ToolchainSubcommand(
     private val toolchain: Toolchain,
+    private val handler: (String) -> Unit,
     upperScopeParams: Map<String, ParameterWithValue> = emptyMap()
 ) :
     Subcommand(toolchain.name, toolchain.description ?: "") {
@@ -27,7 +28,7 @@ internal class ToolchainSubcommand(
     }
 
     private val toolchainSubcommands =
-        toolchain.children.orEmpty().map { ToolchainSubcommand(it, params) }.toTypedArray()
+        toolchain.children.orEmpty().map { ToolchainSubcommand(it, handler, params) }.toTypedArray()
 
     init {
         autoTerminate = false
@@ -39,12 +40,7 @@ internal class ToolchainSubcommand(
         if (executedChild == null) {
             val command = getActualCommand(toolchain.action, params)
             println("Executing `$command`")
-
-//            val options: dynamic = object {}
-//            options["stdio"] = arrayOf("ignore", "inherit", "inherit")
-//            // Suppressing because normal API doesn't work
-//            @Suppress("UNCHECKED_CAST_TO_EXTERNAL_INTERFACE")
-//            child_process.execSync(command, options as ExecSyncOptions)
+            handler(command)
         } else {
             executedChild.executed = false
         }

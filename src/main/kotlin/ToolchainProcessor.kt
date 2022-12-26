@@ -7,7 +7,7 @@ import validation.validate
 
 @OptIn(ExperimentalCli::class, ExperimentalJsExport::class)
 @JsExport
-class ToolchainProcessor(json: String) {
+class ToolchainProcessor(json: String, actionHandler: (String) -> Unit) {
 
     private var toolchain = Json.decodeFromString<Toolchain>(json)
     private var parser = ArgParser(toolchain.name, autoTerminate = false)
@@ -15,7 +15,7 @@ class ToolchainProcessor(json: String) {
     init {
         validate(toolchain)
         val subcommands = toolchain.children.orEmpty().map {
-            ToolchainSubcommand(it)
+            ToolchainSubcommand(it, actionHandler)
         }.toTypedArray()
         parser.subcommands(*subcommands)
     }
@@ -24,7 +24,6 @@ class ToolchainProcessor(json: String) {
         parser.parse(args)
     }
 
-    //    fun execute(args: List<String>) = execute(args.toTypedArray())
     fun executeFromString(args: String) {
         execute(args.split(Regex("\\s+")).toTypedArray())
     }

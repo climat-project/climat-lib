@@ -57,7 +57,7 @@ internal fun getActualCommand(
                     emptyString()
                 }
             } else {
-                if (value.value != emptyString()) {
+                if (value.value.isNotEmpty()) {
                     "${match.getMappedFlag()}='${value.value}'"
                 } else {
                     emptyString()
