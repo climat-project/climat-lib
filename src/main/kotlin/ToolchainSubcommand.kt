@@ -1,7 +1,11 @@
 import domain.Parameter
 import domain.ParameterWithValue
 import domain.Toolchain
-import kotlinx.cli.*
+import kotlinx.cli.ArgType
+import kotlinx.cli.CLIEntity
+import kotlinx.cli.ExperimentalCli
+import kotlinx.cli.Subcommand
+import kotlinx.cli.default
 import template.getActualCommand
 
 @OptIn(ExperimentalCli::class)

@@ -2,8 +2,10 @@ package validation
 
 import domain.Toolchain
 import newLine
-import validation.validations.*
 import validation.validations.AncestorSubommandWithSameName
+import validation.validations.BooleanFlippedMappings
+import validation.validations.DefaultForFlag
+import validation.validations.DefaultForRequiredParam
 import validation.validations.DefaultForUndefinedParam
 import validation.validations.DuplicateChildrenNames
 import validation.validations.DuplicateParamNames
@@ -24,7 +26,7 @@ private val validators = listOf(
     UndefinedParams()
 )
 
-// Made public only for testing
+// Made internal only for testing
 internal fun computeValidations(
     current: Toolchain,
     pathToRoot: List<Toolchain> = emptyList()

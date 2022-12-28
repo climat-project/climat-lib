@@ -10,9 +10,10 @@ package domain/*
 
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
+import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 
-@OptIn(ExperimentalJsExport::class)
+@OptIn(ExperimentalJsExport::class, ExperimentalJsExport::class)
 @Serializable
 @JsExport
 data class Toolchain(

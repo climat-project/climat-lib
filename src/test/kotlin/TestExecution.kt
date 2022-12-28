@@ -57,7 +57,7 @@ class TestExecution {
         var ans: String? = null
         ToolchainProcessor(json) {
             ans = it
-        }.executeFromString(args)
+        }.execute(args)
         return ans
     }
 
