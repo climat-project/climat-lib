@@ -1,8 +1,0 @@
-{
-  "annotations": {
-    "classes": {
-      "kotlinx.serialization.Serializable": null,
-      "kotlin.js.JsExport": null
-    }
-  }
-}

@@ -25,6 +25,7 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             kotlin.srcDir("src/main/kotlin")
+            resources.srcDir("src/main/resources")
             dependencies {
                 implementation("org.jetbrains.kotlinx:kotlinx-cli:0.3.5-develop-0")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
