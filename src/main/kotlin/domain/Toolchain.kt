@@ -10,37 +10,37 @@ package domain/*
 
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
+import kotlin.js.JsExport
 
+@OptIn(ExperimentalJsExport::class)
 @Serializable
+@JsExport
 data class Toolchain(
     val name: String,
     val description: String? = null,
-    private val params: Map<String, String>? = null,
     val paramDefaults: Map<String, String>? = null,
+    private val parameters: Array<String>? = null,
     val action: String,
     val children: Array<Toolchain>? = null
 ) {
     @Transient
-    val parsedParameters: Array<Parameter> = params.orEmpty().map { (name, definition) ->
-        require(ParamNameRegex.matches(name)) {
-            "Param name does not match the pattern $ParamNameRegex - $name"
-        }
-        val match = ParamDefinitionRegex.find(definition)
-        requireNotNull(match) { "Param definition does not match pattern $ParamDefinitionRegex - $definition" }
+    val parsedParameters: Array<Parameter> = parameters.orEmpty().map {
+        val match = ParameterRegex.find(it)
+        requireNotNull(match) { "parameters item does not match pattern $ParameterRegex - $it" }
         Parameter(
-            name = name,
+            name = match.groupValues[3],
             optional = when (match.groupValues[1]) {
                 "req" -> false
                 "opt" -> true
                 else -> throw Exception()
             },
-            shorthand = match.groups[3]?.value,
+            shorthand = match.groups[4]?.value,
             type = when (match.groupValues[2]) {
                 "flag" -> Type.Flag
                 "arg" -> Type.Arg
                 else -> throw Exception()
             },
-            description = match.groups[4]?.value
+            description = match.groups[5]?.value
         )
     }.toTypedArray()
 
@@ -50,7 +50,6 @@ data class Toolchain(
     }
 
     companion object {
-        private val ParamDefinitionRegex = Regex("^(req|opt):(flag|arg)(:\\w)?(?:: *(.*))?\$")
-        private val ParamNameRegex = Regex("\\w+")
+        private val ParameterRegex = Regex("^(req|opt):(flag|arg):(\\w+)(:\\w)?(?:: *(.*))?\$")
     }
 }

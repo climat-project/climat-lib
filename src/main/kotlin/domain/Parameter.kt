@@ -1,5 +1,7 @@
 package domain
 
+@OptIn(ExperimentalJsExport::class)
+@JsExport
 data class Parameter(
     val name: String,
     val optional: Boolean,
