@@ -45,12 +45,6 @@ kotlin {
             webpackTask {
                 outputFileName = "main.js"
             }
-            testTask {
-                useKarma {
-                    useSourceMapSupport()
-                    useFirefoxHeadless()
-                }
-            }
         }
         useCommonJs()
     }

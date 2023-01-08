@@ -17,7 +17,7 @@ internal class BooleanFlippedMappings : ValidationBase() {
             .filter { it.type != Toolchain.Type.Flag }
             .map { it.name }
             .intersect(
-                getParamReferences(ctx.toolchain.action)
+                getParamReferences(ctx.toolchain.parsedAction)
                     .filter { it.isFlipped }
                     .map { it.paramName }
                     .toSet()

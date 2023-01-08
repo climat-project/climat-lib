@@ -1,4 +1,5 @@
 import domain.Toolchain
+import kotlinx.serialization.json.JsonPrimitive
 import validation.ValidationResult
 import validation.computeValidations
 import kotlin.test.Test
@@ -14,41 +15,41 @@ class TestValidation {
         val toolchain =
             Toolchain(
                 name = "root",
-                action = "dummy action",
+                action = JsonPrimitive("dummy action"),
                 children = arrayOf(
                     Toolchain(
                         name = "root_child",
-                        action = "dummy action 2"
+                        action = JsonPrimitive("dummy action 2")
                     ),
                     Toolchain(
                         name = "root_child_2",
-                        action = "dummy action 3",
+                        action = JsonPrimitive("dummy action 3"),
                         children = arrayOf(
                             Toolchain(
                                 name = "root_grandchild",
-                                action = "dummy action 5"
+                                action = JsonPrimitive("dummy action 5")
                             ),
                             Toolchain(
                                 name = "root_grandchild",
-                                action = "dummy action 6"
+                                action = JsonPrimitive("dummy action 6")
                             )
                         )
                     ),
                     Toolchain(
                         name = "root_child",
-                        action = "dummy action 4",
+                        action = JsonPrimitive("dummy action 4"),
                         children = arrayOf(
                             Toolchain(
                                 name = "root_grandchild",
-                                action = "dummy action 5"
+                                action = JsonPrimitive("dummy action 5")
                             ),
                             Toolchain(
                                 name = "root_grandchild",
-                                action = "dummy action 6"
+                                action = JsonPrimitive("dummy action 6")
                             ),
                             Toolchain(
                                 name = "root_child",
-                                action = "dummy action 6"
+                                action = JsonPrimitive("dummy action 6")
                             )
                         )
                     )
@@ -64,31 +65,31 @@ class TestValidation {
         val toolchain =
             Toolchain(
                 name = "root",
-                action = "dummy action",
+                action = JsonPrimitive("dummy action"),
                 parameters = arrayOf("opt:flag:param", "opt:arg:param"),
                 children = arrayOf(
                     Toolchain(
                         name = "root_child",
-                        action = "dummy action 2",
+                        action = JsonPrimitive("dummy action 2"),
                         parameters = arrayOf("opt:flag:param1", "opt:arg:param2", "opt:arg:param3")
                     ),
                     Toolchain(
                         name = "root_child_2",
-                        action = "dummy action 3",
+                        action = JsonPrimitive("dummy action 3"),
                         children = arrayOf(
                             Toolchain(
                                 name = "root_grandchild",
-                                action = "dummy action 5"
+                                action = JsonPrimitive("dummy action 5")
                             ),
                             Toolchain(
                                 name = "root_grandchild_2",
-                                action = "dummy action 6"
+                                action = JsonPrimitive("dummy action 6")
                             )
                         )
                     ),
                     Toolchain(
                         name = "root_child_3",
-                        action = "dummy action 4",
+                        action = JsonPrimitive("dummy action 4"),
                         parameters = arrayOf("opt:flag:param1", "opt:arg:param2", "opt:arg:param1")
                     )
                 )
@@ -103,12 +104,12 @@ class TestValidation {
         val toolchain =
             Toolchain(
                 name = "root",
-                action = "dummy $(undef)",
+                action = JsonPrimitive("dummy $(undef)"),
                 parameters = arrayOf("opt:flag:param1", "opt:arg:param2"),
                 children = arrayOf(
                     Toolchain(
                         name = "root_child",
-                        action = "dummy $(param1) $(param2) $(param_2) $(undef) $(undef2)",
+                        action = JsonPrimitive("dummy $(param1) $(param2) $(param_2) $(undef) $(undef2)"),
                         parameters = arrayOf("opt:flag:param1", "opt:arg:param_2", "opt:arg:param3")
                     )
                 )

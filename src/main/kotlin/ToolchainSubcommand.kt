@@ -63,8 +63,7 @@ internal class ToolchainSubcommand(
     override fun execute() {
         val executedChild = toolchainSubcommands.find { it.executed }
         if (executedChild == null) {
-            val command = getActualCommand(toolchain.action, params)
-            println("Executing `$command`")
+            val command = getActualCommand(toolchain.parsedAction, params)
             handler(command)
         } else {
             executedChild.executed = false

@@ -8,8 +8,15 @@ package domain/*
  * when the generation process is re-run.
  */
 
+import emptyString
+import isJsonObject
+import isString
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.contentOrNull
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 
@@ -21,7 +28,7 @@ data class Toolchain(
     val description: String? = null,
     val paramDefaults: Map<String, String>? = null,
     private val parameters: Array<String>? = null,
-    val action: String,
+    private val action: JsonElement?,
     val children: Array<Toolchain>? = null
 ) {
     @Transient
@@ -44,6 +51,20 @@ data class Toolchain(
             description = match.groups[5]?.value
         )
     }.toTypedArray()
+
+    @Transient
+    val parsedAction = action?.jsonPrimitive?.contentOrNull ?:
+        action?.jsonObject?.get("template")?.jsonPrimitive?.content ?:
+        emptyString()
+
+    init {
+        require(action == null ||
+                action.jsonPrimitive.isString ||
+                action.isJsonObject && ("template" !in action.jsonObject || action.jsonObject["template"]!!.isString))
+        {
+            "`action` must be either a string or an object containing a `template` property which is string"
+        }
+    }
 
     enum class Type {
         Flag,

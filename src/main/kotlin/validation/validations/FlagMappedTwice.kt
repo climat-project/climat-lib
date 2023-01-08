@@ -10,7 +10,7 @@ internal class FlagMappedTwice : ValidationBase() {
     override val type get() = ValidationResult.ValidationEntryType.Warning
     override val code get() = "0008"
     override fun validate(ctx: ValidationContext): Sequence<String> =
-        getParamReferences(ctx.toolchain.action)
+        getParamReferences(ctx.toolchain.parsedAction)
             .filter { it.mapTarget != null }
             .groupBy { it.mapTarget }
             .values.asSequence()
