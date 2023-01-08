@@ -13,16 +13,22 @@ import validation.validate as _validate
 class ToolchainProcessor {
     companion object {
         fun validate(toolchain: Toolchain) = _validate(toolchain)
+        fun parse(json: String): Toolchain {
+            val toolchain = Json.decodeFromString<Toolchain>(json)
+            validate(toolchain)
+            return toolchain
+        }
     }
 
     @JsName("createFromJsonString")
-    constructor(json: String, actionHandler: (String) -> Unit) :
-        this(Json.decodeFromString<Toolchain>(json), actionHandler)
+    constructor(json: String, actionHandler: (String) -> Unit, skipValidation: Boolean = false) :
+        this(Json.decodeFromString<Toolchain>(json), actionHandler, skipValidation)
 
     @JsName("create")
-    constructor(toolchain: Toolchain, actionHandler: (String) -> Unit) {
+    constructor(toolchain: Toolchain, actionHandler: (String) -> Unit, skipValidation: Boolean = false) {
         this.parser = ArgParser(toolchain.name, autoTerminate = false)
-        validate(toolchain)
+        if(!skipValidation)
+            validate(toolchain)
         val subcommands = toolchain.children.orEmpty().map {
             ToolchainSubcommand(it, actionHandler)
         }.toTypedArray()
