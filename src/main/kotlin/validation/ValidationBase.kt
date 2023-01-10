@@ -6,8 +6,11 @@ internal abstract class ValidationBase {
     internal abstract fun validate(ctx: ValidationContext): Sequence<String>
     protected fun getScopeParams(ctx: ValidationContext) =
         (
-            ctx.pathToRoot.flatMap { it.parsedParameters.asSequence() } +
-                ctx.toolchain.parsedParameters
+            ctx.pathToRoot.flatMap { it.parameters.asSequence() } +
+                ctx.toolchain.parameters
             )
             .groupBy { it.name }
+
+    protected fun getDefaultParamKeys(ctx: ValidationContext) =
+        ctx.toolchain.parameters.filter { it.default != null }.map { it.name }.toSet()
 }

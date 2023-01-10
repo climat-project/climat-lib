@@ -10,7 +10,7 @@ internal class DefaultForUndefinedParam : ValidationBase() {
 
     override fun validate(ctx: ValidationContext): Sequence<String> =
         (
-            ctx.toolchain.paramDefaults?.keys.orEmpty() -
+            getDefaultParamKeys(ctx) -
                 getScopeParams(ctx).keys
             ).let { undefinedDefaults ->
             undefinedDefaults.map {

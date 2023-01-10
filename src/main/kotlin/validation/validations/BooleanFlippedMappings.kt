@@ -1,6 +1,6 @@
 package validation.validations
 
-import domain.Toolchain
+import domain.ParamDefinition
 import template.getParamReferences
 import validation.ValidationBase
 import validation.ValidationContext
@@ -14,10 +14,10 @@ internal class BooleanFlippedMappings : ValidationBase() {
         getScopeParams(ctx)
             .values
             .map { it.last() }
-            .filter { it.type != Toolchain.Type.Flag }
+            .filter { it.type != ParamDefinition.Type.Flag }
             .map { it.name }
             .intersect(
-                getParamReferences(ctx.toolchain.parsedAction)
+                getParamReferences(ctx.toolchain.action.template)
                     .filter { it.isFlipped }
                     .map { it.paramName }
                     .toSet()

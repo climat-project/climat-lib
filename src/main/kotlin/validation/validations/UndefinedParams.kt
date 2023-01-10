@@ -12,7 +12,7 @@ internal class UndefinedParams : ValidationBase() {
 
     override fun validate(ctx: ValidationContext): Sequence<String> =
         getScopeParams(ctx).let { scopeParams ->
-            getParamReferences(ctx.toolchain.parsedAction)
+            getParamReferences(ctx.toolchain.action.template)
                 .map { it.paramName }
                 .distinct()
                 .filter(not(scopeParams::contains))

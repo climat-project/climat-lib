@@ -1,6 +1,6 @@
 package validation.validations
 
-import domain.Toolchain
+import domain.ParamDefinition
 import validation.ValidationBase
 import validation.ValidationContext
 import validation.ValidationResult
@@ -12,9 +12,9 @@ internal class DefaultForFlag : ValidationBase() {
 
     override fun validate(ctx: ValidationContext): Sequence<String> =
         (
-            getScopeParams(ctx).filter { (_, v) -> v.last().type == Toolchain.Type.Flag }
+            getScopeParams(ctx).filter { (_, v) -> v.last().type == ParamDefinition.Type.Flag }
                 .keys
-                .intersect(ctx.toolchain.paramDefaults?.keys.orEmpty())
+                .intersect(getDefaultParamKeys(ctx))
             ).let { defaultForRequired ->
             defaultForRequired.map {
                 "Cannot set default to flag `$it`. For a flag the default" +

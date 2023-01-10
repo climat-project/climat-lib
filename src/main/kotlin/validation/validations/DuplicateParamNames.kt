@@ -9,8 +9,7 @@ internal class DuplicateParamNames : ValidationBase() {
     override val code get() = "0003"
 
     override fun validate(ctx: ValidationContext): Sequence<String> =
-        ctx.toolchain.parsedParameters
-            .orEmpty()
+        ctx.toolchain.parameters
             .groupBy { it.name }
             .asSequence()
             .filter { (_, v) -> v.size >= 2 }

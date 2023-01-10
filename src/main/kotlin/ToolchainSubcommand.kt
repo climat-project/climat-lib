@@ -1,6 +1,6 @@
-import domain.Parameter
-import domain.ParameterWithValue
+import domain.ParamDefinition
 import domain.Toolchain
+import leftovers.ParameterWithValue
 import kotlinx.cli.ArgType
 import kotlinx.cli.CLIEntity
 import kotlinx.cli.ExperimentalCli
@@ -12,33 +12,31 @@ import template.getActualCommand
 internal class ToolchainSubcommand(
     private val toolchain: Toolchain,
     private val handler: (String) -> Unit,
-    upperScopeParams: Map<String, ParameterWithValue> = emptyMap(),
-    upperScopeParamDefaults: Map<String, String> = emptyMap()
+    upperScopeParams: Map<String, ParameterWithValue> = emptyMap()
 ) :
-    Subcommand(toolchain.name, toolchain.description ?: "") {
+    Subcommand(toolchain.name, toolchain.description) {
 
     private var executed = false
-    private val paramDefaults = upperScopeParamDefaults + toolchain.paramDefaults.orEmpty()
-    private val params = upperScopeParams + toolchain.parsedParameters.associate {
+    private val params = upperScopeParams + toolchain.parameters.associate {
         it.name to ParameterWithValue(
             it,
             cliArgument(it)
         )
     }
 
-    private fun cliArgument(it: Parameter): CLIEntity<out Any> =
+    private fun cliArgument(it: ParamDefinition): CLIEntity<out Any> =
         if (it.optional) {
             when (it.type) {
-                Toolchain.Type.Arg -> {
+                ParamDefinition.Type.Arg -> {
                     option(
                         ArgType.String,
                         it.name,
                         it.shorthand,
                         it.description
-                    ).default(paramDefaults[it.name] ?: "")
+                    ).default(it.default ?: "")
                 }
 
-                Toolchain.Type.Flag -> {
+                ParamDefinition.Type.Flag -> {
                     option(
                         ArgType.Boolean,
                         it.name,
@@ -53,7 +51,7 @@ internal class ToolchainSubcommand(
         }
 
     private val toolchainSubcommands =
-        toolchain.children.orEmpty().map { ToolchainSubcommand(it, handler, params) }.toTypedArray()
+        toolchain.children.map { ToolchainSubcommand(it, handler, params) }.toTypedArray()
 
     init {
         autoTerminate = false
@@ -63,7 +61,7 @@ internal class ToolchainSubcommand(
     override fun execute() {
         val executedChild = toolchainSubcommands.find { it.executed }
         if (executedChild == null) {
-            val command = getActualCommand(toolchain.parsedAction, params)
+            val command = getActualCommand(toolchain.action, params)
             handler(command)
         } else {
             executedChild.executed = false

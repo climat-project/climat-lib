@@ -42,7 +42,7 @@ internal fun computeValidations(
                 ValidationResult(it, validator.type, current)
             }
         } +
-            current.children.orEmpty().flatMap {
+            current.children.flatMap {
                 computeValidations(it, pathToRoot + listOf(current))
             }
         ).asSequence()

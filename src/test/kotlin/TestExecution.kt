@@ -55,9 +55,9 @@ class TestExecution {
 
     private fun exec(args: String): String? {
         var ans: String? = null
-        ToolchainProcessor(json) {
+        ToolchainProcessor(json, {
             ans = it
-        }.execute(args)
+        }).execute(args)
         return ans
     }
 

@@ -13,7 +13,7 @@ internal class DefaultForRequiredParam : ValidationBase() {
         (
             getScopeParams(ctx).filter { (_, v) -> !v.last().optional }
                 .keys
-                .intersect(ctx.toolchain.paramDefaults?.keys.orEmpty())
+                .intersect(getDefaultParamKeys(ctx))
             ).let { defaultForRequired ->
             defaultForRequired.map {
                 "Param `$it` is required, and should not have default"

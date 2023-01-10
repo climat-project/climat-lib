@@ -1,7 +1,8 @@
 package template
 
-import domain.ParameterWithValue
-import domain.Toolchain
+import domain.IAction
+import domain.ParamDefinition
+import leftovers.ParameterWithValue
 import emptyString
 import not
 
@@ -39,10 +40,10 @@ internal fun getParamReferences(template: String): Sequence<ParamReference> =
         }
 
 internal fun getActualCommand(
-    template: String,
+    action: IAction,
     paramValues: Map<String, ParameterWithValue>
 ): String {
-    val missingValues = getParamReferences(template)
+    val missingValues = getParamReferences(action.template)
         .map { it.paramName }
         .distinct()
         .filter(not(paramValues::contains))
@@ -55,10 +56,10 @@ internal fun getActualCommand(
         )
     }
 
-    return actionRe.replace(template) { match ->
+    return actionRe.replace(action.template) { match ->
         val value = paramValues[match.getParamName()]!!
         if (match.isMapping()) {
-            if (value.definition.type == Toolchain.Type.Flag) {
+            if (value.definition.type == ParamDefinition.Type.Flag) {
                 if (value.value.toBoolean()) {
                     match.getMappedFlag()
                 } else {

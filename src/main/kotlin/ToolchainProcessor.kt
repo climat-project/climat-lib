@@ -1,4 +1,5 @@
 import domain.Toolchain
+import domain.convert
 import kotlinx.cli.ArgParser
 import kotlinx.cli.ExperimentalCli
 import kotlinx.serialization.decodeFromString
@@ -22,14 +23,14 @@ class ToolchainProcessor {
 
     @JsName("createFromJsonString")
     constructor(json: String, actionHandler: (String) -> Unit, skipValidation: Boolean = false) :
-        this(Json.decodeFromString<Toolchain>(json), actionHandler, skipValidation)
+        this(convert(Json.decodeFromString<ToolchainDto>(json)), actionHandler, skipValidation)
 
     @JsName("create")
     constructor(toolchain: Toolchain, actionHandler: (String) -> Unit, skipValidation: Boolean = false) {
         this.parser = ArgParser(toolchain.name, autoTerminate = false)
         if(!skipValidation)
             validate(toolchain)
-        val subcommands = toolchain.children.orEmpty().map {
+        val subcommands = toolchain.children.map {
             ToolchainSubcommand(it, actionHandler)
         }.toTypedArray()
         parser.subcommands(*subcommands)
