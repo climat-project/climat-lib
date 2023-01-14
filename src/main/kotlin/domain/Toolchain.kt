@@ -11,5 +11,6 @@ data class Toolchain(
     val parameters: Array<ParamDefinition>,
     val parameterDefaults: Map<String, String>,
     val action: IAction,
-    val children: Array<Toolchain>
+    val children: Array<Toolchain>,
+    val constants: Array<Constant>
 )

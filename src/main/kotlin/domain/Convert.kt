@@ -5,6 +5,7 @@ import emptyString
 import isJsonObject
 import isString
 import kotlinx.cli.ParsingException
+import kotlinx.serialization.json.booleanOrNull
 import kotlinx.serialization.json.jsonPrimitive
 
 private val parameterRegex = Regex("^(req|opt):(flag|arg):(\\w+)(:\\w)?(?:: *(.*))?\$")
@@ -23,8 +24,8 @@ private fun convertFromParamDefinitionString(paramDefinitionString: String): Par
         },
         shorthand = match.groups[4]?.value,
         type = when (match.groupValues[2]) {
-            "flag" -> ParamDefinition.Type.Flag
-            "arg" -> ParamDefinition.Type.Arg
+            "flag" -> Referenceable.Type.Flag
+            "arg" -> Referenceable.Type.Arg
             else -> throw Exception()
         },
         description = match.groups[5]?.value ?: emptyString(),
@@ -54,5 +55,16 @@ internal fun convert(toolchain: ToolchainDto): Toolchain =
                 throw ParsingException("action must be a string")
             }
         } ?: adHocIAction(emptyString()),
-        children = toolchain.children.orEmpty().map(::convert).toTypedArray()
+        children = toolchain.children.orEmpty().map(::convert).toTypedArray(),
+        constants = toolchain.constants.orEmpty().map { (name, value) ->
+            val type =
+                if (value.booleanOrNull != null)
+                    Referenceable.Type.Flag
+                else if (value.isString)
+                    Referenceable.Type.Arg
+                else
+                    throw ParsingException("Constant value must be either a string or a boolean")
+
+            Constant(name, type, value.toString())
+        }.toTypedArray()
     )

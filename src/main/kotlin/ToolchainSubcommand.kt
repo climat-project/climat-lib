@@ -1,5 +1,6 @@
 import domain.ParamDefinition
 import domain.ParameterWithValue
+import domain.Referenceable
 import domain.Toolchain
 import kotlinx.cli.ArgType
 import kotlinx.cli.CLIEntity
@@ -29,7 +30,7 @@ internal class ToolchainSubcommand(
     private fun cliArgument(it: ParamDefinition): CLIEntity<out Any> =
         if (it.optional) {
             when (it.type) {
-                ParamDefinition.Type.Arg -> {
+                Referenceable.Type.Arg -> {
                     option(
                         ArgType.String,
                         it.name,
@@ -38,7 +39,7 @@ internal class ToolchainSubcommand(
                     ).default(defaults[it.name] ?: "")
                 }
 
-                ParamDefinition.Type.Flag -> {
+                Referenceable.Type.Flag -> {
                     option(
                         ArgType.Boolean,
                         it.name,

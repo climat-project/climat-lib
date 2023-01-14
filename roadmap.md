@@ -1,10 +1,10 @@
 # Roadmap ordered by priority and feasibility
 
-- More unit tests
+- ~~More unit tests~~
+- Constants
 - Appending (Offloading) unknown parameters to the template end
 - Check if we can replace kotlinx-cli library with Clikt (https://ajalt.github.io/clikt/)
 - Multiple names for one subcommand (multiple names or one name with more aliases?)
-- Constants
 - Being able to pass an object to an action handler, not only a template string how is now currently
 - Reference resources, which will be copied when the alias is installed
 - Plugins

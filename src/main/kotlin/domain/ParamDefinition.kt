@@ -6,14 +6,9 @@ import kotlin.js.JsExport
 @OptIn(ExperimentalJsExport::class)
 @JsExport
 data class ParamDefinition(
-    val name: String,
+    override val name: String,
+    override val type: Type,
     val optional: Boolean,
     val shorthand: String?,
-    val type: Type,
     val description: String,
-) {
-    enum class Type {
-        Flag,
-        Arg
-    }
-}
+) : Referenceable()

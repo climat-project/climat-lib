@@ -42,7 +42,7 @@ class TestDuplicateParamNames {
         )
     @Test
     fun test() {
-        val validationResults = toolchain.getValidationMessages(ValidationCode.DuplicateParamNames)
+        val validationResults = toolchain.getValidationMessages(ValidationCode.DuplicateReferenceableNames)
         assertContainsInMessages(
             validationResults,
             "param",

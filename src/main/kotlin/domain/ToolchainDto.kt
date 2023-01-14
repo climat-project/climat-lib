@@ -1,5 +1,6 @@
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonPrimitive
 
 @Serializable
 data class ToolchainDto(
@@ -8,5 +9,6 @@ data class ToolchainDto(
     val paramDefaults: Map<String, String>? = null,
     val parameters: Array<String>? = null,
     val action: JsonElement? = null,
-    val children: Array<ToolchainDto>? = null
+    val children: Array<ToolchainDto>? = null,
+    val constants: Map<String, JsonPrimitive>? = null
 )

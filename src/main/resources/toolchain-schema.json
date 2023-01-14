@@ -23,6 +23,12 @@
             "pattern": "^(req|opt):(flag|arg):(\\w+)(:\\w)?(?::\\ *(.*))?$"
           }
         },
+        "constants": {
+          "type": "object",
+          "patternProperties": {
+            "\\w+": ".*"
+          }
+        },
         "action": {
           "anyOf": [
             {

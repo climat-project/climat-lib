@@ -1,8 +1,8 @@
 package template
 
 import domain.IAction
-import domain.ParamDefinition
 import domain.ParameterWithValue
+import domain.Referenceable
 import emptyString
 import not
 
@@ -59,7 +59,7 @@ internal fun getActualCommand(
     return actionRe.replace(action.template) { match ->
         val value = paramValues[match.getParamName()]!!
         if (match.isMapping()) {
-            if (value.definition.type == ParamDefinition.Type.Flag) {
+            if (value.definition.type == Referenceable.Type.Flag) {
                 if (value.value.toBoolean()) {
                     match.getMappedFlag()
                 } else {
