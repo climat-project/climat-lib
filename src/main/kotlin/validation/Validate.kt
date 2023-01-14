@@ -2,7 +2,7 @@ package validation
 
 import domain.Toolchain
 import newLine
-import validation.validations.AncestorSubommandWithSameName
+import validation.validations.AncestorSubcommandWithSameName
 import validation.validations.BooleanFlippedMappings
 import validation.validations.DefaultForFlag
 import validation.validations.DefaultForRequiredParam
@@ -14,7 +14,7 @@ import validation.validations.ShadowedParams
 import validation.validations.UndefinedParams
 
 private val validators = listOf(
-    AncestorSubommandWithSameName(),
+    AncestorSubcommandWithSameName(),
     BooleanFlippedMappings(),
     DefaultForFlag(),
     DefaultForRequiredParam(),

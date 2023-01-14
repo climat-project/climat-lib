@@ -7,6 +7,6 @@ data class ToolchainDto(
     val description: String? = null,
     val paramDefaults: Map<String, String>? = null,
     val parameters: Array<String>? = null,
-    val action: JsonElement?,
+    val action: JsonElement? = null,
     val children: Array<ToolchainDto>? = null
 )

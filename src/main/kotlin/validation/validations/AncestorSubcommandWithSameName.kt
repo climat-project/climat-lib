@@ -4,7 +4,7 @@ import validation.ValidationBase
 import validation.ValidationContext
 import validation.ValidationResult
 
-internal class AncestorSubommandWithSameName : ValidationBase() {
+internal class AncestorSubcommandWithSameName : ValidationBase() {
     override val type get() = ValidationResult.ValidationEntryType.Warning
     override val code get() = "0006"
 

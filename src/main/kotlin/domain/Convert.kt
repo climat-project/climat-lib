@@ -38,7 +38,7 @@ private fun adHocIAction(template: String): IAction =
             get() = template
     }
 
-fun convert(toolchain: ToolchainDto): Toolchain =
+internal fun convert(toolchain: ToolchainDto): Toolchain =
     Toolchain(
         name = toolchain.name,
         description = toolchain.description ?: emptyString(),
@@ -48,10 +48,13 @@ fun convert(toolchain: ToolchainDto): Toolchain =
         action = toolchain.action?.let {
             if (it.isString) {
                 adHocIAction(it.jsonPrimitive.content)
-            } else if(it.isJsonObject) {
+            }
+            else if(it.isJsonObject) {
                 throw Exception("Not implemented yet!")
             }
-            throw ParsingException("action must be a string")
+            else {
+                throw ParsingException("action must be a string")
+            }
         } ?: adHocIAction(emptyString()),
         children = toolchain.children.orEmpty().map(::convert).toTypedArray()
     )

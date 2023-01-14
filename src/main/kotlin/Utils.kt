@@ -20,4 +20,4 @@ internal val JsonElement.isJsonObject: Boolean
     get() = this as? JsonObject != null
 
 internal val JsonElement.isString: Boolean
-    get() = (this as? JsonPrimitive)?.isString == true
+    get() = (this is JsonPrimitive) && this.isString
