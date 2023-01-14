@@ -48,11 +48,9 @@ internal fun convert(toolchain: ToolchainDto): Toolchain =
         action = toolchain.action?.let {
             if (it.isString) {
                 adHocIAction(it.jsonPrimitive.content)
-            }
-            else if(it.isJsonObject) {
+            } else if (it.isJsonObject) {
                 throw Exception("Not implemented yet!")
-            }
-            else {
+            } else {
                 throw ParsingException("action must be a string")
             }
         } ?: adHocIAction(emptyString()),

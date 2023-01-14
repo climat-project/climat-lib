@@ -28,7 +28,7 @@ class ToolchainProcessor {
     @JsName("create")
     constructor(toolchain: Toolchain, actionHandler: (String) -> Unit, skipValidation: Boolean = false) {
         this.parser = ArgParser(toolchain.name, autoTerminate = false)
-        if(!skipValidation)
+        if (!skipValidation)
             validate(toolchain)
         val subcommands = toolchain.children.map {
             ToolchainSubcommand(it, actionHandler)

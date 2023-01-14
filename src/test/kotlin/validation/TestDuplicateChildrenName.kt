@@ -1,8 +1,8 @@
 package validation
 
 import ToolchainDto
-import utils.getErrors
 import kotlinx.serialization.json.JsonPrimitive
+import utils.getErrors
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -55,5 +55,4 @@ class TestDuplicateChildrenName {
         val validationResults = toolchain.getErrors()
         assertEquals(3, validationResults.count())
     }
-
 }

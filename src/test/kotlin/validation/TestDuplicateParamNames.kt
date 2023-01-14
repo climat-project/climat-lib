@@ -1,8 +1,8 @@
 package validation
 
 import ToolchainDto
-import utils.getErrors
 import kotlinx.serialization.json.JsonPrimitive
+import utils.getErrors
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -44,5 +44,4 @@ class TestDuplicateParamNames {
         val validationResults = toolchain.getErrors()
         assertEquals(2, validationResults.count())
     }
-
 }
