@@ -11,4 +11,4 @@ data class ParamDefinition(
     val optional: Boolean,
     val shorthand: String?,
     val description: String,
-) : Referenceable()
+) : Ref()

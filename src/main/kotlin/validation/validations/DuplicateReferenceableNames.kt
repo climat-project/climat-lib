@@ -4,12 +4,12 @@ import validation.ValidationBase
 import validation.ValidationContext
 import validation.ValidationResult
 
-internal class DuplicateReferenceableNames : ValidationBase() {
+internal class DuplicateRefNames : ValidationBase() {
     override val type get() = ValidationResult.ValidationEntryType.Error
-    override val code get() = ValidationCode.DuplicateReferenceableNames
+    override val code get() = ValidationCode.DuplicateRefNames
 
     override fun validate(ctx: ValidationContext): Sequence<String> =
-        referenceables(ctx.toolchain)
+        Refs(ctx.toolchain)
             .groupBy { it.name }
             .asSequence()
             .filter { (_, v) -> v.size >= 2 }

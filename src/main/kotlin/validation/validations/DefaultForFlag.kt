@@ -1,6 +1,6 @@
 package validation.validations
 
-import domain.Referenceable
+import domain.Ref
 import validation.ValidationBase
 import validation.ValidationContext
 import validation.ValidationResult
@@ -12,7 +12,7 @@ internal class DefaultForFlag : ValidationBase() {
 
     override fun validate(ctx: ValidationContext): Sequence<String> =
         (
-            getScopeParams(ctx).filter { (_, v) -> v.last().type == Referenceable.Type.Flag }
+            getScopeParams(ctx).filter { (_, v) -> v.last().type == Ref.Type.Flag }
                 .keys
                 .intersect(getDefaultParamKeys(ctx))
             ).let { defaultForRequired ->

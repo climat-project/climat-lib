@@ -11,7 +11,7 @@ internal class UndefinedParams : ValidationBase() {
     override val code get() = ValidationCode.UndefinedParams
 
     override fun validate(ctx: ValidationContext): Sequence<String> =
-        getScopeReferenceables(ctx).let { scopeParams ->
+        getScopeRefs(ctx).let { scopeParams ->
             getParamReferences(ctx.toolchain.action.template)
                 .map { it.paramName }
                 .distinct()

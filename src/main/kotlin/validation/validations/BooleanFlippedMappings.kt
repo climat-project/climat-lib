@@ -1,6 +1,6 @@
 package validation.validations
 
-import domain.Referenceable
+import domain.Ref
 import template.getParamReferences
 import validation.ValidationBase
 import validation.ValidationContext
@@ -11,10 +11,10 @@ internal class BooleanFlippedMappings : ValidationBase() {
     override val code get() = ValidationCode.BooleanFlippedMappings
 
     override fun validate(ctx: ValidationContext): Sequence<String> =
-        getScopeReferenceables(ctx)
+        getScopeRefs(ctx)
             .values
             .map { it.last() }
-            .filter { it.type != Referenceable.Type.Flag }
+            .filter { it.type != Ref.Type.Flag }
             .map { it.name }
             .intersect(
                 getParamReferences(ctx.toolchain.action.template)

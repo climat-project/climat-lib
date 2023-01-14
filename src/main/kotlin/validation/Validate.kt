@@ -8,7 +8,7 @@ import validation.validations.DefaultForFlag
 import validation.validations.DefaultForRequiredParam
 import validation.validations.DefaultForUndefinedParam
 import validation.validations.DuplicateChildrenNames
-import validation.validations.DuplicateReferenceableNames
+import validation.validations.DuplicateRefNames
 import validation.validations.FlagMappedTwice
 import validation.validations.ShadowedParams
 import validation.validations.UndefinedParams
@@ -20,7 +20,7 @@ private val validators = listOf(
     DefaultForRequiredParam(),
     DefaultForUndefinedParam(),
     DuplicateChildrenNames(),
-    DuplicateReferenceableNames(),
+    DuplicateRefNames(),
     FlagMappedTwice(),
     ShadowedParams(),
     UndefinedParams()

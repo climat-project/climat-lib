@@ -11,7 +11,7 @@ internal class ShadowedParams : ValidationBase() {
 
     // Algorithm is wrong, but does the work for now
     override fun validate(ctx: ValidationContext): Sequence<String> =
-        getScopeReferenceables(ctx)
+        getScopeRefs(ctx)
             .values.asSequence()
             .filter { it.size == 2 }
             .map {

@@ -24,8 +24,8 @@ private fun convertFromParamDefinitionString(paramDefinitionString: String): Par
         },
         shorthand = match.groups[4]?.value,
         type = when (match.groupValues[2]) {
-            "flag" -> Referenceable.Type.Flag
-            "arg" -> Referenceable.Type.Arg
+            "flag" -> Ref.Type.Flag
+            "arg" -> Ref.Type.Arg
             else -> throw Exception()
         },
         description = match.groups[5]?.value ?: emptyString(),
@@ -59,9 +59,9 @@ internal fun convert(toolchain: ToolchainDto): Toolchain =
         constants = toolchain.constants.orEmpty().map { (name, value) ->
             val type =
                 if (value.booleanOrNull != null)
-                    Referenceable.Type.Flag
+                    Ref.Type.Flag
                 else if (value.isString)
-                    Referenceable.Type.Arg
+                    Ref.Type.Arg
                 else
                     throw ParsingException("Constant value must be either a string or a boolean")
 

@@ -9,4 +9,4 @@ data class Constant(
     override val name: String,
     override val type: Type,
     val value: String
-) : Referenceable()
+) : Ref()

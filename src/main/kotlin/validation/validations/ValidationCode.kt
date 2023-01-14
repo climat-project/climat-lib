@@ -7,7 +7,7 @@ enum class ValidationCode {
     DefaultForRequiredParam,
     DefaultForUndefinedParam,
     DuplicateChildrenNames,
-    DuplicateReferenceableNames,
+    DuplicateRefNames,
     FlagMappedTwice,
     ShadowedParams,
     UndefinedParams
