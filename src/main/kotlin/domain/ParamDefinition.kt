@@ -1,15 +1,9 @@
-@file:OptIn(ExperimentalJsExport::class)
-
 package domain
 
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 
-@JsExport
-interface IAction {
-    val template: String
-}
-
+@OptIn(ExperimentalJsExport::class)
 @JsExport
 data class ParamDefinition(
     val name: String,
@@ -24,12 +18,3 @@ data class ParamDefinition(
         Arg
     }
 }
-
-@JsExport
-data class Toolchain(
-    val name: String,
-    val description: String,
-    val parameters: Array<ParamDefinition>,
-    val action: IAction,
-    val children: Array<Toolchain>
-)

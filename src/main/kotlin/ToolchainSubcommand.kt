@@ -1,6 +1,6 @@
 import domain.ParamDefinition
 import domain.Toolchain
-import leftovers.ParameterWithValue
+import domain.ParameterWithValue
 import kotlinx.cli.ArgType
 import kotlinx.cli.CLIEntity
 import kotlinx.cli.ExperimentalCli

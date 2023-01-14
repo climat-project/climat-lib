@@ -2,6 +2,10 @@ package domain
 
 import ToolchainDto
 import emptyString
+import isJsonObject
+import isString
+import kotlinx.cli.ParsingException
+import kotlinx.serialization.json.jsonPrimitive
 
 private val parameterRegex = Regex("^(req|opt):(flag|arg):(\\w+)(:\\w)?(?:: *(.*))?\$")
 
@@ -28,6 +32,12 @@ private fun convertFromParamDefinitionString(paramDefinitionString: String, para
     )
 }
 
+private fun adHocIAction(template: String): IAction =
+    object : IAction {
+        override val template: String
+            get() = template
+    }
+
 fun convert(toolchain: ToolchainDto): Toolchain =
     Toolchain(
         name = toolchain.name,
@@ -35,9 +45,13 @@ fun convert(toolchain: ToolchainDto): Toolchain =
         parameters = toolchain.parameters.orEmpty().map {
             convertFromParamDefinitionString(it, toolchain.paramDefaults)
         }.toTypedArray(),
-        action = object : IAction { // TODO proper implementation
-            override val template: String
-                get() = "abcd"
-        },
+        action = toolchain.action?.let {
+            if (it.isString) {
+                adHocIAction(it.jsonPrimitive.content)
+            } else if(it.isJsonObject) {
+                throw Exception("Not implemented yet!")
+            }
+            throw ParsingException("action must be a string")
+        } ?: adHocIAction(emptyString()),
         children = toolchain.children.orEmpty().map(::convert).toTypedArray()
     )

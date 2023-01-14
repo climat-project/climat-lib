@@ -2,7 +2,7 @@ package template
 
 import domain.IAction
 import domain.ParamDefinition
-import leftovers.ParameterWithValue
+import domain.ParameterWithValue
 import emptyString
 import not
 

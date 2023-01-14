@@ -1,6 +1,5 @@
-package leftovers
+package domain
 
-import domain.ParamDefinition
 import kotlinx.cli.CLIEntity
 
 data class ParameterWithValue(
