@@ -11,7 +11,6 @@ data class ParamDefinition(
     val shorthand: String?,
     val type: Type,
     val description: String,
-    val default: String?
 ) {
     enum class Type {
         Flag,

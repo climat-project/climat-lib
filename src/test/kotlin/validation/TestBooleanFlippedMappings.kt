@@ -8,8 +8,8 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class TestBooleanFlippedMappings {
-    val toolchain = ToolchainDto(
-        name =  "root",
+    private val toolchain = ToolchainDto(
+        name = "root",
         parameters = arrayOf(
             "req:arg:arg1:descr",
             "req:arg:arg2:descr",

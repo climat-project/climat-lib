@@ -9,7 +9,7 @@ import kotlinx.serialization.json.jsonPrimitive
 
 private val parameterRegex = Regex("^(req|opt):(flag|arg):(\\w+)(:\\w)?(?:: *(.*))?\$")
 
-private fun convertFromParamDefinitionString(paramDefinitionString: String, paramDefaults: Map<String, String>?): ParamDefinition {
+private fun convertFromParamDefinitionString(paramDefinitionString: String): ParamDefinition {
     val match = parameterRegex.find(paramDefinitionString)
     requireNotNull(match) { "parameters item does not match pattern $parameterRegex - $paramDefinitionString" }
 
@@ -28,7 +28,6 @@ private fun convertFromParamDefinitionString(paramDefinitionString: String, para
             else -> throw Exception()
         },
         description = match.groups[5]?.value ?: emptyString(),
-        default = paramDefaults?.get(name)
     )
 }
 
@@ -43,8 +42,9 @@ internal fun convert(toolchain: ToolchainDto): Toolchain =
         name = toolchain.name,
         description = toolchain.description ?: emptyString(),
         parameters = toolchain.parameters.orEmpty().map {
-            convertFromParamDefinitionString(it, toolchain.paramDefaults)
+            convertFromParamDefinitionString(it)
         }.toTypedArray(),
+        parameterDefaults = toolchain.paramDefaults.orEmpty(),
         action = toolchain.action?.let {
             if (it.isString) {
                 adHocIAction(it.jsonPrimitive.content)
