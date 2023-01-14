@@ -8,7 +8,7 @@ import validation.ValidationResult
 internal class DefaultForFlag : ValidationBase() {
 
     override val type get() = ValidationResult.ValidationEntryType.Error
-    override val code get() = "0009"
+    override val code get() = ValidationCode.DefaultForFlag
 
     override fun validate(ctx: ValidationContext): Sequence<String> =
         (

@@ -7,7 +7,7 @@ import validation.ValidationResult
 internal class DefaultForRequiredParam : ValidationBase() {
 
     override val type get() = ValidationResult.ValidationEntryType.Error
-    override val code get() = "0010"
+    override val code get() = ValidationCode.DefaultForRequiredParam
 
     override fun validate(ctx: ValidationContext): Sequence<String> =
         (

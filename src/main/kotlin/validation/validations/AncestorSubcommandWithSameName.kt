@@ -6,7 +6,7 @@ import validation.ValidationResult
 
 internal class AncestorSubcommandWithSameName : ValidationBase() {
     override val type get() = ValidationResult.ValidationEntryType.Warning
-    override val code get() = "0006"
+    override val code get() = ValidationCode.AncestorSubcommandWithSameName
 
     override fun validate(ctx: ValidationContext): Sequence<String> =
         ctx.pathToRoot

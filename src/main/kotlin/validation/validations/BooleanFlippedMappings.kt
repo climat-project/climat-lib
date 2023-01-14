@@ -8,7 +8,7 @@ import validation.ValidationResult
 
 internal class BooleanFlippedMappings : ValidationBase() {
     override val type get() = ValidationResult.ValidationEntryType.Error
-    override val code get() = "0011"
+    override val code get() = ValidationCode.BooleanFlippedMappings
 
     override fun validate(ctx: ValidationContext): Sequence<String> =
         getScopeParams(ctx)

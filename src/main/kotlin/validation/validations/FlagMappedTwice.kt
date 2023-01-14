@@ -8,7 +8,7 @@ import validation.ValidationResult
 internal class FlagMappedTwice : ValidationBase() {
     // TODO think if it should be warning or error
     override val type get() = ValidationResult.ValidationEntryType.Warning
-    override val code get() = "0008"
+    override val code get() = ValidationCode.FlagMappedTwice
     override fun validate(ctx: ValidationContext): Sequence<String> =
         getParamReferences(ctx.toolchain.action.template)
             .filter { it.mapTarget != null }

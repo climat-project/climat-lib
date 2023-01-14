@@ -6,7 +6,7 @@ import validation.ValidationResult
 
 internal class DefaultForUndefinedParam : ValidationBase() {
     override val type get() = ValidationResult.ValidationEntryType.Error
-    override val code get() = "0008"
+    override val code get() = ValidationCode.DefaultForUndefinedParam
 
     override fun validate(ctx: ValidationContext): Sequence<String> =
         (

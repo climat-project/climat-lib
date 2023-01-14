@@ -1,8 +1,10 @@
 package validation
 
+import validation.validations.ValidationCode
+
 internal abstract class ValidationBase {
     internal abstract val type: ValidationResult.ValidationEntryType
-    internal abstract val code: String
+    internal abstract val code: ValidationCode
     internal abstract fun validate(ctx: ValidationContext): Sequence<String>
     protected fun getScopeParams(ctx: ValidationContext) =
         (

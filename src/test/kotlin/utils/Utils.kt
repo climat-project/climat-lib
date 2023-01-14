@@ -2,13 +2,10 @@ package utils
 
 import ToolchainDto
 import domain.convert
-import validation.ValidationResult
 import validation.computeValidations
+import validation.validations.ValidationCode
 
-private fun ToolchainDto.getValidations(validationType: ValidationResult.ValidationEntryType) =
+internal fun ToolchainDto.getValidations(code: ValidationCode) =
     computeValidations(
         convert(this)
-    ).filter { it.type == validationType }
-
-internal fun ToolchainDto.getErrors() = this.getValidations(ValidationResult.ValidationEntryType.Error)
-internal fun ToolchainDto.getWarnings() = this.getValidations(ValidationResult.ValidationEntryType.Warning)
+    ).filter { it.code == code }

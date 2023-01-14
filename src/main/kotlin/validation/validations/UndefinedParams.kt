@@ -8,7 +8,7 @@ import validation.ValidationResult
 
 internal class UndefinedParams : ValidationBase() {
     override val type get() = ValidationResult.ValidationEntryType.Error
-    override val code get() = "0001"
+    override val code get() = ValidationCode.UndefinedParams
 
     override fun validate(ctx: ValidationContext): Sequence<String> =
         getScopeParams(ctx).let { scopeParams ->

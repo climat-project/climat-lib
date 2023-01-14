@@ -6,7 +6,7 @@ import validation.ValidationResult
 
 internal class DuplicateParamNames : ValidationBase() {
     override val type get() = ValidationResult.ValidationEntryType.Error
-    override val code get() = "0003"
+    override val code get() = ValidationCode.DuplicateParamNames
 
     override fun validate(ctx: ValidationContext): Sequence<String> =
         ctx.toolchain.parameters
