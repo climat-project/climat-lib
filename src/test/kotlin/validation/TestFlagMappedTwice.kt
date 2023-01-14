@@ -14,7 +14,7 @@ class TestFlagMappedTwice {
             "req:arg:root_param1:descr",
             "req:arg:root_param2:descr"
         ),
-        action = JsonPrimitive("dummy command $(root_param1:dummyCommandParam) $(root_param2:dummyCommandParam)"),
+        action = JsonPrimitive("dummy command $(root_param) $(root_param1:dummyCommandParam) $(root_param2:dummyCommandParam)"),
         children = arrayOf(
             ToolchainDto(
                 name = "child",

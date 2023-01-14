@@ -67,7 +67,7 @@ internal fun getActualCommand(
                 }
             } else {
                 if (value.value.isNotEmpty()) {
-                    "${match.getMappedFlag()}='${value.value}'"
+                    "${match.getMappedFlag()}=${value.value}"
                 } else {
                     emptyString()
                 }
@@ -76,4 +76,6 @@ internal fun getActualCommand(
             value.value
         }
     }
+        // Remove duplicate whitespaces
+        .replace("\\s+".toRegex(), " ")
 }

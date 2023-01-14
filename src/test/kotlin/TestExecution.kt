@@ -25,7 +25,7 @@ class TestExecution {
                 "opt:arg:param1",
                 "opt:arg:param2"
               ],
-              "action": "echo '$(interactive)' '$(param1)'"
+              "action": "echo '$(interactive)' '$(param1)' $(interactive:--interactiveSwitch) $(param1:--mapped)"
             }
           ]
         },
@@ -75,9 +75,9 @@ class TestExecution {
         assertContentEquals(
             arrayOf(
                 "echo 'abcd'",
-                "echo 'true' 'abc'",
-                "echo 'false' 'default'",
-                "echo 'true' 'nondefault'"
+                "echo 'true' 'abc' --interactiveSwitch --mapped=abc",
+                "echo 'false' 'default' --mapped=default",
+                "echo 'true' 'nondefault' --interactiveSwitch --mapped=nondefault"
             ),
             executed
         )
