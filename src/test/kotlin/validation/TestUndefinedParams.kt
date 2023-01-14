@@ -2,10 +2,10 @@ package validation
 
 import ToolchainDto
 import kotlinx.serialization.json.JsonPrimitive
+import utils.assertContainsInMessages
 import utils.getValidations
 import validation.validations.ValidationCode
 import kotlin.test.Test
-import kotlin.test.assertEquals
 
 class TestUndefinedParams {
     private val toolchain =
@@ -24,6 +24,11 @@ class TestUndefinedParams {
     @Test
     fun test() {
         val validationResults = toolchain.getValidations(ValidationCode.UndefinedParams)
-        assertEquals(3, validationResults.count())
+        assertContainsInMessages(
+            validationResults,
+            "undef",
+            "undef",
+            "undef2"
+        )
     }
 }

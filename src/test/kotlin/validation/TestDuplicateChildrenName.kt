@@ -2,6 +2,7 @@ package validation
 
 import ToolchainDto
 import kotlinx.serialization.json.JsonPrimitive
+import utils.assertContainsInMessages
 import utils.getValidations
 import validation.validations.ValidationCode
 import kotlin.test.Test
@@ -54,6 +55,12 @@ class TestDuplicateChildrenName {
     @Test
     fun test() {
         val validationResults = toolchain.getValidations(ValidationCode.DuplicateChildrenNames)
+        assertContainsInMessages(
+            validationResults,
+            "root_child",
+            "root_grandchild",
+            "root_grandchild"
+        )
         assertEquals(3, validationResults.count())
     }
 }

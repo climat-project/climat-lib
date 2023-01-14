@@ -4,7 +4,7 @@ import domain.Toolchain
 import validation.validations.ValidationCode
 
 internal data class ValidationResult(
-    private val message: String,
+    private val _message: String,
     val code: ValidationCode,
     val type: ValidationEntryType,
     private val toolchain: Toolchain
@@ -17,7 +17,7 @@ internal data class ValidationResult(
             ValidationEntryType.Error -> "Error"
             ValidationEntryType.Warning -> "Warning"
         }
-        }: in `${toolchain.name}`, $message"
+        }: in `${toolchain.name}`, $_message"
     }
 
     enum class ValidationEntryType {
@@ -26,4 +26,6 @@ internal data class ValidationResult(
     }
 
     override fun toString() = repr
+
+    val message = repr
 }

@@ -2,10 +2,10 @@ package validation
 
 import ToolchainDto
 import kotlinx.serialization.json.JsonPrimitive
+import utils.assertContainsInMessages
 import utils.getValidations
 import validation.validations.ValidationCode
 import kotlin.test.Test
-import kotlin.test.assertEquals
 
 class TestBooleanFlippedMappings {
     private val toolchain = ToolchainDto(
@@ -27,6 +27,10 @@ class TestBooleanFlippedMappings {
     @Test
     fun test() {
         val validationResults = toolchain.getValidations(ValidationCode.BooleanFlippedMappings)
-        assertEquals(2, validationResults.count())
+        assertContainsInMessages(
+            validationResults,
+            "arg1",
+            "arg2"
+        )
     }
 }

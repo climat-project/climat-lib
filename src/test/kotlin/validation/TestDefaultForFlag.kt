@@ -28,6 +28,7 @@ class TestDefaultForFlag {
                     ToolchainDto(
                         name = "grandchild",
                         paramDefaults = mapOf(
+                            "param1" to "str_default_2",
                             "param4" to "false"
                         )
                     )

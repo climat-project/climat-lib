@@ -12,11 +12,13 @@ import template.getActualCommand
 internal class ToolchainSubcommand(
     private val toolchain: Toolchain,
     private val handler: (String) -> Unit,
-    upperScopeParams: Map<String, ParameterWithValue> = emptyMap()
+    upperScopeParams: Map<String, ParameterWithValue> = emptyMap(),
+    upperScopeDefaults: Map<String, String> = emptyMap()
 ) :
     Subcommand(toolchain.name, toolchain.description) {
 
     private var executed = false
+    private val defaults = upperScopeDefaults + toolchain.parameterDefaults
     private val params = upperScopeParams + toolchain.parameters.associate {
         it.name to ParameterWithValue(
             it,
@@ -33,7 +35,7 @@ internal class ToolchainSubcommand(
                         it.name,
                         it.shorthand,
                         it.description
-                    ).default(it.default ?: "")
+                    ).default(defaults[it.name] ?: "")
                 }
 
                 ParamDefinition.Type.Flag -> {
