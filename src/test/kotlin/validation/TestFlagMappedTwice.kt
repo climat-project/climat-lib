@@ -7,30 +7,29 @@ import utils.getValidationMessages
 import validation.validations.ValidationCode
 import kotlin.test.Test
 
-class TestBooleanFlippedMappings {
+class TestFlagMappedTwice {
     private val toolchain = ToolchainDto(
         name = "root",
         parameters = arrayOf(
-            "req:arg:arg1:descr",
-            "req:arg:arg2:descr",
-            "req:flag:arg3:descr"
+            "req:arg:root_param1:descr",
+            "req:arg:root_param2:descr"
         ),
-        action = JsonPrimitive("dummy command $(!arg1)"),
+        action = JsonPrimitive("dummy command $(root_param1:dummyCommandParam) $(root_param2:dummyCommandParam)"),
         children = arrayOf(
             ToolchainDto(
-                name = "child1",
-                action = JsonPrimitive("dummy2 command $(!arg2) $(!arg3)")
+                name = "child",
+                action = JsonPrimitive("dummy2 command $(r:cparam) $(c:cparam)")
             )
         )
     )
 
     @Test
     fun test() {
-        val validationResults = toolchain.getValidationMessages(ValidationCode.BooleanFlippedMappings)
+        val validationResults = toolchain.getValidationMessages(ValidationCode.FlagMappedTwice)
         assertContainsInMessages(
             validationResults,
-            "arg1",
-            "arg2"
+            "dummyCommandParam",
+            "cparam"
         )
     }
 }

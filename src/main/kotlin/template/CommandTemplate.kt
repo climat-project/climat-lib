@@ -27,7 +27,7 @@ internal fun getParamReferences(template: String): Sequence<ParamReference> =
     actionRe.findAll(template)
         .map { match ->
             val flagMapTarget = if (match.isMapping()) {
-                match.getParamName()
+                match.getMappedFlag()
             } else {
                 null
             }

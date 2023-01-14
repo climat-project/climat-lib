@@ -2,7 +2,7 @@ package validation
 
 import ToolchainDto
 import utils.assertContainsInMessages
-import utils.getValidations
+import utils.getValidationMessages
 import validation.validations.ValidationCode
 import kotlin.test.Test
 
@@ -29,7 +29,7 @@ class TestAncestorSubcommandWithSameName {
 
     @Test
     fun test() {
-        val validationResults = toolchain.getValidations(ValidationCode.AncestorSubcommandWithSameName)
+        val validationResults = toolchain.getValidationMessages(ValidationCode.AncestorSubcommandWithSameName)
         assertContainsInMessages(
             validationResults,
             "root",

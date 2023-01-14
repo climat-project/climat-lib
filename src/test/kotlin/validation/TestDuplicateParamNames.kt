@@ -3,7 +3,7 @@ package validation
 import ToolchainDto
 import kotlinx.serialization.json.JsonPrimitive
 import utils.assertContainsInMessages
-import utils.getValidations
+import utils.getValidationMessages
 import validation.validations.ValidationCode
 import kotlin.test.Test
 
@@ -42,7 +42,7 @@ class TestDuplicateParamNames {
         )
     @Test
     fun test() {
-        val validationResults = toolchain.getValidations(ValidationCode.DuplicateParamNames)
+        val validationResults = toolchain.getValidationMessages(ValidationCode.DuplicateParamNames)
         assertContainsInMessages(
             validationResults,
             "param",

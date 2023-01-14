@@ -1,7 +1,7 @@
 package validation
 
 import ToolchainDto
-import utils.getValidations
+import utils.getValidationMessages
 import validation.validations.ValidationCode
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -39,7 +39,7 @@ class TestDefaultForFlag {
 
     @Test
     fun test() {
-        val validationResults = toolchain.getValidations(ValidationCode.DefaultForFlag)
+        val validationResults = toolchain.getValidationMessages(ValidationCode.DefaultForFlag)
         assertEquals(3, validationResults.count())
     }
 }

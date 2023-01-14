@@ -15,6 +15,6 @@ internal class FlagMappedTwice : ValidationBase() {
             .groupBy { it.mapTarget }
             .values.asSequence()
             .filter { it.size >= 2 }
-            .map { it.first() }
-            .map { "Flag ${it.mapTarget} was mapped more than once" }
+            .map { it.first().mapTarget!! }
+            .map { "Flag $it was mapped more than once" }
 }

@@ -7,7 +7,7 @@ import validation.validations.ValidationCode
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-internal fun ToolchainDto.getValidations(code: ValidationCode): List<String> =
+internal fun ToolchainDto.getValidationMessages(code: ValidationCode): List<String> =
     computeValidations(
         convert(this)
     ).filter { it.code == code }
