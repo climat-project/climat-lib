@@ -1,5 +1,6 @@
 package validation.validations
 
+import domain.refs
 import validation.ValidationBase
 import validation.ValidationContext
 import validation.ValidationResult
@@ -9,7 +10,7 @@ internal class DuplicateRefNames : ValidationBase() {
     override val code get() = ValidationCode.DuplicateRefNames
 
     override fun validate(ctx: ValidationContext): Sequence<String> =
-        Refs(ctx.toolchain)
+        ctx.toolchain.refs
             .groupBy { it.name }
             .asSequence()
             .filter { (_, v) -> v.size >= 2 }

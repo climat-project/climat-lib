@@ -65,6 +65,6 @@ internal fun convert(toolchain: ToolchainDto): Toolchain =
                 else
                     throw ParsingException("Constant value must be either a string or a boolean")
 
-            Constant(name, type, value.toString())
+            Constant(name, type, (value.booleanOrNull ?: value.content).toString())
         }.toTypedArray()
     )

@@ -32,7 +32,11 @@ class TestExecution {
         {
           "name": "renew",
           "description": "Updates an existing cli with the new json file",
-          "action": "echo 'qwe'"
+          "constants": {
+            "C1": "constantValue",
+            "C2": true
+          },
+          "action": "echo 'qwe' $(C1:--c) $(C1) $(C2:--switch)"
         },
         {
           "name": "remove",
@@ -67,7 +71,8 @@ class TestExecution {
             "new",
             "new --interactive template --param1 abc",
             "new template --param2 we",
-            "new --interactive template --param2 we --param1 nondefault"
+            "new --interactive template --param2 we --param1 nondefault",
+            "renew"
         )
             .map(::exec)
             .toTypedArray()
@@ -77,7 +82,8 @@ class TestExecution {
                 "echo 'abcd'",
                 "echo 'true' 'abc' --interactiveSwitch --mapped=abc",
                 "echo 'false' 'default' --mapped=default",
-                "echo 'true' 'nondefault' --interactiveSwitch --mapped=nondefault"
+                "echo 'true' 'nondefault' --interactiveSwitch --mapped=nondefault",
+                "echo 'qwe' --c=constantValue constantValue --switch"
             ),
             executed
         )

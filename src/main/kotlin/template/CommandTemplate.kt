@@ -1,8 +1,8 @@
 package template
 
 import domain.IAction
-import domain.ParameterWithValue
 import domain.Ref
+import domain.RefWithValue
 import emptyString
 import not
 
@@ -41,12 +41,12 @@ internal fun getParamReferences(template: String): Sequence<ParamReference> =
 
 internal fun getActualCommand(
     action: IAction,
-    paramValues: Map<String, ParameterWithValue>
+    values: Map<String, RefWithValue>
 ): String {
     val missingValues = getParamReferences(action.template)
         .map { it.paramName }
         .distinct()
-        .filter(not(paramValues::contains))
+        .filter(not(values::contains))
         .toList()
     if (missingValues.any()) {
         throw Exception(
@@ -57,9 +57,9 @@ internal fun getActualCommand(
     }
 
     return actionRe.replace(action.template) { match ->
-        val value = paramValues[match.getParamName()]!!
+        val value = values[match.getParamName()]!!
         if (match.isMapping()) {
-            if (value.definition.type == Ref.Type.Flag) {
+            if (value.ref.type == Ref.Type.Flag) {
                 if (value.value.toBoolean()) {
                     match.getMappedFlag()
                 } else {

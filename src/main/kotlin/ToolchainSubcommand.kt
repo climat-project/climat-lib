@@ -1,7 +1,10 @@
+
+import domain.Constant
 import domain.ParamDefinition
-import domain.ParameterWithValue
 import domain.Ref
+import domain.RefWithValue
 import domain.Toolchain
+import domain.refs
 import kotlinx.cli.ArgType
 import kotlinx.cli.CLIEntity
 import kotlinx.cli.ExperimentalCli
@@ -13,17 +16,33 @@ import template.getActualCommand
 internal class ToolchainSubcommand(
     private val toolchain: Toolchain,
     private val handler: (String) -> Unit,
-    upperScopeParams: Map<String, ParameterWithValue> = emptyMap(),
+    upperScopeRefs: Map<String, RefWithValue> = emptyMap(),
     upperScopeDefaults: Map<String, String> = emptyMap()
 ) :
     Subcommand(toolchain.name, toolchain.description) {
 
     private var executed = false
     private val defaults = upperScopeDefaults + toolchain.parameterDefaults
-    private val params = upperScopeParams + toolchain.parameters.associate {
-        it.name to ParameterWithValue(
+    private val params = upperScopeRefs + toolchain.refs.associate {
+        it.name to RefWithValue(
             it,
-            cliArgument(it)
+            when (it) {
+                is ParamDefinition -> {
+                    cliArgument(it).let {
+                        {
+                            it.delegate.value.toString()
+                        }
+                    }
+                }
+
+                is Constant -> {
+                    { it.value }
+                }
+
+                else -> {
+                    throw Exception("Not supported")
+                }
+            }
         )
     }
 

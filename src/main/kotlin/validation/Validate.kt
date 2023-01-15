@@ -48,7 +48,6 @@ internal fun computeValidations(
         ).asSequence()
 
 // TODO implement warning for unused variables
-// TODO implement warning for a flag mapped twice
 internal fun validate(toolchain: Toolchain) {
     val validations = computeValidations(toolchain)
     val warnings = validations.filter { it.type == ValidationResult.ValidationEntryType.Warning }
