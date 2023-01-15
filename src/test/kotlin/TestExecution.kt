@@ -7,6 +7,10 @@ class TestExecution {
       "name": "cli-alias-aggregator",
       "description": "",
       "action": "",
+      "constants": {
+        "C1": "constantValue",
+        "C2": true
+      },
       "children": [
         {
           "name": "new",
@@ -32,10 +36,6 @@ class TestExecution {
         {
           "name": "renew",
           "description": "Updates an existing cli with the new json file",
-          "constants": {
-            "C1": "constantValue",
-            "C2": true
-          },
           "action": "echo 'qwe' $(C1:--c) $(C1) $(C2:--switch)"
         },
         {

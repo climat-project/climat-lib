@@ -13,7 +13,7 @@ import kotlinx.cli.default
 import template.getActualCommand
 
 @OptIn(ExperimentalCli::class)
-internal class ToolchainSubcommand(
+internal class ToolchainCommand(
     private val toolchain: Toolchain,
     private val handler: (String) -> Unit,
     upperScopeRefs: Map<String, RefWithValue> = emptyMap(),
@@ -73,7 +73,7 @@ internal class ToolchainSubcommand(
         }
 
     private val toolchainSubcommands =
-        toolchain.children.map { ToolchainSubcommand(it, handler, params) }.toTypedArray()
+        toolchain.children.map { ToolchainCommand(it, handler, params) }.toTypedArray()
 
     init {
         autoTerminate = false

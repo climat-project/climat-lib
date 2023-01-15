@@ -1,7 +1,7 @@
 # Roadmap ordered by priority and feasibility
 
 - ~~More unit tests~~
-- Constants
+- ~~Constants~~
 - Check if we can replace kotlinx-cli library with Clikt (https://ajalt.github.io/clikt/)
 - Appending (Offloading) unknown parameters to the template end
 - Multiple names for one subcommand (multiple names or one name with more aliases?)
