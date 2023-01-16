@@ -1,6 +1,6 @@
 package validation
 
-import domain.dto.ToolchainDto
+import domain.dto.DescendantToolchainDto
 import kotlinx.serialization.json.JsonPrimitive
 import utils.assertContainsInMessages
 import utils.getValidationMessages
@@ -8,7 +8,7 @@ import validation.validations.ValidationCode
 import kotlin.test.Test
 
 class TestBooleanFlippedMappings {
-    private val toolchain = ToolchainDto(
+    private val toolchain = DescendantToolchainDto(
         name = "root",
         parameters = arrayOf(
             "req:arg:arg1:descr",
@@ -17,7 +17,7 @@ class TestBooleanFlippedMappings {
         ),
         action = JsonPrimitive("dummy command $(!arg1)"),
         children = arrayOf(
-            ToolchainDto(
+            DescendantToolchainDto(
                 name = "child1",
                 action = JsonPrimitive("dummy2 command $(!arg2) $(!arg3)")
             )

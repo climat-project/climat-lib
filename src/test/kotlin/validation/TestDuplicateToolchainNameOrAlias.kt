@@ -1,6 +1,6 @@
 package validation
 
-import domain.dto.ToolchainDto
+import domain.dto.DescendantToolchainDto
 import kotlinx.serialization.json.JsonPrimitive
 import utils.assertContainsInMessages
 import utils.getValidationMessages
@@ -9,57 +9,57 @@ import kotlin.test.Test
 
 class TestDuplicateToolchainNameOrAlias {
     private val toolchain =
-        ToolchainDto(
+        DescendantToolchainDto(
             name = "root",
             action = JsonPrimitive("dummy action"),
             children = arrayOf(
-                ToolchainDto(
+                DescendantToolchainDto(
                     name = "root_child",
                     action = JsonPrimitive("dummy action 2")
                 ),
-                ToolchainDto(
+                DescendantToolchainDto(
                     name = "root_child_2",
                     action = JsonPrimitive("dummy action 3"),
                     children = arrayOf(
-                        ToolchainDto(
+                        DescendantToolchainDto(
                             name = "root_grandchild",
                             action = JsonPrimitive("dummy action 5")
                         ),
-                        ToolchainDto(
+                        DescendantToolchainDto(
                             name = "root_grandchild",
                             action = JsonPrimitive("dummy action 6")
                         )
                     )
                 ),
-                ToolchainDto(
+                DescendantToolchainDto(
                     name = "root_child",
                     action = JsonPrimitive("dummy action 4"),
                     children = arrayOf(
-                        ToolchainDto(
+                        DescendantToolchainDto(
                             name = "root_grandchild",
                             action = JsonPrimitive("dummy action 5")
                         ),
-                        ToolchainDto(
+                        DescendantToolchainDto(
                             name = "root_grandchild",
                             action = JsonPrimitive("dummy action 6")
                         ),
-                        ToolchainDto(
+                        DescendantToolchainDto(
                             name = "root_child",
                             action = JsonPrimitive("dummy action 6"),
                             children = arrayOf(
-                                ToolchainDto(
+                                DescendantToolchainDto(
                                     name = "grand_grand_child",
                                     aliases = arrayOf("grand_grand_child_alias", "grand_grand_child_2")
                                 ),
-                                ToolchainDto(
+                                DescendantToolchainDto(
                                     name = "grand_grand_child_2",
                                     aliases = arrayOf("grand_grand_child_2")
                                 ),
-                                ToolchainDto(
+                                DescendantToolchainDto(
                                     name = "grand_grand_child_3",
                                     aliases = arrayOf("grand_grand_child_3_alias", "xylophone", "grand_grand_child_3_alias")
                                 ),
-                                ToolchainDto(
+                                DescendantToolchainDto(
                                     name = "grand_grand_child_4",
                                     aliases = arrayOf("xylophone")
                                 ),

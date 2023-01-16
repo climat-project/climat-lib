@@ -12,8 +12,7 @@ internal class UselessToolchain : ValidationBase() {
         ctx.toolchain.let {
             if (it.action.template.isEmpty() && it.children.isEmpty()) {
                 sequenceOf("`${it.name}` toolchain is useless. Has no children or action")
-            }
-            else {
+            } else {
                 emptySequence()
             }
         }

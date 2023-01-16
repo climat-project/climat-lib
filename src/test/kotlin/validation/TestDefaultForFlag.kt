@@ -1,16 +1,16 @@
 package validation
 
-import domain.dto.ToolchainDto
+import domain.dto.DescendantToolchainDto
 import utils.getValidationMessages
 import validation.validations.ValidationCode
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class TestDefaultForFlag {
-    private val toolchain = ToolchainDto(
+    private val toolchain = DescendantToolchainDto(
         name = "root",
         children = arrayOf(
-            ToolchainDto(
+            DescendantToolchainDto(
                 name = "child",
                 parameters = arrayOf(
                     "req:arg:param1:descr",
@@ -25,7 +25,7 @@ class TestDefaultForFlag {
                     "param3" to "random"
                 ),
                 children = arrayOf(
-                    ToolchainDto(
+                    DescendantToolchainDto(
                         name = "grandchild",
                         paramDefaults = mapOf(
                             "param1" to "str_default_2",

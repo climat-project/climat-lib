@@ -1,27 +1,27 @@
 package validation
 
-import domain.dto.ToolchainDto
+import domain.dto.DescendantToolchainDto
 import utils.assertContainsInMessages
 import utils.getValidationMessages
 import validation.validations.ValidationCode
 import kotlin.test.Test
 
 class TestShadowedParams {
-    private val toolchain = ToolchainDto(
+    private val toolchain = DescendantToolchainDto(
         name = "root",
         parameters = arrayOf(
             "req:arg:param1:descr",
             "req:arg:param2:descr"
         ),
         children = arrayOf(
-            ToolchainDto(
+            DescendantToolchainDto(
                 name = "child1",
                 parameters = arrayOf(
                     "req:arg:param1:descr",
                     "req:arg:param3:descr"
                 ),
                 children = arrayOf(
-                    ToolchainDto(
+                    DescendantToolchainDto(
                         name = "grandchild",
                         parameters = arrayOf(
                             "opt:flag:param1:descr2",
@@ -30,7 +30,7 @@ class TestShadowedParams {
                     )
                 )
             ),
-            ToolchainDto(
+            DescendantToolchainDto(
                 name = "child2",
                 parameters = arrayOf(
                     "opt:flag:param2",

@@ -1,13 +1,13 @@
 package utils
 
-import domain.dto.ToolchainDto
 import domain.convert
+import domain.dto.DescendantToolchainDto
 import validation.computeValidations
 import validation.validations.ValidationCode
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-internal fun ToolchainDto.getValidationMessages(code: ValidationCode): List<String> =
+internal fun DescendantToolchainDto.getValidationMessages(code: ValidationCode): List<String> =
     computeValidations(
         convert(this)
     ).filter { it.code == code }

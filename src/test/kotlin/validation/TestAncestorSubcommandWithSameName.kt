@@ -1,6 +1,6 @@
 package validation
 
-import domain.dto.ToolchainDto
+import domain.dto.DescendantToolchainDto
 import utils.assertContainsInMessages
 import utils.getValidationMessages
 import validation.validations.ValidationCode
@@ -8,16 +8,16 @@ import kotlin.test.Test
 
 class TestAncestorSubcommandWithSameName {
     private val toolchain =
-        ToolchainDto(
+        DescendantToolchainDto(
             name = "root",
             children = arrayOf(
-                ToolchainDto(
+                DescendantToolchainDto(
                     name = "child",
                     children = arrayOf(
-                        ToolchainDto(
+                        DescendantToolchainDto(
                             name = "root",
                             children = arrayOf(
-                                ToolchainDto(
+                                DescendantToolchainDto(
                                     name = "child"
                                 )
                             )

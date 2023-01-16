@@ -1,6 +1,6 @@
 package validation
 
-import domain.dto.ToolchainDto
+import domain.dto.DescendantToolchainDto
 import kotlinx.serialization.json.JsonPrimitive
 import utils.assertContainsInMessages
 import utils.getValidationMessages
@@ -9,31 +9,31 @@ import kotlin.test.Test
 
 class TestDuplicateParamNames {
     private val toolchain =
-        ToolchainDto(
+        DescendantToolchainDto(
             name = "root",
             action = JsonPrimitive("dummy action"),
             parameters = arrayOf("opt:flag:param", "opt:arg:param"),
             children = arrayOf(
-                ToolchainDto(
+                DescendantToolchainDto(
                     name = "root_child",
                     action = JsonPrimitive("dummy action 2"),
                     parameters = arrayOf("opt:flag:param1", "opt:arg:param2", "opt:arg:param3")
                 ),
-                ToolchainDto(
+                DescendantToolchainDto(
                     name = "root_child_2",
                     action = JsonPrimitive("dummy action 3"),
                     children = arrayOf(
-                        ToolchainDto(
+                        DescendantToolchainDto(
                             name = "root_grandchild",
                             action = JsonPrimitive("dummy action 5")
                         ),
-                        ToolchainDto(
+                        DescendantToolchainDto(
                             name = "root_grandchild_2",
                             action = JsonPrimitive("dummy action 6")
                         )
                     )
                 ),
-                ToolchainDto(
+                DescendantToolchainDto(
                     name = "root_child_3",
                     action = JsonPrimitive("dummy action 4"),
                     parameters = arrayOf("opt:flag:param1", "opt:arg:param2", "opt:arg:param1")

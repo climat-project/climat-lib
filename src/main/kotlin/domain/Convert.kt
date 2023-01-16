@@ -1,13 +1,13 @@
 package domain
 
+import domain.dto.DescendantToolchainDto
 import domain.dto.RootToolchainDto
 import domain.dto.ToolchainDto
-import domain.dto.ToolchainDtoBase
 import domain.ref.Constant
 import domain.ref.ParamDefinition
 import domain.ref.Ref
+import domain.toolchain.DescendantToolchain
 import domain.toolchain.RootToolchain
-import domain.toolchain.Toolchain
 import emptyString
 import isJsonObject
 import isString
@@ -29,16 +29,16 @@ internal fun convert(toolchain: RootToolchainDto): RootToolchain =
         resources = toolchain.resources
     )
 
-internal fun convert(toolchain: ToolchainDto): Toolchain =
-    Toolchain(
+internal fun convert(toolchain: DescendantToolchainDto): DescendantToolchain =
+    DescendantToolchain(
         name = toolchain.name,
-        aliases = toolchain.aliases,
         description = toolchain.description,
         parameters = getParameters(toolchain),
         parameterDefaults = toolchain.paramDefaults,
         action = getAction(toolchain),
         children = getChildren(toolchain),
-        constants = getConstants(toolchain)
+        constants = getConstants(toolchain),
+        aliases = toolchain.aliases
     )
 
 private fun convertFromParamDefinitionString(paramDefinitionString: String): ParamDefinition {
@@ -69,11 +69,11 @@ private fun adHocIAction(template: String): IAction =
             get() = template
     }
 
-private fun getParameters(toolchain: ToolchainDtoBase) = toolchain.parameters.map {
+private fun getParameters(toolchain: ToolchainDto) = toolchain.parameters.map {
     convertFromParamDefinitionString(it)
 }.toTypedArray()
 
-private fun getConstants(toolchain: ToolchainDtoBase) = toolchain.constants.map { (name, value) ->
+private fun getConstants(toolchain: ToolchainDto) = toolchain.constants.map { (name, value) ->
     val type =
         if (value.booleanOrNull != null)
             Ref.Type.Flag
@@ -85,9 +85,9 @@ private fun getConstants(toolchain: ToolchainDtoBase) = toolchain.constants.map 
     Constant(name, type, (value.booleanOrNull ?: value.content).toString())
 }.toTypedArray()
 
-private fun getChildren(toolchain: ToolchainDtoBase) = toolchain.children.map(::convert).toTypedArray()
+private fun getChildren(toolchain: ToolchainDto) = toolchain.children.map(::convert).toTypedArray()
 
-private fun getAction(toolchain: ToolchainDtoBase) = toolchain.action?.let {
+private fun getAction(toolchain: ToolchainDto) = toolchain.action?.let {
     if (it.isString) {
         adHocIAction(it.jsonPrimitive.content)
     } else if (it.isJsonObject) {
@@ -96,4 +96,3 @@ private fun getAction(toolchain: ToolchainDtoBase) = toolchain.action?.let {
         throw ParsingException("action must be a string")
     }
 } ?: adHocIAction(emptyString())
-

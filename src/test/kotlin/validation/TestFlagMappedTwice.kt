@@ -1,6 +1,6 @@
 package validation
 
-import domain.dto.ToolchainDto
+import domain.dto.DescendantToolchainDto
 import kotlinx.serialization.json.JsonPrimitive
 import utils.assertContainsInMessages
 import utils.getValidationMessages
@@ -8,7 +8,7 @@ import validation.validations.ValidationCode
 import kotlin.test.Test
 
 class TestFlagMappedTwice {
-    private val toolchain = ToolchainDto(
+    private val toolchain = DescendantToolchainDto(
         name = "root",
         parameters = arrayOf(
             "req:arg:root_param1:descr",
@@ -16,7 +16,7 @@ class TestFlagMappedTwice {
         ),
         action = JsonPrimitive("dummy command $(root_param) $(root_param1:dummyCommandParam) $(root_param2:dummyCommandParam)"),
         children = arrayOf(
-            ToolchainDto(
+            DescendantToolchainDto(
                 name = "child",
                 action = JsonPrimitive("dummy2 command $(r:cparam) $(c:cparam)")
             )

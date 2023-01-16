@@ -1,13 +1,13 @@
 package validation
 
-import domain.dto.ToolchainDto
+import domain.dto.DescendantToolchainDto
 import utils.assertContainsInMessages
 import utils.getValidationMessages
 import validation.validations.ValidationCode
 import kotlin.test.Test
 
 class TestDefaultForRequiredParam {
-    private val toolchain = ToolchainDto(
+    private val toolchain = DescendantToolchainDto(
         name = "root",
 
         parameters = arrayOf(
@@ -15,7 +15,7 @@ class TestDefaultForRequiredParam {
         ),
 
         children = arrayOf(
-            ToolchainDto(
+            DescendantToolchainDto(
                 name = "child",
                 parameters = arrayOf(
                     "req:arg:param1:descr",

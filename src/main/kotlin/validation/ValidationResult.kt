@@ -1,13 +1,13 @@
 package validation
 
-import domain.toolchain.ToolchainBase
+import domain.toolchain.Toolchain
 import validation.validations.ValidationCode
 
 internal data class ValidationResult(
     private val _message: String,
     val code: ValidationCode,
     val type: ValidationEntryType,
-    private val toolchain: ToolchainBase
+    private val toolchain: Toolchain
 ) {
     private var repr: String
 

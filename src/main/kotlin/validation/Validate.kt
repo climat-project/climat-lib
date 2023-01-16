@@ -1,15 +1,15 @@
 package validation
 
 import domain.toolchain.RootToolchain
-import domain.toolchain.ToolchainBase
+import domain.toolchain.Toolchain
 import newLine
 import validation.validations.AncestorSubcommandWithSameName
 import validation.validations.BooleanFlippedMappings
 import validation.validations.DefaultForFlag
 import validation.validations.DefaultForRequiredParam
 import validation.validations.DefaultForUndefinedParam
-import validation.validations.DuplicateToolchainNamesOrAliases
 import validation.validations.DuplicateRefNames
+import validation.validations.DuplicateToolchainNamesOrAliases
 import validation.validations.FlagMappedTwice
 import validation.validations.ShadowedParams
 import validation.validations.UndefinedParams
@@ -31,8 +31,8 @@ private val validators = listOf(
 
 // Made internal only for testing
 internal fun computeValidations(
-    current: ToolchainBase,
-    pathToRoot: List<ToolchainBase> = emptyList()
+    current: Toolchain,
+    pathToRoot: List<Toolchain> = emptyList()
 ): Sequence<ValidationResult> =
     (
         validators.flatMap { validator ->
