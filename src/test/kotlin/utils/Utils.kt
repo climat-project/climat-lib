@@ -1,6 +1,6 @@
 package utils
 
-import ToolchainDto
+import domain.dto.ToolchainDto
 import domain.convert
 import validation.computeValidations
 import validation.validations.ValidationCode

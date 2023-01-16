@@ -1,5 +1,5 @@
 
-import domain.Ref
+import domain.ref.Ref
 import kotlinx.cli.ArgType
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject

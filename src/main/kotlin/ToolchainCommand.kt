@@ -1,11 +1,11 @@
 
-import domain.Constant
-import domain.ParamDefinition
-import domain.Ref
-import domain.RefWithValue
-import domain.Toolchain
+import domain.ref.Constant
+import domain.ref.ParamDefinition
+import domain.ref.Ref
+import domain.ref.RefWithValue
 import domain.eachAlias
 import domain.refs
+import domain.toolchain.ToolchainBase
 import kotlinx.cli.ArgType
 import kotlinx.cli.CLIEntity
 import kotlinx.cli.ExperimentalCli
@@ -15,7 +15,7 @@ import template.getActualCommand
 
 @OptIn(ExperimentalCli::class)
 internal class ToolchainCommand(
-    private val toolchain: Toolchain,
+    private val toolchain: ToolchainBase,
     private val handler: (String) -> Unit,
     upperScopeRefs: Map<String, RefWithValue> = emptyMap(),
     upperScopeDefaults: Map<String, String> = emptyMap()

@@ -1,6 +1,7 @@
 package validation
 
-import domain.Toolchain
+import domain.toolchain.RootToolchain
+import domain.toolchain.ToolchainBase
 import newLine
 import validation.validations.AncestorSubcommandWithSameName
 import validation.validations.BooleanFlippedMappings
@@ -30,8 +31,8 @@ private val validators = listOf(
 
 // Made internal only for testing
 internal fun computeValidations(
-    current: Toolchain,
-    pathToRoot: List<Toolchain> = emptyList()
+    current: ToolchainBase,
+    pathToRoot: List<ToolchainBase> = emptyList()
 ): Sequence<ValidationResult> =
     (
         validators.flatMap { validator ->
@@ -50,7 +51,7 @@ internal fun computeValidations(
         ).asSequence()
 
 // TODO implement warning for unused variables
-internal fun validate(toolchain: Toolchain) {
+internal fun validate(toolchain: RootToolchain) {
     val validations = computeValidations(toolchain)
     val warnings = validations.filter { it.type == ValidationResult.ValidationEntryType.Warning }
     if (warnings.any()) {

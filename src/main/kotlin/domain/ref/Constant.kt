@@ -1,14 +1,12 @@
-package domain
+package domain.ref
 
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
-data class ParamDefinition(
+data class Constant(
     override val name: String,
     override val type: Type,
-    val optional: Boolean,
-    val shorthand: String?,
-    val description: String,
+    val value: String
 ) : Ref()

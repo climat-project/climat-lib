@@ -1,4 +1,4 @@
-package domain
+package domain.ref
 
 data class RefWithValue(
     val ref: Ref,

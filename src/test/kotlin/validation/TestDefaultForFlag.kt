@@ -1,6 +1,6 @@
 package validation
 
-import ToolchainDto
+import domain.dto.ToolchainDto
 import utils.getValidationMessages
 import validation.validations.ValidationCode
 import kotlin.test.Test

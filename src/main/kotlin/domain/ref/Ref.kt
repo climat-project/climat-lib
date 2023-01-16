@@ -1,4 +1,4 @@
-package domain
+package domain.ref
 
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport

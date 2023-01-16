@@ -1,7 +1,7 @@
 package validation
 
-import domain.ParamDefinition
-import domain.Ref
+import domain.ref.ParamDefinition
+import domain.ref.Ref
 import domain.refs
 import validation.validations.ValidationCode
 

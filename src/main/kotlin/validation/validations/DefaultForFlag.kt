@@ -1,6 +1,6 @@
 package validation.validations
 
-import domain.Ref
+import domain.ref.Ref
 import validation.ValidationBase
 import validation.ValidationContext
 import validation.ValidationResult

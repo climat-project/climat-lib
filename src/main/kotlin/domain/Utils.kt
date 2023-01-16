@@ -1,6 +1,10 @@
 package domain
 
-internal val Toolchain.refs: List<Ref>
+import domain.ref.Ref
+import domain.toolchain.Toolchain
+import domain.toolchain.ToolchainBase
+
+internal val ToolchainBase.refs: List<Ref>
     get() = this.constants.toList() +
         this.parameters.toList()
 

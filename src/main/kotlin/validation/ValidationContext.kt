@@ -1,8 +1,8 @@
 package validation
 
-import domain.Toolchain
+import domain.toolchain.ToolchainBase
 
 internal data class ValidationContext(
-    val toolchain: Toolchain,
-    val pathToRoot: List<Toolchain>
+    val toolchain: ToolchainBase,
+    val pathToRoot: List<ToolchainBase>
 )

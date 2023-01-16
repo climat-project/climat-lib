@@ -1,8 +1,8 @@
 package template
 
 import domain.IAction
-import domain.Ref
-import domain.RefWithValue
+import domain.ref.Ref
+import domain.ref.RefWithValue
 import emptyString
 import not
 
