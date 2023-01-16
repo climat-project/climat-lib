@@ -12,6 +12,7 @@ import validation.validations.DuplicateRefNames
 import validation.validations.FlagMappedTwice
 import validation.validations.ShadowedParams
 import validation.validations.UndefinedParams
+import validation.validations.UselessToolchain
 
 private val validators = listOf(
     AncestorSubcommandWithSameName(),
@@ -23,7 +24,8 @@ private val validators = listOf(
     DuplicateRefNames(),
     FlagMappedTwice(),
     ShadowedParams(),
-    UndefinedParams()
+    UndefinedParams(),
+    UselessToolchain()
 )
 
 // Made internal only for testing

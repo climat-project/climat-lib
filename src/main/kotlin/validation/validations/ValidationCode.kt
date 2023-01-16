@@ -10,5 +10,6 @@ enum class ValidationCode {
     DuplicateRefNames,
     FlagMappedTwice,
     ShadowedParams,
-    UndefinedParams
+    UndefinedParams,
+    UselessToolchain
 }
