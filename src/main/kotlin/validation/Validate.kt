@@ -7,7 +7,7 @@ import validation.validations.BooleanFlippedMappings
 import validation.validations.DefaultForFlag
 import validation.validations.DefaultForRequiredParam
 import validation.validations.DefaultForUndefinedParam
-import validation.validations.DuplicateChildrenNames
+import validation.validations.DuplicateToolchainNamesOrAliases
 import validation.validations.DuplicateRefNames
 import validation.validations.FlagMappedTwice
 import validation.validations.ShadowedParams
@@ -19,7 +19,7 @@ private val validators = listOf(
     DefaultForFlag(),
     DefaultForRequiredParam(),
     DefaultForUndefinedParam(),
-    DuplicateChildrenNames(),
+    DuplicateToolchainNamesOrAliases(),
     DuplicateRefNames(),
     FlagMappedTwice(),
     ShadowedParams(),

@@ -4,6 +4,7 @@ import domain.ParamDefinition
 import domain.Ref
 import domain.RefWithValue
 import domain.Toolchain
+import domain.eachAlias
 import domain.refs
 import kotlinx.cli.ArgType
 import kotlinx.cli.CLIEntity
@@ -55,7 +56,7 @@ internal class ToolchainCommand(
                         it.name,
                         it.shorthand,
                         it.description
-                    ).default(defaults[it.name] ?: "")
+                    ).default(defaults[it.name] ?: emptyString())
                 }
 
                 Ref.Type.Flag -> {
@@ -73,7 +74,11 @@ internal class ToolchainCommand(
         }
 
     private val toolchainSubcommands =
-        toolchain.children.map { ToolchainCommand(it, handler, params) }.toTypedArray()
+        toolchain.children.flatMap { child ->
+            child.eachAlias.map { toolchain ->
+                ToolchainCommand(toolchain, handler, params)
+            }
+        }.toTypedArray()
 
     init {
         autoTerminate = false

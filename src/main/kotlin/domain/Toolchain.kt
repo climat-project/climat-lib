@@ -7,6 +7,7 @@ import kotlin.js.JsExport
 @JsExport
 data class Toolchain(
     val name: String,
+    val aliases: Array<String>,
     val description: String,
     val parameters: Array<ParamDefinition>,
     val parameterDefaults: Map<String, String>,

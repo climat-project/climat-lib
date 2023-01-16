@@ -41,11 +41,12 @@ private fun adHocIAction(template: String): IAction =
 internal fun convert(toolchain: ToolchainDto): Toolchain =
     Toolchain(
         name = toolchain.name,
+        aliases = toolchain.aliases,
         description = toolchain.description ?: emptyString(),
-        parameters = toolchain.parameters.orEmpty().map {
+        parameters = toolchain.parameters.map {
             convertFromParamDefinitionString(it)
         }.toTypedArray(),
-        parameterDefaults = toolchain.paramDefaults.orEmpty(),
+        parameterDefaults = toolchain.paramDefaults,
         action = toolchain.action?.let {
             if (it.isString) {
                 adHocIAction(it.jsonPrimitive.content)
@@ -55,8 +56,8 @@ internal fun convert(toolchain: ToolchainDto): Toolchain =
                 throw ParsingException("action must be a string")
             }
         } ?: adHocIAction(emptyString()),
-        children = toolchain.children.orEmpty().map(::convert).toTypedArray(),
-        constants = toolchain.constants.orEmpty().map { (name, value) ->
+        children = toolchain.children.map(::convert).toTypedArray(),
+        constants = toolchain.constants.map { (name, value) ->
             val type =
                 if (value.booleanOrNull != null)
                     Ref.Type.Flag
