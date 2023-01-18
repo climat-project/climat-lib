@@ -14,7 +14,7 @@ class ToolchainProcessor {
     companion object {
         fun validate(toolchain: RootToolchain) = _validate(toolchain)
         fun parse(json: String): RootToolchain {
-            val toolchain = Json.decodeFromString<RootToolchain>(json)
+            val toolchain = convert(Json.decodeFromString<RootToolchainDto>(json))
             validate(toolchain)
             return toolchain
         }
