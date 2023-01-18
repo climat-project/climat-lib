@@ -15,11 +15,12 @@ import kotlinx.cli.ParsingException
 import kotlinx.serialization.json.booleanOrNull
 import kotlinx.serialization.json.jsonPrimitive
 
-private val parameterRegex = Regex("^(req|opt):(flag|arg):(\\w+)(:\\w)?(?:: *(.*))?\$")
+private val nameRe = Regex("\\w[\\w\\-.]*")
+private val parameterRe = Regex("^(req|opt):(flag|arg):(\\w+)(:\\w)?(?:: *(.*))?\$")
 
 internal fun convert(toolchain: RootToolchainDto): RootToolchain =
     RootToolchain(
-        name = toolchain.name,
+        name = validateName(toolchain.name),
         description = toolchain.description,
         parameters = getParameters(toolchain),
         parameterDefaults = toolchain.paramDefaults,
@@ -31,7 +32,7 @@ internal fun convert(toolchain: RootToolchainDto): RootToolchain =
 
 internal fun convert(toolchain: DescendantToolchainDto): DescendantToolchain =
     DescendantToolchain(
-        name = toolchain.name,
+        name = validateName(toolchain.name),
         description = toolchain.description,
         parameters = getParameters(toolchain),
         parameterDefaults = toolchain.paramDefaults,
@@ -42,12 +43,12 @@ internal fun convert(toolchain: DescendantToolchainDto): DescendantToolchain =
     )
 
 private fun convertFromParamDefinitionString(paramDefinitionString: String): ParamDefinition {
-    val match = parameterRegex.find(paramDefinitionString)
-    requireNotNull(match) { "parameters item does not match pattern $parameterRegex - $paramDefinitionString" }
-
+    val match = parameterRe.find(paramDefinitionString)
+    requireNotNull(match) { "parameters item does not match pattern $parameterRe - $paramDefinitionString" }
+    
     val name = match.groupValues[3] // TODO give names to regex groups
     return ParamDefinition(
-        name = name,
+        name = validateName(name),
         optional = when (match.groupValues[1]) {
             "req" -> false
             "opt" -> true
@@ -61,6 +62,13 @@ private fun convertFromParamDefinitionString(paramDefinitionString: String): Par
         },
         description = match.groups[5]?.value ?: emptyString(),
     )
+}
+
+private fun validateName(name: String): String {
+    if (nameRe.matches(name))
+        return name
+    else
+        throw ParsingException("`$name` is invalid. Pattern ${nameRe.pattern} should be respected.")
 }
 
 private fun adHocIAction(template: String): IAction =
