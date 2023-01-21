@@ -2,8 +2,12 @@ package validation
 
 import domain.toolchain.Toolchain
 import validation.validations.ValidationCode
+import kotlin.js.ExperimentalJsExport
+import kotlin.js.JsExport
 
-internal data class ValidationResult(
+@OptIn(ExperimentalJsExport::class)
+@JsExport
+data class ValidationResult(
     private val _message: String,
     val code: ValidationCode,
     val type: ValidationEntryType,

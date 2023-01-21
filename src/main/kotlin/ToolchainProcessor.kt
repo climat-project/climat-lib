@@ -1,8 +1,10 @@
 import domain.convert
 import domain.dto.RootToolchainDto
 import domain.toolchain.RootToolchain
+import domain.toolchain.Toolchain
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
+import validation.computeValidations
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 import kotlin.js.JsName
@@ -12,22 +14,20 @@ import validation.validate as _validate
 @JsExport
 class ToolchainProcessor {
     companion object {
-        fun validate(toolchain: RootToolchain) = _validate(toolchain)
-        fun parse(json: String): RootToolchain {
-            val toolchain = convert(Json.decodeFromString<RootToolchainDto>(json))
-            validate(toolchain)
-            return toolchain
-        }
+        fun validate(toolchain: RootToolchain) = computeValidations(toolchain).toList().toTypedArray()
+        fun parse(json: String): RootToolchain =
+            convert(Json.decodeFromString<RootToolchainDto>(json))
     }
 
     @JsName("createFromJsonString")
-    constructor(json: String, actionHandler: (String) -> Unit, skipValidation: Boolean = false) :
+    constructor(json: String, actionHandler: (parsedAction: String, context: Toolchain) -> Unit, skipValidation: Boolean = false) :
         this(convert(Json.decodeFromString<RootToolchainDto>(json)), actionHandler, skipValidation)
 
     @JsName("create")
-    constructor(toolchain: RootToolchain, actionHandler: (String) -> Unit, skipValidation: Boolean = false) {
+    constructor(toolchain: RootToolchain, actionHandler: (parsedAction: String, context: Toolchain) -> Unit, skipValidation: Boolean = false) {
         if (!skipValidation)
-            validate(toolchain)
+            _validate(toolchain)
+
         this.parser = ToolchainCommand(toolchain, actionHandler)
     }
 

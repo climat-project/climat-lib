@@ -16,7 +16,7 @@ import template.getActualCommand
 @OptIn(ExperimentalCli::class)
 internal class ToolchainCommand(
     private val toolchain: Toolchain,
-    private val handler: (String) -> Unit,
+    private val handler: (parsedAction: String, context: Toolchain) -> Unit,
     upperScopeRefs: Map<String, RefWithValue> = emptyMap(),
     upperScopeDefaults: Map<String, String> = emptyMap()
 ) :
@@ -89,7 +89,7 @@ internal class ToolchainCommand(
         val executedChild = toolchainSubcommands.find { it.executed }
         if (executedChild == null) {
             val command = getActualCommand(toolchain.action, params)
-            handler(command)
+            handler(command, toolchain)
         } else {
             executedChild.executed = false
         }

@@ -53,12 +53,7 @@ internal fun computeValidations(
 // TODO implement warning for unused variables
 internal fun validate(toolchain: RootToolchain) {
     val validations = computeValidations(toolchain)
-    val warnings = validations.filter { it.type == ValidationResult.ValidationEntryType.Warning }
-    if (warnings.any()) {
-        println(warnings.joinToString(newLine()))
-    }
-
-    val errors = validations.filter { it.type == ValidationResult.ValidationEntryType.Error }
+    val errors = validations.filter { it.type == ValidationResult.ValidationEntryType.Error }.toList()
     if (errors.any()) {
         throw Exception(errors.joinToString(newLine()))
     }
