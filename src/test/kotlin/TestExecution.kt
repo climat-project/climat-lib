@@ -1,3 +1,4 @@
+
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
 
@@ -59,8 +60,8 @@ class TestExecution {
 
     private fun exec(args: String): String? {
         var ans: String? = null
-        ToolchainProcessor(json, {
-            ans = it
+        ToolchainProcessor(json, { act, _ ->
+            ans = act
         }).execute(args)
         return ans
     }

@@ -5,10 +5,11 @@
 - ~~Multiple names for one subcommand (one name with more aliases?)~~
 - ~~Reference resources, which will be copied when the alias is installed~~
 - ~~Toolchain name/alias or param/constant name pattern (only alphanumeric + dash + underscore for example)~~
+- Publish first release
+- Being able to pass an object to an action handler, not only a template string how is now currently
 - Beautify errors and ensure proper error handling
 - Check if we can replace kotlinx-cli library with Clikt (https://ajalt.github.io/clikt/)
 - Appending (Offloading) unknown parameters to the template end
-- Being able to pass an object to an action handler, not only a template string how is now currently
 - Plugins
 - Own DSL instead of JSON (Kotlin DSL?)
 - Object-Oriented API

@@ -45,7 +45,7 @@ internal fun convert(toolchain: DescendantToolchainDto): DescendantToolchain =
 private fun convertFromParamDefinitionString(paramDefinitionString: String): ParamDefinition {
     val match = parameterRe.find(paramDefinitionString)
     requireNotNull(match) { "parameters item does not match pattern $parameterRe - $paramDefinitionString" }
-    
+
     val name = match.groupValues[3] // TODO give names to regex groups
     return ParamDefinition(
         name = validateName(name),

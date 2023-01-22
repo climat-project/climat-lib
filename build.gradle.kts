@@ -16,10 +16,11 @@ plugins {
     kotlin("multiplatform") version "1.7.21"
     kotlin("plugin.serialization") version "1.7.20"
     id("org.jlleitschuh.gradle.ktlint") version "11.0.0"
+    id("dev.petuska.npm.publish") version "3.2.0"
 }
 
 group = "me.marius"
-version = "1.0-SNAPSHOT"
+version = "0.0.1"
 
 kotlin {
     sourceSets {
@@ -39,15 +40,24 @@ kotlin {
         }
     }
 
-    js {
+    js(IR) {
         binaries.library()
         browser {
             webpackTask {
                 outputFileName = "main.js"
+                output.libraryTarget = "commonjs2"
             }
         }
         useCommonJs()
     }
     jvm {
+    }
+}
+
+npmPublish {
+    registries {
+        github {
+            authToken.set(mavenPassword)
+        }
     }
 }
