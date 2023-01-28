@@ -1,13 +1,16 @@
-val mavenUser: String by project
-val mavenPassword: String by project
+val githubUser: String by project
+val githubPassword: String by project
+val npmToken: String by project
 
 repositories {
     mavenCentral()
+    maven("https://jitpack.io")
+
     maven {
         url = uri("https://maven.pkg.github.com/wilversings/kotlinx-cli")
         credentials {
-            username = mavenUser
-            password = mavenPassword
+            username = githubUser
+            password = githubPassword
         }
     }
 }
@@ -24,7 +27,16 @@ version = "0.0.1"
 
 kotlin {
     sourceSets {
+        val commonAntlr by creating {
+            kotlin.srcDir("build/generated-src/commonAntlr/kotlin")
+            dependencies {
+                api(kotlin("stdlib-common"))
+                api("com.strumenta.antlr-kotlin:antlr-kotlin-runtime:b5135079b8")
+            }
+        }
+
         val commonMain by getting {
+            dependsOn(commonAntlr)
             kotlin.srcDir("src/main/kotlin")
             resources.srcDir("src/main/resources")
             dependencies {
@@ -54,10 +66,41 @@ kotlin {
     }
 }
 
+ktlint.filter {
+    exclude { it.file.path.contains("generated") }
+}
+
 npmPublish {
     registries {
-        github {
-            authToken.set(mavenPassword)
+        npmjs {
+            authToken.set(npmToken)
         }
     }
 }
+
+buildscript {
+    repositories {
+        maven("https://jitpack.io")
+    }
+    dependencies {
+        classpath("com.strumenta.antlr-kotlin:antlr-kotlin-gradle-plugin:b5135079b8")
+    }
+}
+
+tasks.register<com.strumenta.antlrkotlin.gradleplugin.AntlrKotlinTask>("generateKotlinCommonGrammarSource") {
+    antlrClasspath = configurations.detachedConfiguration(
+        project.dependencies.create("com.strumenta.antlr-kotlin:antlr-kotlin-target:b5135079b8")
+    )
+    maxHeapSize = "64m"
+    packageName = "climat.lang"
+    arguments = listOf("-no-visitor", "-no-listener")
+    source = project.objects
+        .sourceDirectorySet("antlr", "antlr")
+        .srcDir("src/antlr").apply {
+            include("*.g4")
+        }
+    outputDirectory = File("build/generated-src/commonAntlr/kotlin")
+}
+
+tasks.getByName("compileKotlinJvm").dependsOn("generateKotlinCommonGrammarSource")
+tasks.getByName("compileKotlinJs").dependsOn("generateKotlinCommonGrammarSource")
