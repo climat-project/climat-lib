@@ -1,25 +1,21 @@
 parser grammar CLParser;
-
 options { tokenVocab=CLLexer; }
 
-program: func;
-
-func: name LPAREN params RPAREN funcBody;
-
-name: ID;
-
+func: NAME LPAREN params? RPAREN funcBody;
 params: param (COMMA param)*;
-
-param: name SEMI paramType;
-
+param: NAME COLON paramType (EQ literal)?;
 paramType: OPTION | ARGUMENT;
 
-funcBody: LCURLY (props EOL)* RCURLY;
+funcBody: LCURLY funcStatements* RCURLY;
+funcStatements: children | action | aliases | constDef;
 
-props: children | action;
-
-children: L func (COMMA func)* R;
-
+children: CHILDREN_PROP LBRAKET func (COMMA func)* RBRAKET;
 action: ACTION_PROP DOUBLE_QUOTE ANYTHING DOUBLE_QUOTE;
+aliases: ALIASES_PROP LBRAKET (NAME (COMMA NAME)*)? RBRAKET;
+constDef: CONST NAME EQ literal;
+
+literal: stringLiteral | booleanLiteral;
+stringLiteral: DOUBLE_QUOTE .*? DOUBLE_QUOTE;
+booleanLiteral: TRUE | FALSE;
 
 
