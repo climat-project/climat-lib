@@ -18,16 +18,16 @@ internal fun decodeFromString(cliDsl: String): RootToolchain {
     val parser = CliDslParser(CommonTokenStream(lexer))
     val func = parser.func()
 
-    val (funcStatements, funcParams) = destructureFunc(func)
+    val (statements, params) = destructureFunc(func)
 
     return RootToolchain(
         name = func.NAME()?.text ?: throw Exception("Missing function name"),
         description = emptyString(), // TODO implement
-        parameters = decodeParameters(funcParams),
-        parameterDefaults = decodeDefaults(funcParams),
-        action = decodeAction(funcStatements),
-        children = decodeChildren(funcStatements),
-        constants = decodeConstants(funcStatements),
+        parameters = decodeParameters(params),
+        parameterDefaults = decodeDefaults(statements, params),
+        action = decodeAction(statements),
+        children = decodeChildren(statements),
+        constants = decodeConstants(statements),
         resources = emptyArray()
     )
 }
@@ -39,7 +39,7 @@ private fun decodeDescendantToolchain(func: CliDslParser.FuncContext): Descendan
         name = func.NAME()?.text ?: throw Exception("Missing function name"),
         description = emptyString(), // TODO implement
         parameters = decodeParameters(funcParams),
-        parameterDefaults = decodeDefaults(funcParams),
+        parameterDefaults = decodeDefaults(funcStatements, funcParams),
         action = decodeAction(funcStatements),
         children = decodeChildren(funcStatements),
         constants = decodeConstants(funcStatements),
@@ -68,10 +68,13 @@ private fun destructureFunc(func: CliDslParser.FuncContext) =
     (func.findFuncBody()?.findFuncStatements() ?: throw Exception("Function body not found")) to
         func.findParams()?.findParam().orEmpty()
 
-private fun decodeDefaults(params: List<CliDslParser.ParamContext>): Map<String, String> =
+private fun decodeDefaults(funcStatements: List<CliDslParser.FuncStatementsContext>, params: List<CliDslParser.ParamContext>): Map<String, String> =
     params.associate {
         (it.NAME()?.text ?: throw Exception()) to it.findLiteral()?.let(::getLiteralText)
-    }.filterNotNullValues()
+    }.filterNotNullValues() + funcStatements.mapNotNull { it.findDefaultOverride() }.associate {
+        (it.NAME()?.text ?: throw Exception("Missing default override name")) to
+            (it.findLiteral()?.let(::getLiteralText) ?: throw Exception("Missing default override value"))
+    }
 
 private fun decodeConstants(statements: List<CliDslParser.FuncStatementsContext>): Array<Constant> =
     statements.mapNotNull { it.findConstDef() }
@@ -82,7 +85,7 @@ private fun decodeConstants(statements: List<CliDslParser.FuncStatementsContext>
                     type = if (literal.findStringLiteral() != null) Ref.Type.Arg else Ref.Type.Flag,
                     value = getLiteralText(literal)
                 )
-            } ?: throw Exception("Constant value not found")
+            } ?: throw Exception("Missing constant value")
         }.toTypedArray()
 
 private fun getLiteralText(literal: CliDslParser.LiteralContext) =

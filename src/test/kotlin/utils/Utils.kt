@@ -1,12 +1,12 @@
 package utils
 
-import domain.toolchain.DescendantToolchain
+import domain.toolchain.Toolchain
 import validation.computeValidations
 import validation.validations.ValidationCode
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-internal fun DescendantToolchain.getValidationMessages(code: ValidationCode): List<String> =
+internal fun Toolchain.getValidationMessages(code: ValidationCode): List<String> =
     computeValidations(
         this
     ).filter { it.code == code }

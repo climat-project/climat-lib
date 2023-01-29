@@ -26,7 +26,7 @@ class TestExecution {
         },
         export(type?: flag) {
           action "echo 'abcd'"
-        }
+        },
       ]
     }"""
 
