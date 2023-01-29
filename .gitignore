@@ -5,6 +5,7 @@
 /android.tests.dependencies
 /dependencies/android.tests.dependencies
 /dist
+/gen
 /local
 /gh-pages
 /ideaSDK
