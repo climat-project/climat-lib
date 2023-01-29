@@ -1,6 +1,8 @@
 parser grammar CliDslParser;
 options { tokenVocab=CliDslLexer; }
 
+root: func EOF;
+
 func: NAME (LPAREN params? RPAREN)? funcBody;
 params: param (COMMA param)* COMMA?;
 param: NAME SHORTHAND? (QMARK)? COLON paramType (EQ literal)?;

@@ -16,6 +16,8 @@ import org.antlr.v4.kotlinruntime.CommonTokenStream
 internal fun decodeFromString(cliDsl: String): RootToolchain {
     val lexer = CliDslLexer(CharStreams.fromString(cliDsl))
     val parser = CliDslParser(CommonTokenStream(lexer))
+    parser.addErrorListener(errListener)
+
     val func = parser.func()
 
     val (statements, params) = destructureFunc(func)
