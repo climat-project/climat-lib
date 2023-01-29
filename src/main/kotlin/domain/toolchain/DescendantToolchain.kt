@@ -3,6 +3,8 @@ package domain.toolchain
 import domain.IAction
 import domain.ref.Constant
 import domain.ref.ParamDefinition
+import emptyString
+import noopAction
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 
@@ -10,11 +12,11 @@ import kotlin.js.JsExport
 @JsExport
 data class DescendantToolchain(
     override val name: String,
-    override val description: String,
-    override val parameters: Array<ParamDefinition>,
-    override val parameterDefaults: Map<String, String>,
-    override val action: IAction,
-    override val children: Array<DescendantToolchain>,
-    override val constants: Array<Constant>,
-    val aliases: Array<String>,
+    override val description: String = emptyString(),
+    override val parameters: Array<ParamDefinition> = emptyArray(),
+    override val parameterDefaults: Map<String, String> = emptyMap(),
+    override val action: IAction = noopAction(),
+    override val children: Array<DescendantToolchain> = emptyArray(),
+    override val constants: Array<Constant> = emptyArray(),
+    val aliases: Array<String> = emptyArray(),
 ) : Toolchain()

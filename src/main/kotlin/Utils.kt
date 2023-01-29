@@ -1,9 +1,7 @@
 
+import domain.IAction
 import domain.ref.Ref
 import kotlinx.cli.ArgType
-import kotlinx.serialization.json.JsonElement
-import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.JsonPrimitive
 
 internal fun toolchainParameterTypeToCliArgType(it: Ref.Type): ArgType<*> = when (it) {
     Ref.Type.Arg -> ArgType.String
@@ -17,8 +15,10 @@ internal fun emptyString(): String = ""
 // TODO support multiplatform?
 internal fun newLine(): String = "\n"
 
-internal val JsonElement.isJsonObject: Boolean
-    get() = this as? JsonObject != null
+fun <K, V> Map<K, V?>.filterNotNullValues(): Map<K, V> =
+    mapNotNull { (key, value) -> value?.let { key to it } }.toMap()
 
-internal val JsonElement.isString: Boolean
-    get() = (this is JsonPrimitive) && this.isString
+internal fun noopAction(): IAction = object : IAction {
+    override val template: String
+        get() = emptyString()
+}

@@ -4,63 +4,35 @@ import kotlin.test.assertContentEquals
 
 class TestExecution {
 
-    private val json = """{
-      "name": "cli-alias-aggregator",
-      "description": "",
-      "action": "",
-      "constants": {
-        "C1": "constantValue",
-        "C2": true
-      },
-      "children": [
-        {
-          "name": "new",
-          "description": "Creates a new cli",
-          "parameters": [
-            "opt:flag:interactive:i"
-          ],
-          "action": "echo 'abcd'",
-          "children": [
-            {
-              "name": "template",
-              "paramDefaults": {
-                "param1": "default"
-              },
-              "parameters": [
-                "opt:arg:param1",
-                "opt:arg:param2"
-              ],
-              "action": "echo '$(interactive)' '$(param1)' $(interactive:--interactiveSwitch) $(param1:--mapped)"
+    private val cliDsl = """
+    cli-alias-aggregator {
+      const C1 = "constantValue"
+      const C2 = true
+      
+      children [
+        new(interactive?: flag) {
+          action "echo 'abcd'"
+          children [
+            template(param1?: arg = "default", param2?: arg) {
+              action "echo '$(interactive)' '$(param1)' $(interactive:--interactiveSwitch) $(param1:--mapped)"
             }
           ]
         },
-        {
-          "name": "renew",
-          "description": "Updates an existing cli with the new json file",
-          "action": "echo 'qwe' $(C1:--c) $(C1) $(C2:--switch)"
+        renew {
+          action "echo 'qwe' $(C1:--c) $(C1) $(C2:--switch)"
         },
-        {
-          "name": "remove",
-          "parameters": [
-            "opt:flag:force:f"
-          ],
-          "description": "Removes an existing cli",
-          "action": "echo 'what ever'"
+        remove(force?: flag) {
+          action "echo 'what ever'"
         },
-        {
-          "name": "export",
-          "description": "Exports the cli",
-          "parameters": [
-            "opt:flag:type:t"
-          ],
-          "action": "echo 'abcd'"
+        export(type?: flag) {
+          action "echo 'abcd'"
         }
       ]
     }"""
 
     private fun exec(args: String): String? {
         var ans: String? = null
-        ToolchainProcessor(json, { act, _ ->
+        ToolchainProcessor(cliDsl, { act, _ ->
             ans = act
         }).execute(args)
         return ans

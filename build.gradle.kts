@@ -16,7 +16,7 @@ repositories {
 }
 
 plugins {
-    kotlin("multiplatform") version "1.7.21"
+    kotlin("multiplatform") version "1.8.0"
     kotlin("plugin.serialization") version "1.7.20"
     id("org.jlleitschuh.gradle.ktlint") version "11.0.0"
     id("dev.petuska.npm.publish") version "3.2.0"
