@@ -1,6 +1,7 @@
-import parser.decodeCliDsl
+import domain.Action
 import domain.toolchain.RootToolchain
 import domain.toolchain.Toolchain
+import parser.decodeCliDsl
 import validation.computeValidations
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
@@ -17,11 +18,11 @@ class ToolchainProcessor {
     }
 
     @JsName("createFromJsonString")
-    constructor(cliDsl: String, actionHandler: (parsedAction: String, context: Toolchain) -> Unit, skipValidation: Boolean = false) :
+    constructor(cliDsl: String, actionHandler: (parsedAction: Action, context: Toolchain) -> Unit, skipValidation: Boolean = false) :
         this(decodeCliDsl(cliDsl), actionHandler, skipValidation)
 
     @JsName("create")
-    constructor(toolchain: RootToolchain, actionHandler: (parsedAction: String, context: Toolchain) -> Unit, skipValidation: Boolean = false) {
+    constructor(toolchain: RootToolchain, actionHandler: (parsedAction: Action, context: Toolchain) -> Unit, skipValidation: Boolean = false) {
         if (!skipValidation)
             _validate(toolchain)
 

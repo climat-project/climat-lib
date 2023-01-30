@@ -1,6 +1,9 @@
 package template
 
-import domain.IAction
+import domain.ActionValueBase
+import domain.CustomScriptActionValue
+import domain.ScopeParamsActionValue
+import domain.TemplateActionValue
 import domain.ref.Ref
 import domain.ref.RefWithValue
 import emptyString
@@ -39,43 +42,53 @@ internal fun getParamReferences(template: String): Sequence<ParamReference> =
             )
         }
 
-internal fun getActualCommand(
-    action: IAction,
+internal fun setActualCommand(
+    action: ActionValueBase<*>,
     values: Map<String, RefWithValue>
-): String {
-    val missingValues = getParamReferences(action.template)
-        .map { it.paramName }
-        .distinct()
-        .filter(not(values::contains))
-        .toList()
-    if (missingValues.any()) {
-        throw Exception(
-            "Cannot compile command. Missing parameters: ${
-            missingValues.joinToString(", ")
-            }"
-        )
-    }
-
-    return actionRe.replace(action.template) { match ->
-        val value = values[match.getParamName()]!!
-        if (match.isMapping()) {
-            if (value.ref.type == Ref.Type.Flag) {
-                if (value.value.toBoolean()) {
-                    match.getMappedFlag()
+) {
+    when (action) {
+        is TemplateActionValue -> {
+            val missingValues = getParamReferences(action.template)
+                .map { it.paramName }
+                .distinct()
+                .filter(not(values::contains))
+                .toList()
+            if (missingValues.any()) {
+                throw Exception(
+                    "Cannot compile command. Missing parameters: ${
+                    missingValues.joinToString(", ")
+                    }"
+                )
+            }
+            action.value = actionRe.replace(action.template) { match ->
+                val value = values[match.getParamName()]!!
+                if (match.isMapping()) {
+                    if (value.ref.type == Ref.Type.Flag) {
+                        if (value.value.toBoolean()) {
+                            match.getMappedFlag()
+                        } else {
+                            emptyString()
+                        }
+                    } else {
+                        if (value.value.isNotEmpty()) {
+                            "${match.getMappedFlag()}=${value.value}"
+                        } else {
+                            emptyString()
+                        }
+                    }
                 } else {
-                    emptyString()
-                }
-            } else {
-                if (value.value.isNotEmpty()) {
-                    "${match.getMappedFlag()}=${value.value}"
-                } else {
-                    emptyString()
+                    value.value
                 }
             }
-        } else {
-            value.value
+                // Remove duplicate whitespaces
+                .replace("\\s+".toRegex(), " ")
         }
+        is CustomScriptActionValue -> {
+            // handled by the library consumer
+        }
+        is ScopeParamsActionValue -> {
+            action.value = values.mapValues { it.value.value }
+        }
+        else -> throw Exception("Type `${action::class}` not supported")
     }
-        // Remove duplicate whitespaces
-        .replace("\\s+".toRegex(), " ")
 }

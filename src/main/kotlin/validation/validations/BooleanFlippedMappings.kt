@@ -1,5 +1,6 @@
 package validation.validations
 
+import domain.TemplateActionValue
 import domain.ref.Ref
 import template.getParamReferences
 import validation.ValidationBase
@@ -11,17 +12,23 @@ internal class BooleanFlippedMappings : ValidationBase() {
     override val code get() = ValidationCode.BooleanFlippedMappings
 
     override fun validate(ctx: ValidationContext): Sequence<String> =
-        getScopeRefs(ctx)
-            .values
-            .map { it.last() }
-            .filter { it.type != Ref.Type.Flag }
-            .map { it.name }
-            .intersect(
-                getParamReferences(ctx.toolchain.action.template)
-                    .filter { it.isFlipped }
-                    .map { it.paramName }
-                    .toSet()
-            ).map {
-                "Param `$it` cannot be flipped because it is not a flag"
-            }.asSequence()
+        ctx.toolchain.action.let { act ->
+            if (act is TemplateActionValue) {
+                getScopeRefs(ctx)
+                    .values
+                    .map { it.last() }
+                    .filter { it.type != Ref.Type.Flag }
+                    .map { it.name }
+                    .intersect(
+                        getParamReferences(act.template)
+                            .filter { it.isFlipped }
+                            .map { it.paramName }
+                            .toSet()
+                    ).map {
+                        "Param `$it` cannot be flipped because it is not a flag"
+                    }.asSequence()
+            } else {
+                emptySequence()
+            }
+        }
 }

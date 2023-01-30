@@ -1,5 +1,6 @@
 package validation.validations
 
+import domain.TemplateActionValue
 import not
 import template.getParamReferences
 import validation.ValidationBase
@@ -12,12 +13,15 @@ internal class UndefinedParams : ValidationBase() {
 
     override fun validate(ctx: ValidationContext): Sequence<String> =
         getScopeRefs(ctx).let { scopeParams ->
-            getParamReferences(ctx.toolchain.action.template)
-                .map { it.paramName }
-                .distinct()
-                .filter(not(scopeParams::contains))
-                .map {
-                    "Parameter `$it` is not defined in the current scope"
-                }
+            val act = ctx.toolchain.action
+            if (act is TemplateActionValue)
+                getParamReferences(act.template)
+                    .map { it.paramName }
+                    .distinct()
+                    .filter(not(scopeParams::contains))
+                    .map {
+                        "Parameter `$it` is not defined in the current scope"
+                    }
+            else emptySequence()
         }
 }

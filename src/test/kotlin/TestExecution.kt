@@ -1,4 +1,5 @@
 
+import domain.TemplateActionValue
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
 
@@ -30,12 +31,12 @@ class TestExecution {
       ]
     }"""
 
-    private fun exec(args: String): String? {
-        var ans: String? = null
+    private fun exec(args: String): String {
+        var ans: TemplateActionValue? = null
         ToolchainProcessor(cliDsl, { act, _ ->
-            ans = act
+            ans = act as TemplateActionValue
         }).execute(args)
-        return ans
+        return ans!!.value!!
     }
 
     @Test

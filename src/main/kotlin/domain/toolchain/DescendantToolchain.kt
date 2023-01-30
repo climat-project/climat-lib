@@ -1,6 +1,6 @@
 package domain.toolchain
 
-import domain.IAction
+import domain.Action
 import domain.ref.Constant
 import domain.ref.ParamDefinition
 import emptyString
@@ -15,7 +15,7 @@ data class DescendantToolchain(
     override val description: String = emptyString(),
     override val parameters: Array<ParamDefinition> = emptyArray(),
     override val parameterDefaults: Map<String, String> = emptyMap(),
-    override val action: IAction = noopAction(),
+    override val action: Action = noopAction(),
     override val children: Array<DescendantToolchain> = emptyArray(),
     override val constants: Array<Constant> = emptyArray(),
     val aliases: Array<String> = emptyArray(),

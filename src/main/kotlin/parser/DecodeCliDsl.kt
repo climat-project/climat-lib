@@ -2,7 +2,8 @@ package parser
 
 import climat.lang.CliDslLexer
 import climat.lang.CliDslParser
-import domain.IAction
+import domain.ActionValueBase
+import domain.TemplateActionValue
 import domain.ref.Constant
 import domain.ref.ParamDefinition
 import domain.ref.Ref
@@ -19,7 +20,7 @@ internal fun decodeCliDsl(cliDsl: String): RootToolchain {
     val parser = CliDslParser(CommonTokenStream(lexer))
     parser.addErrorListener(errListener)
 
-    val func = parser.func()
+    val func = parser.root().findFunc() ?: throw Exception("Can't parse function")
 
     val (statements, params) = destructureFunc(func)
 
@@ -63,7 +64,7 @@ private fun decodeAliases(statements: List<CliDslParser.FuncStatementsContext>):
     return emptyArray()
 }
 
-private fun decodeAction(statements: List<CliDslParser.FuncStatementsContext>): IAction {
+private fun decodeAction(statements: List<CliDslParser.FuncStatementsContext>): ActionValueBase<*> {
     val actions = statements.mapNotNull { it.findAction() }
         .toList()
     if (actions.size >= 2) {
@@ -71,12 +72,9 @@ private fun decodeAction(statements: List<CliDslParser.FuncStatementsContext>): 
     }
     if (actions.size == 1) {
         val child = actions.first()
-        val text = child.findStringLiteral()?.let(::getLiteralTextFromStringContext) ?: throw Exception("No action string provided!")
+        val text = child.findActionValue()?.findStringLiteral()?.let(::getLiteralTextFromStringContext) ?: throw Exception("No action string provided!")
 
-        return object : IAction {
-            override val template: String
-                get() = text
-        }
+        return TemplateActionValue(text)
     }
     return noopAction()
 }

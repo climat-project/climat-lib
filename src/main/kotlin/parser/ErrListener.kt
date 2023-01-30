@@ -53,5 +53,4 @@ internal val errListener = object : ANTLRErrorListener {
     ) {
         throw Exception("$msg, Line: $line, Col: $charPositionInLine")
     }
-
 }

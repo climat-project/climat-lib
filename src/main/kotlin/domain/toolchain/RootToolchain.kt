@@ -1,6 +1,6 @@
 package domain.toolchain
 
-import domain.IAction
+import domain.Action
 import domain.ref.Constant
 import domain.ref.ParamDefinition
 import kotlin.js.ExperimentalJsExport
@@ -13,7 +13,7 @@ data class RootToolchain(
     override val description: String,
     override val parameters: Array<ParamDefinition>,
     override val parameterDefaults: Map<String, String>,
-    override val action: IAction,
+    override val action: Action,
     override val children: Array<DescendantToolchain>,
     override val constants: Array<Constant>,
     val resources: Array<String>

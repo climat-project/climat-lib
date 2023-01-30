@@ -1,5 +1,5 @@
 
-import domain.IAction
+import domain.NoopActionValue
 import domain.ref.Ref
 import kotlinx.cli.ArgType
 
@@ -18,7 +18,4 @@ internal fun newLine(): String = "\n"
 fun <K, V> Map<K, V?>.filterNotNullValues(): Map<K, V> =
     mapNotNull { (key, value) -> value?.let { key to it } }.toMap()
 
-internal fun noopAction(): IAction = object : IAction {
-    override val template: String
-        get() = emptyString()
-}
+internal fun noopAction() = NoopActionValue()

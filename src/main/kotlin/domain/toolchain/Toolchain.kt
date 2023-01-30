@@ -1,6 +1,6 @@
 package domain.toolchain
 
-import domain.IAction
+import domain.Action
 import domain.ref.Constant
 import domain.ref.ParamDefinition
 import kotlin.js.ExperimentalJsExport
@@ -13,7 +13,7 @@ abstract class Toolchain {
     abstract val description: String
     abstract val parameters: Array<ParamDefinition>
     abstract val parameterDefaults: Map<String, String>
-    abstract val action: IAction
+    abstract val action: Action
     abstract val children: Array<DescendantToolchain>
     abstract val constants: Array<Constant>
 }

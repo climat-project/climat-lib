@@ -1,4 +1,5 @@
 
+import domain.ActionValueBase
 import domain.eachAlias
 import domain.ref.Constant
 import domain.ref.ParamDefinition
@@ -11,12 +12,12 @@ import kotlinx.cli.CLIEntity
 import kotlinx.cli.ExperimentalCli
 import kotlinx.cli.Subcommand
 import kotlinx.cli.default
-import template.getActualCommand
+import template.setActualCommand
 
 @OptIn(ExperimentalCli::class)
 internal class ToolchainCommand(
     private val toolchain: Toolchain,
-    private val handler: (parsedAction: String, context: Toolchain) -> Unit,
+    private val handler: (parsedAction: ActionValueBase<*>, context: Toolchain) -> Unit,
     upperScopeRefs: Map<String, RefWithValue> = emptyMap(),
     upperScopeDefaults: Map<String, String> = emptyMap()
 ) :
@@ -88,8 +89,9 @@ internal class ToolchainCommand(
     override fun execute() {
         val executedChild = toolchainSubcommands.find { it.executed }
         if (executedChild == null) {
-            val command = getActualCommand(toolchain.action, params)
-            handler(command, toolchain)
+            val act = toolchain.action
+            setActualCommand(act, params)
+            handler(act, toolchain)
         } else {
             executedChild.executed = false
         }

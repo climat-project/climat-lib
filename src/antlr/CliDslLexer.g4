@@ -36,6 +36,14 @@ MULTILINE_COMMENT_START: '/*';
 MULTILINE_COMMENT_END: '*/';
 COMMENT: '//';
 
+// Modifiers
+SEALED: 'sealed';
+SHIFTED: 'shifted';
+
+// Actions
+JS: 'js';
+SCOPE_PARAMS: 'scope params';
+
 INT : [0-9]+ ;
 NAME: [a-zA-Z_\-][a-zA-Z_0-9\-]* ;
 WS: [ \t\n\r\f]+ -> skip;
