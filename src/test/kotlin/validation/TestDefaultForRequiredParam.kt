@@ -1,6 +1,6 @@
 package validation
 
-import domain.decodeFromString
+import parser.decodeCliDsl
 import utils.assertContainsInMessages
 import utils.getValidationMessages
 import validation.validations.ValidationCode
@@ -24,7 +24,7 @@ class TestDefaultForRequiredParam {
 
     @Test
     fun test() {
-        val validationResults = decodeFromString(toolchain).getValidationMessages(ValidationCode.DefaultForRequiredParam)
+        val validationResults = decodeCliDsl(toolchain).getValidationMessages(ValidationCode.DefaultForRequiredParam)
         assertContainsInMessages(
             validationResults,
             listOf("child", "rootParam"),

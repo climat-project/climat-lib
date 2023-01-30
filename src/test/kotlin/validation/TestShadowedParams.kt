@@ -1,6 +1,6 @@
 package validation
 
-import domain.decodeFromString
+import parser.decodeCliDsl
 import utils.assertContainsInMessages
 import utils.getValidationMessages
 import validation.validations.ValidationCode
@@ -22,7 +22,7 @@ class TestShadowedParams {
 
     @Test
     fun test() {
-        val validationResults = decodeFromString(toolchain).getValidationMessages(ValidationCode.ShadowedParams)
+        val validationResults = decodeCliDsl(toolchain).getValidationMessages(ValidationCode.ShadowedParams)
         assertContainsInMessages(
             validationResults,
             "param1",

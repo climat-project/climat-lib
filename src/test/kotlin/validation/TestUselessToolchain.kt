@@ -1,6 +1,6 @@
 package validation
 
-import domain.decodeFromString
+import parser.decodeCliDsl
 import utils.assertContainsInMessages
 import utils.getValidationMessages
 import validation.validations.ValidationCode
@@ -18,7 +18,7 @@ class TestUselessToolchain {
 
     @Test
     fun test() {
-        val validationResults = decodeFromString(toolchain).getValidationMessages(ValidationCode.UselessToolchain)
+        val validationResults = decodeCliDsl(toolchain).getValidationMessages(ValidationCode.UselessToolchain)
         assertContainsInMessages(
             validationResults,
             "useless_child",

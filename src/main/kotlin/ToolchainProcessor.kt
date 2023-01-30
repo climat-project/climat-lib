@@ -1,4 +1,4 @@
-import domain.decodeFromString
+import parser.decodeCliDsl
 import domain.toolchain.RootToolchain
 import domain.toolchain.Toolchain
 import validation.computeValidations
@@ -13,12 +13,12 @@ class ToolchainProcessor {
     companion object {
         fun validate(toolchain: RootToolchain) = computeValidations(toolchain).toList().toTypedArray()
         fun parse(cliDsl: String): RootToolchain =
-            decodeFromString(cliDsl)
+            decodeCliDsl(cliDsl)
     }
 
     @JsName("createFromJsonString")
     constructor(cliDsl: String, actionHandler: (parsedAction: String, context: Toolchain) -> Unit, skipValidation: Boolean = false) :
-        this(decodeFromString(cliDsl), actionHandler, skipValidation)
+        this(decodeCliDsl(cliDsl), actionHandler, skipValidation)
 
     @JsName("create")
     constructor(toolchain: RootToolchain, actionHandler: (parsedAction: String, context: Toolchain) -> Unit, skipValidation: Boolean = false) {

@@ -1,6 +1,6 @@
 package validation
 
-import domain.decodeFromString
+import parser.decodeCliDsl
 import utils.assertContainsInMessages
 import utils.getValidationMessages
 import validation.validations.ValidationCode
@@ -22,7 +22,7 @@ class TestDefaultForUndefinedParam {
 
     @Test
     fun test() {
-        val validationResults = decodeFromString(toolchain).getValidationMessages(ValidationCode.DefaultForUndefinedParam)
+        val validationResults = decodeCliDsl(toolchain).getValidationMessages(ValidationCode.DefaultForUndefinedParam)
         assertContainsInMessages(
             validationResults,
             "param3",

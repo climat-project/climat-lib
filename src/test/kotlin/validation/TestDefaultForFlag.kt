@@ -1,6 +1,6 @@
 package validation
 
-import domain.decodeFromString
+import parser.decodeCliDsl
 import utils.getValidationMessages
 import validation.validations.ValidationCode
 import kotlin.test.Test
@@ -31,7 +31,7 @@ class TestDefaultForFlag {
 
     @Test
     fun test() {
-        val validationResults = decodeFromString(toolchain).getValidationMessages(ValidationCode.DefaultForFlag)
+        val validationResults = decodeCliDsl(toolchain).getValidationMessages(ValidationCode.DefaultForFlag)
         assertEquals(3, validationResults.count())
     }
 }

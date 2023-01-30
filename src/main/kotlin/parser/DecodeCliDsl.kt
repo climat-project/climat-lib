@@ -1,7 +1,8 @@
-package domain
+package parser
 
 import climat.lang.CliDslLexer
 import climat.lang.CliDslParser
+import domain.IAction
 import domain.ref.Constant
 import domain.ref.ParamDefinition
 import domain.ref.Ref
@@ -13,7 +14,7 @@ import noopAction
 import org.antlr.v4.kotlinruntime.CharStreams
 import org.antlr.v4.kotlinruntime.CommonTokenStream
 
-internal fun decodeFromString(cliDsl: String): RootToolchain {
+internal fun decodeCliDsl(cliDsl: String): RootToolchain {
     val lexer = CliDslLexer(CharStreams.fromString(cliDsl))
     val parser = CliDslParser(CommonTokenStream(lexer))
     parser.addErrorListener(errListener)
@@ -35,20 +36,34 @@ internal fun decodeFromString(cliDsl: String): RootToolchain {
 }
 
 private fun decodeDescendantToolchain(func: CliDslParser.FuncContext): DescendantToolchain {
-    val (funcStatements, funcParams) = destructureFunc(func)
+    val (statements, params) = destructureFunc(func)
 
     return DescendantToolchain(
         name = func.NAME()?.text ?: throw Exception("Missing function name"),
         description = emptyString(), // TODO implement
-        parameters = decodeParameters(funcParams),
-        parameterDefaults = decodeDefaults(funcStatements, funcParams),
-        action = decodeAction(funcStatements),
-        children = decodeChildren(funcStatements),
-        constants = decodeConstants(funcStatements),
+        parameters = decodeParameters(params),
+        parameterDefaults = decodeDefaults(statements, params),
+        action = decodeAction(statements),
+        children = decodeChildren(statements),
+        constants = decodeConstants(statements),
+        aliases = decodeAliases(statements)
     )
 }
 
-fun decodeAction(statements: List<CliDslParser.FuncStatementsContext>): IAction {
+private fun decodeAliases(statements: List<CliDslParser.FuncStatementsContext>): Array<String> {
+    val aliasProps = statements.mapNotNull { it.findAliases() }
+        .toList()
+    if (aliasProps.size >= 2) {
+        throw Exception("More than one aliases property not allowed")
+    }
+    if (aliasProps.size == 1) {
+        val alias = aliasProps.first()
+        return alias.NAME().map { it.text }.toTypedArray()
+    }
+    return emptyArray()
+}
+
+private fun decodeAction(statements: List<CliDslParser.FuncStatementsContext>): IAction {
     val actions = statements.mapNotNull { it.findAction() }
         .toList()
     if (actions.size >= 2) {

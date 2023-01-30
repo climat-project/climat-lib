@@ -1,6 +1,6 @@
 package validation
 
-import domain.decodeFromString
+import parser.decodeCliDsl
 import utils.assertContainsInMessages
 import utils.getValidationMessages
 import validation.validations.ValidationCode
@@ -31,7 +31,7 @@ class TestDuplicateParamNames {
 
     @Test
     fun test() {
-        val validationResults = decodeFromString(toolchain).getValidationMessages(ValidationCode.DuplicateRefNames)
+        val validationResults = decodeCliDsl(toolchain).getValidationMessages(ValidationCode.DuplicateRefNames)
         assertContainsInMessages(
             validationResults,
             "param",
