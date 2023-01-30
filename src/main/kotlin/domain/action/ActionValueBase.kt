@@ -1,12 +1,13 @@
 @file:OptIn(ExperimentalJsExport::class)
 
-package domain
+package domain.action
 
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 
 typealias Action = ActionValueBase<*>
-@JsExport abstract class ActionValueBase<VType>() {
+@JsExport
+abstract class ActionValueBase<VType>() {
 
     var value: VType? = null
 
@@ -26,7 +27,3 @@ typealias Action = ActionValueBase<*>
         Noop
     }
 }
-@JsExport class TemplateActionValue(val template: String) : ActionValueBase<String>()
-@JsExport class CustomScriptActionValue(val customScript: String) : ActionValueBase<Nothing>()
-@JsExport class ScopeParamsActionValue() : ActionValueBase<Map<String, String>>()
-@JsExport class NoopActionValue() : ActionValueBase<Nothing>()

@@ -1,4 +1,4 @@
-import domain.Action
+import domain.action.Action
 import domain.toolchain.RootToolchain
 import domain.toolchain.Toolchain
 import parser.decodeCliDsl

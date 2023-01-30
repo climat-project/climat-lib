@@ -1,5 +1,5 @@
 
-import domain.TemplateActionValue
+import domain.action.TemplateActionValue
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
 

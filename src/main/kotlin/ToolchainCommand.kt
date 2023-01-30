@@ -1,5 +1,5 @@
 
-import domain.ActionValueBase
+import domain.action.ActionValueBase
 import domain.eachAlias
 import domain.ref.Constant
 import domain.ref.ParamDefinition

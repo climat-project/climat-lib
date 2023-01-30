@@ -1,9 +1,9 @@
 package template
 
-import domain.ActionValueBase
-import domain.CustomScriptActionValue
-import domain.ScopeParamsActionValue
-import domain.TemplateActionValue
+import domain.action.ActionValueBase
+import domain.action.CustomScriptActionValue
+import domain.action.ScopeParamsActionValue
+import domain.action.TemplateActionValue
 import domain.ref.Ref
 import domain.ref.RefWithValue
 import emptyString
@@ -16,6 +16,7 @@ internal data class ParamReference(
     val range: IntRange
 )
 
+// TODO: move responsibility to the parser
 private val actionRe = Regex("\\\$\\((!)?([\\w.]+)(?::([^ ()]+))?\\)")
 
 internal fun MatchResult.isMapping() = this.groups[3] != null

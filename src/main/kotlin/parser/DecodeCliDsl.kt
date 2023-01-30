@@ -2,8 +2,9 @@ package parser
 
 import climat.lang.CliDslLexer
 import climat.lang.CliDslParser
-import domain.ActionValueBase
-import domain.TemplateActionValue
+import domain.action.ActionValueBase
+import domain.action.ScopeParamsActionValue
+import domain.action.TemplateActionValue
 import domain.ref.Constant
 import domain.ref.ParamDefinition
 import domain.ref.Ref
@@ -14,6 +15,8 @@ import filterNotNullValues
 import noopAction
 import org.antlr.v4.kotlinruntime.CharStreams
 import org.antlr.v4.kotlinruntime.CommonTokenStream
+
+// TODO custom exceptions
 
 internal fun decodeCliDsl(cliDsl: String): RootToolchain {
     val lexer = CliDslLexer(CharStreams.fromString(cliDsl))
@@ -68,10 +71,15 @@ private fun decodeAction(statements: List<CliDslParser.FuncStatementsContext>): 
     val actions = statements.mapNotNull { it.findAction() }
         .toList()
     if (actions.size >= 2) {
-        throw Exception("More than one child property not allowed")
+        throw Exception("More than one action property is not allowed")
     }
     if (actions.size == 1) {
         val child = actions.first()
+        child.findActionValue()?.let {
+            it.findStringLiteral()?.text?.let(::TemplateActionValue)
+                ?: it.SCOPE_PARAMS()?.text?.let { ScopeParamsActionValue() }
+                ?: throw Exception("Could not parse action value")
+        }
         val text = child.findActionValue()?.findStringLiteral()?.let(::getLiteralTextFromStringContext) ?: throw Exception("No action string provided!")
 
         return TemplateActionValue(text)

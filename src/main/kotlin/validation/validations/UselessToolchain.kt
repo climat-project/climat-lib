@@ -1,6 +1,6 @@
 package validation.validations
 
-import domain.NoopActionValue
+import domain.action.NoopActionValue
 import validation.ValidationBase
 import validation.ValidationContext
 import validation.ValidationResult

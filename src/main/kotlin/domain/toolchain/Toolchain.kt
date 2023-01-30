@@ -1,6 +1,6 @@
 package domain.toolchain
 
-import domain.Action
+import domain.action.Action
 import domain.ref.Constant
 import domain.ref.ParamDefinition
 import kotlin.js.ExperimentalJsExport

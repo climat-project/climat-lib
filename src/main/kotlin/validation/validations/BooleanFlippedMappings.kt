@@ -1,6 +1,6 @@
 package validation.validations
 
-import domain.TemplateActionValue
+import domain.action.TemplateActionValue
 import domain.ref.Ref
 import template.getParamReferences
 import validation.ValidationBase
