@@ -20,6 +20,7 @@ plugins {
     kotlin("plugin.serialization") version "1.7.20"
     id("org.jlleitschuh.gradle.ktlint") version "11.0.0"
     id("dev.petuska.npm.publish") version "3.2.0"
+    id("org.barfuin.gradle.taskinfo") version "1.0.5"
 }
 
 group = "me.marius"
@@ -100,7 +101,12 @@ tasks.register<com.strumenta.antlrkotlin.gradleplugin.AntlrKotlinTask>("generate
             include("*.g4")
         }
     outputDirectory = File("build/generated-src/commonAntlr/kotlin")
+
+    dependsOn("compileCommonAntlrKotlinMetadata")
 }
+
+// Doesn't work: https://github.com/gradle/gradle/issues/9331
+// tasks.getByName("compileCommonMainKotlinMetadata").dependsOn("generateKotlinCommonGrammarSource")
 
 tasks.getByName("compileKotlinJvm").dependsOn("generateKotlinCommonGrammarSource")
 tasks.getByName("compileKotlinJs").dependsOn("generateKotlinCommonGrammarSource")
