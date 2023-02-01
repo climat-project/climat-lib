@@ -1,4 +1,5 @@
-
+package e2e
+import ToolchainProcessor
 import domain.action.TemplateActionValue
 import kotlin.test.Test
 import kotlin.test.assertContentEquals

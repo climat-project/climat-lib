@@ -2,16 +2,28 @@ val githubUser: String by project
 val githubPassword: String by project
 val npmToken: String by project
 
-repositories {
-    mavenCentral()
-    maven("https://jitpack.io")
+allprojects {
+    repositories {
+        mavenCentral()
+        maven("https://jitpack.io")
 
-    maven {
-        url = uri("https://maven.pkg.github.com/wilversings/kotlinx-cli")
-        credentials {
-            username = githubUser
-            password = githubPassword
+        maven {
+            url = uri("https://maven.pkg.github.com/wilversings/kotlinx-cli")
+            credentials {
+                username = githubUser
+                password = githubPassword
+            }
         }
+    }
+}
+
+buildscript {
+    repositories {
+        maven("https://jitpack.io")
+        mavenCentral()
+    }
+    dependencies {
+        classpath("com.strumenta.antlr-kotlin:antlr-kotlin-gradle-plugin:b5135079b8")
     }
 }
 
@@ -76,15 +88,6 @@ npmPublish {
         npmjs {
             authToken.set(npmToken)
         }
-    }
-}
-
-buildscript {
-    repositories {
-        maven("https://jitpack.io")
-    }
-    dependencies {
-        classpath("com.strumenta.antlr-kotlin:antlr-kotlin-gradle-plugin:b5135079b8")
     }
 }
 

@@ -16,11 +16,11 @@ EOL: '\n';
 CONST: 'const';
 TRUE: 'true';
 FALSE: 'false';
+ALPHANUMERIC: [a-zA-Z0-9];
 
 // Parameters
 FLAG: 'flag';
 ARGUMENT: 'arg';
-SHORTHAND: [a-zA-Z];
 
 // Props
 ACTION_PROP: 'action';
@@ -41,10 +41,9 @@ SEALED: 'sealed';
 SHIFTED: 'shifted';
 
 // Actions
-JS: 'js';
 SCOPE_PARAMS: 'scope params';
 
-INT : [0-9]+ ;
-NAME: [a-zA-Z_\-][a-zA-Z_0-9\-]* ;
+INT : [0-9]+;
+IDENTIFIER: (ALPHANUMERIC | [_-])+;
 WS: [ \t\n\r\f]+ -> skip;
 STRING_LITERAL: '"' ( '\\"' | . )*? '"';

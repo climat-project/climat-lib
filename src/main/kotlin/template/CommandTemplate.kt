@@ -2,6 +2,7 @@ package template
 
 import domain.action.ActionValueBase
 import domain.action.CustomScriptActionValue
+import domain.action.NoopActionValue
 import domain.action.ScopeParamsActionValue
 import domain.action.TemplateActionValue
 import domain.ref.Ref
@@ -89,6 +90,9 @@ internal fun setActualCommand(
         }
         is ScopeParamsActionValue -> {
             action.value = values.mapValues { it.value.value }
+        }
+        is NoopActionValue -> {
+            // By definition, do nothing
         }
         else -> throw Exception("Type `${action::class}` not supported")
     }

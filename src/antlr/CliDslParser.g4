@@ -5,9 +5,9 @@ root: func EOF;
 
 funcModifiers: SEALED | SHIFTED;
 
-func: funcModifiers* NAME (LPAREN params? RPAREN)? funcBody;
+func: funcModifiers* IDENTIFIER (LPAREN params? RPAREN)? funcBody;
 params: param (COMMA param)* COMMA?;
-param: NAME SHORTHAND? (QMARK)? COLON paramType (EQ literal)?;
+param: IDENTIFIER ALPHANUMERIC? (QMARK)? COLON paramType (EQ literal)?;
 paramType: FLAG | ARGUMENT;
 
 funcBody: LCURLY funcStatements* RCURLY;
@@ -15,11 +15,12 @@ funcStatements: children | action | aliases | constDef | defaultOverride;
 
 children: CHILDREN_PROP LBRAKET func (COMMA func)* COMMA? RBRAKET;
 action: ACTION_PROP actionValue;
-aliases: ALIASES_PROP LBRAKET (NAME (COMMA NAME)* COMMA? )? RBRAKET;
-constDef: CONST NAME EQ literal;
-defaultOverride: OVERRIDE DEFAULT NAME EQ literal;
+aliases: ALIASES_PROP LBRAKET (IDENTIFIER (COMMA IDENTIFIER)* COMMA? )? RBRAKET;
+constDef: CONST IDENTIFIER EQ literal;
+defaultOverride: OVERRIDE DEFAULT IDENTIFIER EQ literal;
 
-actionValue: stringLiteral | SCOPE_PARAMS;
+actionValue: stringLiteral | SCOPE_PARAMS | customScript;
+customScript: IDENTIFIER? LCURLY RCURLY;
 
 literal: stringLiteral | booleanLiteral;
 stringLiteral: STRING_LITERAL;

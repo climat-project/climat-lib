@@ -16,19 +16,17 @@ import noopAction
 import org.antlr.v4.kotlinruntime.CharStreams
 import org.antlr.v4.kotlinruntime.CommonTokenStream
 
-// TODO custom exceptions
-
 internal fun decodeCliDsl(cliDsl: String): RootToolchain {
     val lexer = CliDslLexer(CharStreams.fromString(cliDsl))
     val parser = CliDslParser(CommonTokenStream(lexer))
     parser.addErrorListener(errListener)
 
-    val func = parser.root().findFunc() ?: throw Exception("Can't parse function")
+    val func = parser.root().assertRequire { findFunc() }
 
     val (statements, params) = destructureFunc(func)
 
     return RootToolchain(
-        name = func.NAME()?.text ?: throw Exception("Missing function name"),
+        name = func.assertRequire { IDENTIFIER() }.text,
         description = emptyString(), // TODO implement
         parameters = decodeParameters(params),
         parameterDefaults = decodeDefaults(statements, params),
@@ -43,7 +41,7 @@ private fun decodeDescendantToolchain(func: CliDslParser.FuncContext): Descendan
     val (statements, params) = destructureFunc(func)
 
     return DescendantToolchain(
-        name = func.NAME()?.text ?: throw Exception("Missing function name"),
+        name = func.assertRequire { IDENTIFIER() }.text,
         description = emptyString(), // TODO implement
         parameters = decodeParameters(params),
         parameterDefaults = decodeDefaults(statements, params),
@@ -58,11 +56,11 @@ private fun decodeAliases(statements: List<CliDslParser.FuncStatementsContext>):
     val aliasProps = statements.mapNotNull { it.findAliases() }
         .toList()
     if (aliasProps.size >= 2) {
-        throw Exception("More than one aliases property not allowed")
+        aliasProps[1].throwExpected("More than one aliases property not allowed")
     }
     if (aliasProps.size == 1) {
         val alias = aliasProps.first()
-        return alias.NAME().map { it.text }.toTypedArray()
+        return alias.IDENTIFIER().map { it.text }.toTypedArray()
     }
     return emptyArray()
 }
@@ -71,54 +69,49 @@ private fun decodeAction(statements: List<CliDslParser.FuncStatementsContext>): 
     val actions = statements.mapNotNull { it.findAction() }
         .toList()
     if (actions.size >= 2) {
-        throw Exception("More than one action property is not allowed")
+        actions[1].throwExpected("More than one action property is not allowed")
     }
     if (actions.size == 1) {
         val child = actions.first()
-        child.findActionValue()?.let {
-            it.findStringLiteral()?.text?.let(::TemplateActionValue)
-                ?: it.SCOPE_PARAMS()?.text?.let { ScopeParamsActionValue() }
-                ?: throw Exception("Could not parse action value")
+        return child.assertRequire { findActionValue() }.let {
+            it.findStringLiteral()?.let(::getLiteralTextFromStringContext)?.let(::TemplateActionValue)
+                ?: it.assertRequire { SCOPE_PARAMS() }.text.let { ScopeParamsActionValue() }
         }
-        val text = child.findActionValue()?.findStringLiteral()?.let(::getLiteralTextFromStringContext) ?: throw Exception("No action string provided!")
-
-        return TemplateActionValue(text)
     }
     return noopAction()
 }
 
 private fun destructureFunc(func: CliDslParser.FuncContext) =
-    (func.findFuncBody()?.findFuncStatements() ?: throw Exception("Function body not found")) to
+    func.assertRequire { findFuncBody() }.findFuncStatements() to
         func.findParams()?.findParam().orEmpty()
 
 private fun decodeDefaults(funcStatements: List<CliDslParser.FuncStatementsContext>, params: List<CliDslParser.ParamContext>): Map<String, String> =
     params.associate {
-        (it.NAME()?.text ?: throw Exception()) to it.findLiteral()?.let(::getLiteralText)
+        it.assertRequire { IDENTIFIER() }.text to it.findLiteral()?.let(::getLiteralText)
     }.filterNotNullValues() + funcStatements.mapNotNull { it.findDefaultOverride() }.associate {
-        (it.NAME()?.text ?: throw Exception("Missing default override name")) to
-            (it.findLiteral()?.let(::getLiteralText) ?: throw Exception("Missing default override value"))
+        it.assertRequire { IDENTIFIER() }.text to
+            it.assertRequire { findLiteral() }.let(::getLiteralText)
     }
 
 private fun decodeConstants(statements: List<CliDslParser.FuncStatementsContext>): Array<Constant> =
     statements.mapNotNull { it.findConstDef() }
         .map { context ->
-            context.findLiteral()?.let { literal ->
+            context.assertRequire { findLiteral() }.let { literal ->
                 Constant(
-                    name = context.NAME()?.text ?: throw Exception("Missing constant name"),
+                    name = context.assertRequire { IDENTIFIER() }.text,
                     type = if (literal.findStringLiteral() != null) Ref.Type.Arg else Ref.Type.Flag,
                     value = getLiteralText(literal)
                 )
-            } ?: throw Exception("Missing constant value")
+            }
         }.toTypedArray()
 
-private fun getLiteralText(literal: CliDslParser.LiteralContext) =
+private fun getLiteralText(literal: CliDslParser.LiteralContext): String =
     literal
         .findStringLiteral()
         ?.let(::getLiteralTextFromStringContext)
-        ?: literal.findBooleanLiteral()?.text
-        ?: throw Exception("Could not parse literal text")
+        ?: literal.assertRequire { findBooleanLiteral() }.text
 
-private fun getLiteralTextFromStringContext(literal: CliDslParser.StringLiteralContext) =
+private fun getLiteralTextFromStringContext(literal: CliDslParser.StringLiteralContext): String? =
     literal
         .STRING_LITERAL()
         ?.text
@@ -130,7 +123,7 @@ private fun decodeChildren(statements: List<CliDslParser.FuncStatementsContext>)
     val children = statements.mapNotNull { it.findChildren() }
         .toList()
     if (children.size >= 2) {
-        throw Exception("More than one child property not allowed")
+        children[1].throwExpected("More than one child property not allowed")
     }
     if (children.size == 1) {
         val child = children.first()
@@ -142,16 +135,16 @@ private fun decodeChildren(statements: List<CliDslParser.FuncStatementsContext>)
 private fun decodeParameters(params: List<CliDslParser.ParamContext>): Array<ParamDefinition> =
     params.map { parsedParam ->
         ParamDefinition(
-            name = parsedParam.NAME()?.text ?: throw Exception("Parameter name missing"),
+            name = parsedParam.assertRequire { IDENTIFIER() }.text,
             description = emptyString(), // TODO implement
             optional = parsedParam.QMARK() != null,
-            shorthand = parsedParam.SHORTHAND()?.text,
-            type = parsedParam.findParamType()?.let {
+            shorthand = parsedParam.ALPHANUMERIC()?.text,
+            type = parsedParam.assertRequire { findParamType() }.let {
                 when {
                     it.FLAG() != null -> Ref.Type.Flag
                     it.ARGUMENT() != null -> Ref.Type.Arg
-                    else -> throw Exception("Could not parse parameter type")
+                    else -> it.throwUnexpected("Could not parse parameter type")
                 }
-            } ?: throw Exception("Parameter type missing")
+            }
         )
     }.toTypedArray()
