@@ -12,7 +12,6 @@ LBRAKET: '[';
 RBRAKET: ']';
 DOUBLE_QUOTE: '"';
 QMARK: '?';
-EOL: '\n';
 CONST: 'const';
 TRUE: 'true';
 FALSE: 'false';
@@ -43,7 +42,11 @@ SHIFTED: 'shifted';
 // Actions
 SCOPE_PARAMS: 'scope params';
 
-INT : [0-9]+;
 IDENTIFIER: (ALPHANUMERIC | [_-])+;
 WS: [ \t\n\r\f]+ -> skip;
 STRING_LITERAL: '"' ( '\\"' | . )*? '"';
+
+// Docstring
+DOCSTRING_OPEN_CLOSE: '"""';
+TEXT: ~["@{}[\]()a-zA-Z0-9,:?=]+;
+PARAM_TAG: '@param' WS*;

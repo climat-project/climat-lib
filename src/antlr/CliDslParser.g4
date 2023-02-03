@@ -5,7 +5,7 @@ root: func EOF;
 
 funcModifiers: SEALED | SHIFTED;
 
-func: funcModifiers* IDENTIFIER (LPAREN params? RPAREN)? funcBody;
+func: docstring? funcModifiers* IDENTIFIER (LPAREN params? RPAREN)? funcBody;
 params: param (COMMA param)* COMMA?;
 param: IDENTIFIER ALPHANUMERIC? (QMARK)? COLON paramType (EQ literal)?;
 paramType: FLAG | ARGUMENT;
@@ -26,4 +26,7 @@ literal: stringLiteral | booleanLiteral;
 stringLiteral: STRING_LITERAL;
 booleanLiteral: TRUE | FALSE;
 
-
+docstring: DOCSTRING_OPEN_CLOSE functionDescription? paramDescription* DOCSTRING_OPEN_CLOSE;
+functionDescription: description;
+paramDescription: PARAM_TAG IDENTIFIER description;
+description: (IDENTIFIER | TEXT)+;
