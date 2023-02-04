@@ -1,7 +1,7 @@
 package parser
 
-import climat.lang.CliDslLexer
-import climat.lang.CliDslParser
+import climat.lang.DslLexer
+import climat.lang.DslParser
 import domain.action.ActionValueBase
 import domain.action.ScopeParamsActionValue
 import domain.action.TemplateActionValue
@@ -17,8 +17,8 @@ import org.antlr.v4.kotlinruntime.CharStreams
 import org.antlr.v4.kotlinruntime.CommonTokenStream
 
 internal fun decodeCliDsl(cliDsl: String): RootToolchain {
-    val lexer = CliDslLexer(CharStreams.fromString(cliDsl))
-    val parser = CliDslParser(CommonTokenStream(lexer))
+    val lexer = DslLexer(CharStreams.fromString(cliDsl))
+    val parser = DslParser(CommonTokenStream(lexer))
     parser.addErrorListener(errListener)
 
     val func = parser.root().assertRequire { findFunc() }
@@ -27,8 +27,8 @@ internal fun decodeCliDsl(cliDsl: String): RootToolchain {
 
     return RootToolchain(
         name = func.assertRequire { IDENTIFIER() }.text,
-        description = decodeFunctionDescription(docstring),
-        parameters = decodeParameters(params, getParamDescriptionMap(docstring)),
+        description = docstring.functionDoc,
+        parameters = decodeParameters(params, docstring.paramDoc),
         parameterDefaults = decodeDefaults(statements, params),
         action = decodeAction(statements),
         children = decodeChildren(statements),
@@ -37,13 +37,13 @@ internal fun decodeCliDsl(cliDsl: String): RootToolchain {
     )
 }
 
-private fun decodeDescendantToolchain(func: CliDslParser.FuncContext): DescendantToolchain {
+private fun decodeDescendantToolchain(func: DslParser.FuncContext): DescendantToolchain {
     val (statements, params, docstring) = destructureFunc(func)
 
     return DescendantToolchain(
         name = func.assertRequire { IDENTIFIER() }.text,
-        description = decodeFunctionDescription(docstring),
-        parameters = decodeParameters(params, getParamDescriptionMap(docstring)),
+        description = docstring.functionDoc,
+        parameters = decodeParameters(params, docstring.paramDoc),
         parameterDefaults = decodeDefaults(statements, params),
         action = decodeAction(statements),
         children = decodeChildren(statements),
@@ -52,7 +52,7 @@ private fun decodeDescendantToolchain(func: CliDslParser.FuncContext): Descendan
     )
 }
 
-private fun decodeAliases(statements: List<CliDslParser.FuncStatementsContext>): Array<String> {
+private fun decodeAliases(statements: List<DslParser.FuncStatementsContext>): Array<String> {
     val aliasProps = statements.mapNotNull { it.findAliases() }
         .toList()
     if (aliasProps.size >= 2) {
@@ -65,7 +65,7 @@ private fun decodeAliases(statements: List<CliDslParser.FuncStatementsContext>):
     return emptyArray()
 }
 
-private fun decodeAction(statements: List<CliDslParser.FuncStatementsContext>): ActionValueBase<*> {
+private fun decodeAction(statements: List<DslParser.FuncStatementsContext>): ActionValueBase<*> {
     val actions = statements.mapNotNull { it.findAction() }
         .toList()
     if (actions.size >= 2) {
@@ -81,14 +81,14 @@ private fun decodeAction(statements: List<CliDslParser.FuncStatementsContext>): 
     return noopAction()
 }
 
-private fun destructureFunc(func: CliDslParser.FuncContext) =
+private fun destructureFunc(func: DslParser.FuncContext) =
     Triple(
         func.assertRequire { findFuncBody() }.findFuncStatements(),
         func.findParams()?.findParam().orEmpty(),
-        func.findDocstring()
+        decodeDocstring(func.DOCSTRING()?.text ?: emptyString())
     )
 
-private fun decodeDefaults(funcStatements: List<CliDslParser.FuncStatementsContext>, params: List<CliDslParser.ParamContext>): Map<String, String> =
+private fun decodeDefaults(funcStatements: List<DslParser.FuncStatementsContext>, params: List<DslParser.ParamContext>): Map<String, String> =
     params.associate {
         it.assertRequire { IDENTIFIER() }.text to it.findLiteral()?.let(::getLiteralText)
     }.filterNotNullValues() + funcStatements.mapNotNull { it.findDefaultOverride() }.associate {
@@ -96,7 +96,7 @@ private fun decodeDefaults(funcStatements: List<CliDslParser.FuncStatementsConte
             it.assertRequire { findLiteral() }.let(::getLiteralText)
     }
 
-private fun decodeConstants(statements: List<CliDslParser.FuncStatementsContext>): Array<Constant> =
+private fun decodeConstants(statements: List<DslParser.FuncStatementsContext>): Array<Constant> =
     statements.mapNotNull { it.findConstDef() }
         .map { context ->
             context.assertRequire { findLiteral() }.let { literal ->
@@ -108,13 +108,13 @@ private fun decodeConstants(statements: List<CliDslParser.FuncStatementsContext>
             }
         }.toTypedArray()
 
-private fun getLiteralText(literal: CliDslParser.LiteralContext): String =
+private fun getLiteralText(literal: DslParser.LiteralContext): String =
     literal
         .findStringLiteral()
         ?.let(::getLiteralTextFromStringContext)
         ?: literal.assertRequire { findBooleanLiteral() }.text
 
-private fun getLiteralTextFromStringContext(literal: CliDslParser.StringLiteralContext): String? =
+private fun getLiteralTextFromStringContext(literal: DslParser.StringLiteralContext): String? =
     literal
         .STRING_LITERAL()
         ?.text
@@ -122,7 +122,7 @@ private fun getLiteralTextFromStringContext(literal: CliDslParser.StringLiteralC
         ?.dropLast(1)
         ?.replace("\\\"", "\"")
 
-private fun decodeChildren(statements: List<CliDslParser.FuncStatementsContext>): Array<DescendantToolchain> {
+private fun decodeChildren(statements: List<DslParser.FuncStatementsContext>): Array<DescendantToolchain> {
     val children = statements.mapNotNull { it.findChildren() }
         .toList()
     if (children.size >= 2) {
@@ -135,7 +135,7 @@ private fun decodeChildren(statements: List<CliDslParser.FuncStatementsContext>)
     return emptyArray()
 }
 
-private fun decodeParameters(params: List<CliDslParser.ParamContext>, paramDescriptions: Map<String, String>): Array<ParamDefinition> =
+private fun decodeParameters(params: List<DslParser.ParamContext>, paramDescriptions: Map<String, String>): Array<ParamDefinition> =
     params.map { parsedParam ->
         val paramName = parsedParam.assertRequire { IDENTIFIER() }.text
 
@@ -153,10 +153,3 @@ private fun decodeParameters(params: List<CliDslParser.ParamContext>, paramDescr
             }
         )
     }.toTypedArray()
-
-fun getParamDescriptionMap(docstring: CliDslParser.DocstringContext?): Map<String, String> =
-    docstring?.findParamDescription().orEmpty()
-        .associate { it.assertRequire { IDENTIFIER() }.text to it.assertRequire { findDescription() }.text }
-
-private fun decodeFunctionDescription(docstring: CliDslParser.DocstringContext?) =
-    docstring?.findFunctionDescription()?.text ?: emptyString()

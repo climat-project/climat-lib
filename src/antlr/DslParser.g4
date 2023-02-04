@@ -1,11 +1,11 @@
-parser grammar CliDslParser;
-options { tokenVocab=CliDslLexer; }
+parser grammar DslParser;
+options { tokenVocab=DslLexer; }
 
 root: func EOF;
 
 funcModifiers: SEALED | SHIFTED;
 
-func: docstring? funcModifiers* IDENTIFIER (LPAREN params? RPAREN)? funcBody;
+func: DOCSTRING? funcModifiers* IDENTIFIER (LPAREN params? RPAREN)? funcBody;
 params: param (COMMA param)* COMMA?;
 param: IDENTIFIER ALPHANUMERIC? (QMARK)? COLON paramType (EQ literal)?;
 paramType: FLAG | ARGUMENT;
@@ -25,8 +25,3 @@ customScript: IDENTIFIER? CUSTOM_SCRIPT;
 literal: stringLiteral | booleanLiteral;
 stringLiteral: STRING_LITERAL;
 booleanLiteral: TRUE | FALSE;
-
-docstring: DOCSTRING_OPEN_CLOSE functionDescription? paramDescription* DOCSTRING_OPEN_CLOSE;
-functionDescription: description;
-paramDescription: PARAM_TAG IDENTIFIER description;
-description: (IDENTIFIER | TEXT)+;

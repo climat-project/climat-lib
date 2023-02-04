@@ -12,6 +12,9 @@ class ParserSanityCheck {
                     aliases [alias1, alias3]
                 },
                 sealed js {},
+                
+                ${"\"\"\""}
+                ${"\"\"\""}
                 c3(p1 s: arg, p2 1: flag, p3?: arg, p4?: flag,
                    p5?: arg = "wat",
                    p6?: flag = false) {

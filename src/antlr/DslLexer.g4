@@ -1,5 +1,6 @@
 // DELETE THIS CONTENT IF YOU PUT COMBINED GRAMMAR IN Parser TAB
-lexer grammar CliDslLexer;
+lexer grammar DslLexer;
+import CommonLexer;
 
 EQ : '=' ;
 COMMA : ',' ;
@@ -17,7 +18,6 @@ QMARK: '?';
 CONST: 'const';
 TRUE: 'true';
 FALSE: 'false';
-ALPHANUMERIC: [a-zA-Z0-9];
 
 // Parameters
 FLAG: 'flag';
@@ -45,11 +45,8 @@ SHIFTED: 'shifted';
 SCOPE_PARAMS: 'scope params';
 CUSTOM_SCRIPT: LT WS* .*? WS* GT;
 
-IDENTIFIER: (ALPHANUMERIC | [_-])+;
 WS: [ \t\n\r\f]+ -> skip;
 STRING_LITERAL: '"' ( '\\"' | . )*? '"';
 
 // Docstring
-DOCSTRING_OPEN_CLOSE: '"""';
-TEXT: ~["@{}[\]()<>a-zA-Z0-9,:?=]+;
-PARAM_TAG: '@param' WS*;
+DOCSTRING: '"""' .*? '"""';

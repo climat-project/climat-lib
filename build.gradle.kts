@@ -68,6 +68,9 @@ kotlin {
     js(IR) {
         binaries.library()
         browser {
+            testTask {
+                useMocha()
+            }
             webpackTask {
                 outputFileName = "main.js"
                 output.libraryTarget = "commonjs2"
@@ -101,7 +104,7 @@ tasks.register<com.strumenta.antlrkotlin.gradleplugin.AntlrKotlinTask>("generate
     source = project.objects
         .sourceDirectorySet("antlr", "antlr")
         .srcDir("src/antlr").apply {
-            include("*.g4")
+            include("**/*.g4")
         }
     outputDirectory = File("build/generated-src/commonAntlr/kotlin")
 
