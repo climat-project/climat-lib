@@ -20,7 +20,7 @@ constDef: CONST IDENTIFIER EQ literal;
 defaultOverride: OVERRIDE DEFAULT IDENTIFIER EQ literal;
 
 actionValue: stringLiteral | SCOPE_PARAMS | customScript;
-customScript: IDENTIFIER? LCURLY RCURLY;
+customScript: IDENTIFIER? CUSTOM_SCRIPT;
 
 literal: stringLiteral | booleanLiteral;
 stringLiteral: STRING_LITERAL;

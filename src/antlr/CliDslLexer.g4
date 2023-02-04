@@ -10,6 +10,8 @@ LCURLY : '{' ;
 RCURLY : '}' ;
 LBRAKET: '[';
 RBRAKET: ']';
+LT: '<';
+GT: '>';
 DOUBLE_QUOTE: '"';
 QMARK: '?';
 CONST: 'const';
@@ -41,6 +43,7 @@ SHIFTED: 'shifted';
 
 // Actions
 SCOPE_PARAMS: 'scope params';
+CUSTOM_SCRIPT: LT WS* .*? WS* GT;
 
 IDENTIFIER: (ALPHANUMERIC | [_-])+;
 WS: [ \t\n\r\f]+ -> skip;
@@ -48,5 +51,5 @@ STRING_LITERAL: '"' ( '\\"' | . )*? '"';
 
 // Docstring
 DOCSTRING_OPEN_CLOSE: '"""';
-TEXT: ~["@{}[\]()a-zA-Z0-9,:?=]+;
+TEXT: ~["@{}[\]()<>a-zA-Z0-9,:?=]+;
 PARAM_TAG: '@param' WS*;

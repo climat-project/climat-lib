@@ -14,7 +14,7 @@ abstract class ActionValueBase<VType>() {
     val type: Type
         get() = when (this) {
             is TemplateActionValue -> Type.Template
-            is CustomScriptActionValue -> Type.JavaScript
+            is CustomScriptActionValue -> Type.CustomScript
             is ScopeParamsActionValue -> Type.ScopeParams
             is NoopActionValue -> Type.Noop
             else -> throw Exception("${this::class} is not supported")
@@ -22,7 +22,7 @@ abstract class ActionValueBase<VType>() {
 
     enum class Type {
         Template,
-        JavaScript,
+        CustomScript,
         ScopeParams,
         Noop
     }
