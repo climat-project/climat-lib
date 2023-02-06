@@ -2,7 +2,6 @@ package validation.validations
 
 import domain.action.TemplateActionValue
 import domain.ref.Ref
-import template.getParamReferences
 import validation.ValidationBase
 import validation.ValidationContext
 import validation.ValidationResult
@@ -20,9 +19,9 @@ internal class BooleanFlippedMappings : ValidationBase() {
                     .filter { it.type != Ref.Type.Flag }
                     .map { it.name }
                     .intersect(
-                        getParamReferences(act.template)
+                        act.template.refReferences
                             .filter { it.isFlipped }
-                            .map { it.paramName }
+                            .map { it.name }
                             .toSet()
                     ).map {
                         "Param `$it` cannot be flipped because it is not a flag"

@@ -22,14 +22,14 @@ internal fun decodeDocstring(docstring: String): Docstring {
 
     // TODO add warnings
     // parser.addErrorListener(errListener)
-    val entries = parser.root().findEntries()
+    val entries = parser.root().findEntry()
     if (entries.isEmpty()) {
         return Docstring.empty
     }
     val first = entries.first()
 
-    first.CONTENT().let {
-        return if (it != null) {
+    return first.CONTENT().let {
+        if (it != null) {
             Docstring(
                 it.text,
                 pair(entries.drop(1))
@@ -40,7 +40,7 @@ internal fun decodeDocstring(docstring: String): Docstring {
     }
 }
 
-private fun pair(docs: List<DocstringParser.EntriesContext>) =
+private fun pair(docs: List<DocstringParser.EntryContext>) =
     docs.chunked(2)
         .map { (tag, doc) -> tag.assertRequire { findParamTag() } to doc.assertRequire { CONTENT() } }
         .associate { (tag, doc) -> tag.assertRequire { IDENTIFIER() }.text to doc.text }

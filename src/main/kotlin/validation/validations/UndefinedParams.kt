@@ -2,7 +2,6 @@ package validation.validations
 
 import domain.action.TemplateActionValue
 import not
-import template.getParamReferences
 import validation.ValidationBase
 import validation.ValidationContext
 import validation.ValidationResult
@@ -15,8 +14,9 @@ internal class UndefinedParams : ValidationBase() {
         getScopeRefs(ctx).let { scopeParams ->
             val act = ctx.toolchain.action
             if (act is TemplateActionValue)
-                getParamReferences(act.template)
-                    .map { it.paramName }
+                act.template.refReferences
+                    .asSequence()
+                    .map { it.name }
                     .distinct()
                     .filter(not(scopeParams::contains))
                     .map {

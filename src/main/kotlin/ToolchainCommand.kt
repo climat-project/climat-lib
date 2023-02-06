@@ -1,5 +1,9 @@
 
 import domain.action.ActionValueBase
+import domain.action.CustomScriptActionValue
+import domain.action.NoopActionValue
+import domain.action.ScopeParamsActionValue
+import domain.action.TemplateActionValue
 import domain.eachAlias
 import domain.ref.Constant
 import domain.ref.ParamDefinition
@@ -12,8 +16,6 @@ import kotlinx.cli.CLIEntity
 import kotlinx.cli.ExperimentalCli
 import kotlinx.cli.Subcommand
 import kotlinx.cli.default
-import template.setActualCommand
-
 @OptIn(ExperimentalCli::class)
 internal class ToolchainCommand(
     private val toolchain: Toolchain,
@@ -90,11 +92,32 @@ internal class ToolchainCommand(
         val executedChild = toolchainSubcommands.find { it.executed }
         if (executedChild == null) {
             val act = toolchain.action
-            setActualCommand(act, params)
+            setActualCommand(act, params.values)
             handler(act, toolchain)
         } else {
             executedChild.executed = false
         }
         executed = true
+    }
+
+    private fun setActualCommand(
+        action: ActionValueBase<*>,
+        values: Collection<RefWithValue>
+    ) {
+        when (action) {
+            is TemplateActionValue -> {
+                action.value = action.template.str(values)
+            }
+            is CustomScriptActionValue -> {
+                // handled by the library consumer
+            }
+            is ScopeParamsActionValue -> {
+                action.value = values.associate { it.ref.name to it.value }
+            }
+            is NoopActionValue -> {
+                // By definition, do nothing
+            }
+            else -> throw Exception("Type `${action::class}` not supported")
+        }
     }
 }

@@ -15,6 +15,8 @@ import filterNotNullValues
 import noopAction
 import org.antlr.v4.kotlinruntime.CharStreams
 import org.antlr.v4.kotlinruntime.CommonTokenStream
+import parser.template.Template
+import parser.template.decodeTemplate
 
 internal fun decodeCliDsl(cliDsl: String): RootToolchain {
     val lexer = DslLexer(CharStreams.fromString(cliDsl))
@@ -74,8 +76,11 @@ private fun decodeAction(statements: List<DslParser.FuncStatementsContext>): Act
     if (actions.size == 1) {
         val child = actions.first()
         return child.assertRequire { findActionValue() }.let {
-            it.findStringLiteral()?.let(::getLiteralTextFromStringContext)?.let(::TemplateActionValue)
-                ?: it.assertRequire { SCOPE_PARAMS() }.text.let { ScopeParamsActionValue() }
+            it.findStringLiteral()?.let(::getLiteralTextFromStringContext)?.let {
+                TemplateActionValue(
+                    Template(decodeTemplate(it))
+                )
+            } ?: it.assertRequire { SCOPE_PARAMS() }.text.let { ScopeParamsActionValue() }
         }
     }
     return noopAction()

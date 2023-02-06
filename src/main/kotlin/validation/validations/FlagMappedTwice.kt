@@ -1,7 +1,6 @@
 package validation.validations
 
 import domain.action.TemplateActionValue
-import template.getParamReferences
 import validation.ValidationBase
 import validation.ValidationContext
 import validation.ValidationResult
@@ -13,12 +12,12 @@ internal class FlagMappedTwice : ValidationBase() {
     override fun validate(ctx: ValidationContext): Sequence<String> =
         ctx.toolchain.action.let { act ->
             if (act is TemplateActionValue) {
-                getParamReferences(act.template)
-                    .filter { it.mapTarget != null }
-                    .groupBy { it.mapTarget }
+                act.template.refReferences
+                    .filter { it.mapping != null }
+                    .groupBy { it.mapping }
                     .values.asSequence()
                     .filter { it.size >= 2 }
-                    .map { it.first().mapTarget!! }
+                    .map { it.first().mapping!! }
                     .map { "Flag $it was mapped more than once" }
             } else { emptySequence() }
         }
