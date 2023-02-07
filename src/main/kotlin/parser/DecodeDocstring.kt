@@ -1,10 +1,7 @@
 package parser
 
-import climat.lang.DocstringLexer
-import climat.lang.DocstringParser
+import climat.lang.DslParser
 import emptyString
-import org.antlr.v4.kotlinruntime.CharStreams
-import org.antlr.v4.kotlinruntime.CommonTokenStream
 
 internal data class Docstring(
     val functionDoc: String,
@@ -16,19 +13,20 @@ internal data class Docstring(
     }
 }
 
-internal fun decodeDocstring(docstring: String): Docstring {
-    val lexer = DocstringLexer(CharStreams.fromString(docstring))
-    val parser = DocstringParser(CommonTokenStream(lexer))
+internal fun decodeDocstring(docstring: DslParser.DocstringContext?): Docstring {
+    if (docstring == null) {
+        return Docstring.empty
+    }
 
     // TODO add warnings
     // parser.addErrorListener(errListener)
-    val entries = parser.root().findEntry()
+    val entries = docstring.findDocstringEntry()
     if (entries.isEmpty()) {
         return Docstring.empty
     }
     val first = entries.first()
 
-    return first.CONTENT().let {
+    return first.Docstring_CONTENT().let {
         if (it != null) {
             Docstring(
                 it.text,
@@ -40,7 +38,7 @@ internal fun decodeDocstring(docstring: String): Docstring {
     }
 }
 
-private fun pair(docs: List<DocstringParser.EntryContext>) =
+private fun pair(docs: List<DslParser.DocstringEntryContext>) =
     docs.chunked(2)
-        .map { (tag, doc) -> tag.assertRequire { findParamTag() } to doc.assertRequire { CONTENT() } }
-        .associate { (tag, doc) -> tag.assertRequire { IDENTIFIER() }.text to doc.text }
+        .map { (tag, doc) -> tag.assertRequire { findParamTag() } to doc.assertRequire { Docstring_CONTENT() } }
+        .associate { (tag, doc) -> tag.assertRequire { Docstring_IDENTIFIER() }.text to doc.text }

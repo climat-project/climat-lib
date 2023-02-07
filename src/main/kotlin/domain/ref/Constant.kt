@@ -1,5 +1,6 @@
 package domain.ref
 
+import parser.template.Template
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 
@@ -8,5 +9,5 @@ import kotlin.js.JsExport
 data class Constant(
     override val name: String,
     override val type: Type,
-    val value: String
+    val value: Template
 ) : Ref()

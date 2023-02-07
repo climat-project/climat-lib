@@ -15,6 +15,7 @@ import filterNotNullValues
 import noopAction
 import org.antlr.v4.kotlinruntime.CharStreams
 import org.antlr.v4.kotlinruntime.CommonTokenStream
+import parser.template.SimpleString
 import parser.template.Template
 import parser.template.decodeTemplate
 
@@ -76,9 +77,9 @@ private fun decodeAction(statements: List<DslParser.FuncStatementsContext>): Act
     if (actions.size == 1) {
         val child = actions.first()
         return child.assertRequire { findActionValue() }.let {
-            it.findStringLiteral()?.let(::getLiteralTextFromStringContext)?.let {
+            it.findStrintTemplate()?.let {
                 TemplateActionValue(
-                    Template(decodeTemplate(it))
+                    decodeTemplate(it)
                 )
             } ?: it.assertRequire { SCOPE_PARAMS() }.text.let { ScopeParamsActionValue() }
         }
@@ -90,15 +91,15 @@ private fun destructureFunc(func: DslParser.FuncContext) =
     Triple(
         func.assertRequire { findFuncBody() }.findFuncStatements(),
         func.findParams()?.findParam().orEmpty(),
-        decodeDocstring(func.DOCSTRING()?.text ?: emptyString())
+        decodeDocstring(func.findDocstring())
     )
 
 private fun decodeDefaults(funcStatements: List<DslParser.FuncStatementsContext>, params: List<DslParser.ParamContext>): Map<String, String> =
     params.associate {
-        it.assertRequire { IDENTIFIER() }.text to it.findLiteral()?.let(::getLiteralText)
+        it.assertRequire { IDENTIFIER() }.text to it.findLiteral()?.let(::decodeSimpleString)
     }.filterNotNullValues() + funcStatements.mapNotNull { it.findDefaultOverride() }.associate {
         it.assertRequire { IDENTIFIER() }.text to
-            it.assertRequire { findLiteral() }.let(::getLiteralText)
+            decodeSimpleString(it.assertRequire { findLiteral() })
     }
 
 private fun decodeConstants(statements: List<DslParser.FuncStatementsContext>): Array<Constant> =
@@ -107,25 +108,26 @@ private fun decodeConstants(statements: List<DslParser.FuncStatementsContext>): 
             context.assertRequire { findLiteral() }.let { literal ->
                 Constant(
                     name = context.assertRequire { IDENTIFIER() }.text,
-                    type = if (literal.findStringLiteral() != null) Ref.Type.Arg else Ref.Type.Flag,
-                    value = getLiteralText(literal)
+                    type = if (literal.findStrintTemplate() != null) Ref.Type.Arg else Ref.Type.Flag,
+                    value = getLiteralTemplate(literal)
                 )
             }
         }.toTypedArray()
 
-private fun getLiteralText(literal: DslParser.LiteralContext): String =
+private fun getLiteralTemplate(literal: DslParser.LiteralContext): Template =
     literal
-        .findStringLiteral()
-        ?.let(::getLiteralTextFromStringContext)
-        ?: literal.assertRequire { findBooleanLiteral() }.text
+        .findStrintTemplate()
+        ?.let(::decodeTemplate)
+        ?: Template(listOf(SimpleString(literal.assertRequire { findBooleanLiteral() }.text)))
 
-private fun getLiteralTextFromStringContext(literal: DslParser.StringLiteralContext): String? =
-    literal
-        .STRING_LITERAL()
-        ?.text
-        ?.drop(1)
-        ?.dropLast(1)
-        ?.replace("\\\"", "\"")
+private fun decodeSimpleString(literal: DslParser.LiteralContext): String {
+    val tpl = getLiteralTemplate(literal)
+    if (tpl.refReferences.any()) {
+        literal.throwExpected("String interpolation not supported for defaults")
+        // TODO maybe we should support it?
+    }
+    return tpl.str(emptyList())
+}
 
 private fun decodeChildren(statements: List<DslParser.FuncStatementsContext>): Array<DescendantToolchain> {
     val children = statements.mapNotNull { it.findChildren() }

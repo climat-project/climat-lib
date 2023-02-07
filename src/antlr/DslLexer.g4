@@ -1,6 +1,10 @@
 // DELETE THIS CONTENT IF YOU PUT COMBINED GRAMMAR IN Parser TAB
 lexer grammar DslLexer;
-import CommonLexer;
+
+channels {
+  WHITESPACE_CHANNEL,
+  COMMENT
+}
 
 EQ : '=' ;
 COMMA : ',' ;
@@ -13,7 +17,7 @@ LBRAKET: '[';
 RBRAKET: ']';
 LT: '<';
 GT: '>';
-DOUBLE_QUOTE: '"';
+DOUBLE_QUOTE: '"' -> pushMode(Template);
 QMARK: '?';
 CONST: 'const';
 TRUE: 'true';
@@ -33,9 +37,8 @@ OVERRIDE: 'override';
 DEFAULT: 'default';
 
 // Comments
-MULTILINE_COMMENT_START: '/*';
-MULTILINE_COMMENT_END: '*/';
-COMMENT: '//';
+MULTILINE_COMMENT: '/*' .*? '*/' -> channel(COMMENT);
+SINGLELINE_COMMENT: '//' .*? '\n' -> channel(COMMENT);
 
 // Modifiers
 SEALED: 'sealed';
@@ -45,8 +48,29 @@ SHIFTED: 'shifted';
 SCOPE_PARAMS: 'scope params';
 CUSTOM_SCRIPT: LT WS* .*? WS* GT;
 
-WS: [ \t\n\r\f]+ -> skip;
-STRING_LITERAL: '"' ( '\\"' | . )*? '"';
-
 // Docstring
-DOCSTRING: '"""' .*? '"""';
+DOCSTRING_BEGIN: '"""' -> pushMode(Docstring);
+
+WS: [ \t\n\r\f]+ -> channel(WHITESPACE_CHANNEL);
+ALPHANUMERIC: [a-zA-Z0-9];
+IDENTIFIER: (ALPHANUMERIC | [_-])+;
+
+mode Template;
+Template_KACHING: '$';
+Template_CONTENT: ('\\$' | '\\"' | ~[$"(])+;
+Template_LPAREN: LPAREN -> pushMode(Interpolation);
+Template_CLOSE: '"' -> popMode;
+
+mode Interpolation;
+Interpolation_IDENTIFIER: IDENTIFIER;
+Interpolation_COLON: COLON;
+Interpolation_RPAREN: RPAREN -> popMode;
+Interpolation_WS: WS;
+Interpolation_NEGATE: '!';
+
+mode Docstring;
+Docstring_WS: [ \t\n\r\f]+;
+Docstring_AT_PARAM: '@param';
+Docstring_CONTENT: ~[@"]+?;
+Docstring_END: '"""' -> popMode;
+Docstring_IDENTIFIER: IDENTIFIER;

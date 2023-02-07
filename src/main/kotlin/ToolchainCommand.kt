@@ -16,6 +16,7 @@ import kotlinx.cli.CLIEntity
 import kotlinx.cli.ExperimentalCli
 import kotlinx.cli.Subcommand
 import kotlinx.cli.default
+
 @OptIn(ExperimentalCli::class)
 internal class ToolchainCommand(
     private val toolchain: Toolchain,
@@ -27,8 +28,8 @@ internal class ToolchainCommand(
 
     private var executed = false
     private val defaults = upperScopeDefaults + toolchain.parameterDefaults
-    private val params = upperScopeRefs + toolchain.refs.associate {
-        it.name to RefWithValue(
+    private val currentScopeRefs = toolchain.refs.fold(emptyList<RefWithValue>()) { acc, it ->
+        val refWithValue = RefWithValue(
             it,
             when (it) {
                 is ParamDefinition -> {
@@ -40,7 +41,7 @@ internal class ToolchainCommand(
                 }
 
                 is Constant -> {
-                    { it.value }
+                    { it.value.str(acc) }
                 }
 
                 else -> {
@@ -48,7 +49,9 @@ internal class ToolchainCommand(
                 }
             }
         )
+        acc + listOf(refWithValue)
     }
+    private val params = upperScopeRefs + currentScopeRefs.associateBy { it.ref.name }
 
     private fun cliArgument(it: ParamDefinition): CLIEntity<out Any> =
         if (it.optional) {
