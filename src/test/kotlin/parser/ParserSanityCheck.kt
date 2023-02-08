@@ -35,6 +35,7 @@ class ParserSanityCheck {
                         shifted bb{
                         },
                         sealed shifted cc{
+                            action <random script>
                         },
                         shifted sealed dd{}
                     ]

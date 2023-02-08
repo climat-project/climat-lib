@@ -87,7 +87,7 @@ private fun decodeAction(statements: List<DslParser.FuncStatementsContext>): Act
                 ?: it.assertRequire { findCustomScript() }.let {
                     CustomScriptActionValue(
                         it.IDENTIFIER()?.text,
-                        it.assertRequire { CUSTOM_SCRIPT() }.text
+                        it.assertRequire { CustomScript_SCRIPT() }.text
                     )
                 }
         }

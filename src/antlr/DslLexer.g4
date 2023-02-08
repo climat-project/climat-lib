@@ -15,8 +15,6 @@ LCURLY : '{' ;
 RCURLY : '}' ;
 LBRAKET: '[';
 RBRAKET: ']';
-LT: '<';
-GT: '>';
 DOUBLE_QUOTE: '"' -> pushMode(Template);
 QMARK: '?';
 CONST: 'const';
@@ -46,7 +44,7 @@ SHIFTED: 'shifted';
 
 // Actions
 SCOPE_PARAMS: 'scope params';
-CUSTOM_SCRIPT: LT WS* .*? WS* GT;
+CUSTOM_SCRIPT_BEGIN: '<' -> pushMode(CustomScript);
 
 // Docstring
 DOCSTRING_BEGIN: '"""' -> pushMode(Docstring);
@@ -74,3 +72,7 @@ Docstring_END: '"""' -> popMode;
 
 mode DocstringRef;
 Docstring_IDENTIFIER: IDENTIFIER WS -> popMode;
+
+mode CustomScript;
+CustomScript_SCRIPT: ~[>]+;
+CustomScript_END: '>' -> popMode;

@@ -21,7 +21,7 @@ constDef: CONST IDENTIFIER EQ literal;
 defaultOverride: OVERRIDE DEFAULT IDENTIFIER EQ literal;
 
 actionValue: strintTemplate | SCOPE_PARAMS | customScript;
-customScript: IDENTIFIER? CUSTOM_SCRIPT;
+customScript: IDENTIFIER? CUSTOM_SCRIPT_BEGIN CustomScript_SCRIPT? CustomScript_END;
 
 literal: strintTemplate | booleanLiteral;
 booleanLiteral: TRUE | FALSE;
