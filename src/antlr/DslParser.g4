@@ -3,6 +3,7 @@ options { tokenVocab=DslLexer; }
 
 root: func EOF;
 
+// TODO implement functionality for SEALED and SHIFTED modifiers
 funcModifiers: SEALED | SHIFTED;
 
 func: docstring? funcModifiers* IDENTIFIER (LPAREN params? RPAREN)? funcBody;
@@ -28,10 +29,10 @@ booleanLiteral: TRUE | FALSE;
 strintTemplate: DOUBLE_QUOTE entry* Template_CLOSE;
 entry: content | interpolation;
 content: Template_CONTENT;
-interpolation: Template_KACHING Template_LPAREN Interpolation_NEGATE? Interpolation_IDENTIFIER mapping? Interpolation_RPAREN;
+interpolation: Template_INTERPOLATION_OPEN Interpolation_NEGATE? Interpolation_IDENTIFIER mapping? Interpolation_RPAREN;
 mapping: Interpolation_COLON Interpolation_IDENTIFIER;
 
 docstring: DOCSTRING_BEGIN docstringEntry* Docstring_END;
 docstringEntry: Docstring_CONTENT | paramTag;
-paramTag: Docstring_AT_PARAM Docstring_IDENTIFIER Docstring_WS;
+paramTag: Docstring_AT_PARAM Docstring_IDENTIFIER;
 

@@ -5,4 +5,7 @@ import kotlin.js.JsExport
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
-class CustomScriptActionValue(val customScript: String) : ActionValueBase<Nothing>()
+class CustomScriptActionValue(
+    val name: String?,
+    val customScript: String
+) : ActionValueBase<Map<String, String>>()

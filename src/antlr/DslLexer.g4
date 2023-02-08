@@ -56,9 +56,8 @@ ALPHANUMERIC: [a-zA-Z0-9];
 IDENTIFIER: (ALPHANUMERIC | [_-])+;
 
 mode Template;
-Template_KACHING: '$';
-Template_CONTENT: ('\\$' | '\\"' | ~[$"(])+;
-Template_LPAREN: LPAREN -> pushMode(Interpolation);
+Template_CONTENT: ('\\$' | '\\"' | ~[$"])+;
+Template_INTERPOLATION_OPEN: '$' LPAREN -> pushMode(Interpolation);
 Template_CLOSE: '"' -> popMode;
 
 mode Interpolation;
@@ -69,8 +68,9 @@ Interpolation_WS: WS;
 Interpolation_NEGATE: '!';
 
 mode Docstring;
-Docstring_WS: [ \t\n\r\f]+;
-Docstring_AT_PARAM: '@param';
-Docstring_CONTENT: ~[@"]+?;
+Docstring_AT_PARAM: '@param' WS -> pushMode(DocstringRef);
+Docstring_CONTENT: ~[@"]+;
 Docstring_END: '"""' -> popMode;
-Docstring_IDENTIFIER: IDENTIFIER;
+
+mode DocstringRef;
+Docstring_IDENTIFIER: IDENTIFIER WS -> popMode;

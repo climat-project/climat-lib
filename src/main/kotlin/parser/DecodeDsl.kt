@@ -3,6 +3,7 @@ package parser
 import climat.lang.DslLexer
 import climat.lang.DslParser
 import domain.action.ActionValueBase
+import domain.action.CustomScriptActionValue
 import domain.action.ScopeParamsActionValue
 import domain.action.TemplateActionValue
 import domain.ref.Constant
@@ -74,6 +75,7 @@ private fun decodeAction(statements: List<DslParser.FuncStatementsContext>): Act
     if (actions.size >= 2) {
         actions[1].throwExpected("More than one action property is not allowed")
     }
+
     if (actions.size == 1) {
         val child = actions.first()
         return child.assertRequire { findActionValue() }.let {
@@ -81,7 +83,13 @@ private fun decodeAction(statements: List<DslParser.FuncStatementsContext>): Act
                 TemplateActionValue(
                     decodeTemplate(it)
                 )
-            } ?: it.assertRequire { SCOPE_PARAMS() }.text.let { ScopeParamsActionValue() }
+            } ?: it.SCOPE_PARAMS()?.text?.let { ScopeParamsActionValue() }
+                ?: it.assertRequire { findCustomScript() }.let {
+                    CustomScriptActionValue(
+                        it.IDENTIFIER()?.text,
+                        it.assertRequire { CUSTOM_SCRIPT() }.text
+                    )
+                }
         }
     }
     return noopAction()

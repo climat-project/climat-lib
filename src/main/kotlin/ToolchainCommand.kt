@@ -112,7 +112,7 @@ internal class ToolchainCommand(
                 action.value = action.template.str(values)
             }
             is CustomScriptActionValue -> {
-                // handled by the library consumer
+                action.value = values.associate { it.ref.name to it.value }
             }
             is ScopeParamsActionValue -> {
                 action.value = values.associate { it.ref.name to it.value }
