@@ -7,6 +7,7 @@ internal data class Docstring(
     val functionDoc: String,
     val paramDoc: Map<String, String>
 ) {
+
     companion object {
         val empty: Docstring
             get() = Docstring(emptyString(), emptyMap())
@@ -18,8 +19,6 @@ internal fun decodeDocstring(docstring: DslParser.DocstringContext?): Docstring 
         return Docstring.empty
     }
 
-    // TODO add warnings
-    // parser.addErrorListener(errListener)
     val entries = docstring.findDocstringEntry()
     if (entries.isEmpty()) {
         return Docstring.empty
@@ -29,7 +28,7 @@ internal fun decodeDocstring(docstring: DslParser.DocstringContext?): Docstring 
     return first.Docstring_CONTENT().let {
         if (it != null) {
             Docstring(
-                it.text,
+                it.text.trim(),
                 pair(entries.drop(1))
             )
         } else {
@@ -41,4 +40,4 @@ internal fun decodeDocstring(docstring: DslParser.DocstringContext?): Docstring 
 private fun pair(docs: List<DslParser.DocstringEntryContext>) =
     docs.chunked(2)
         .map { (tag, doc) -> tag.assertRequire { findParamTag() } to doc.assertRequire { Docstring_CONTENT() } }
-        .associate { (tag, doc) -> tag.assertRequire { Docstring_IDENTIFIER() }.text to doc.text }
+        .associate { (tag, doc) -> tag.assertRequire { Docstring_IDENTIFIER() }.text.trim() to doc.text.trim() }
