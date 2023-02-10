@@ -17,8 +17,8 @@ import noopAction
 import org.antlr.v4.kotlinruntime.CharStreams
 import org.antlr.v4.kotlinruntime.CommonTokenStream
 import parser.docstring.decodeDocstring
+import parser.exception.CliDslErrorListener
 import parser.exception.assertRequire
-import parser.exception.errListener
 import parser.exception.throwExpected
 import parser.exception.throwUnexpected
 import parser.template.SimpleString
@@ -28,44 +28,44 @@ import parser.template.decodeTemplate
 internal fun decodeCliDsl(cliDsl: String): RootToolchain {
     val lexer = DslLexer(CharStreams.fromString(cliDsl))
     val parser = DslParser(CommonTokenStream(lexer))
-    parser.addErrorListener(errListener)
+    parser.addErrorListener(CliDslErrorListener(cliDsl))
 
-    val func = parser.root().assertRequire { findFunc() }
+    val func = parser.root().assertRequire(cliDsl) { findFunc() }
 
-    val (statements, params, docstring) = destructureFunc(func)
+    val (statements, params, docstring) = destructureFunc(cliDsl, func)
 
     return RootToolchain(
-        name = func.assertRequire { IDENTIFIER() }.text,
+        name = func.assertRequire(cliDsl) { IDENTIFIER() }.text,
         description = docstring.functionDoc,
-        parameters = decodeParameters(params, docstring.paramDoc),
-        parameterDefaults = decodeDefaults(statements, params),
-        action = decodeAction(statements),
-        children = decodeChildren(statements),
-        constants = decodeConstants(statements),
+        parameters = decodeParameters(cliDsl, params, docstring.paramDoc),
+        parameterDefaults = decodeDefaults(cliDsl, statements, params),
+        action = decodeAction(cliDsl, statements),
+        children = decodeChildren(cliDsl, statements),
+        constants = decodeConstants(cliDsl, statements),
         resources = emptyArray()
     )
 }
 
-private fun decodeDescendantToolchain(func: DslParser.FuncContext): DescendantToolchain {
-    val (statements, params, docstring) = destructureFunc(func)
+private fun decodeDescendantToolchain(cliDsl: String, func: DslParser.FuncContext): DescendantToolchain {
+    val (statements, params, docstring) = destructureFunc(cliDsl, func)
 
     return DescendantToolchain(
-        name = func.assertRequire { IDENTIFIER() }.text,
+        name = func.assertRequire(cliDsl) { IDENTIFIER() }.text,
         description = docstring.functionDoc,
-        parameters = decodeParameters(params, docstring.paramDoc),
-        parameterDefaults = decodeDefaults(statements, params),
-        action = decodeAction(statements),
-        children = decodeChildren(statements),
-        constants = decodeConstants(statements),
-        aliases = decodeAliases(statements)
+        parameters = decodeParameters(cliDsl, params, docstring.paramDoc),
+        parameterDefaults = decodeDefaults(cliDsl, statements, params),
+        action = decodeAction(cliDsl, statements),
+        children = decodeChildren(cliDsl, statements),
+        constants = decodeConstants(cliDsl, statements),
+        aliases = decodeAliases(cliDsl, statements)
     )
 }
 
-private fun decodeAliases(statements: List<DslParser.FuncStatementsContext>): Array<String> {
+private fun decodeAliases(cliDsl: String, statements: List<DslParser.FuncStatementsContext>): Array<String> {
     val aliasProps = statements.mapNotNull { it.findAliases() }
         .toList()
     if (aliasProps.size >= 2) {
-        aliasProps[1].throwExpected("More than one aliases property not allowed")
+        aliasProps[1].throwExpected("More than one aliases property not allowed", cliDsl)
     }
     if (aliasProps.size == 1) {
         val alias = aliasProps.first()
@@ -74,25 +74,25 @@ private fun decodeAliases(statements: List<DslParser.FuncStatementsContext>): Ar
     return emptyArray()
 }
 
-private fun decodeAction(statements: List<DslParser.FuncStatementsContext>): ActionValueBase<*> {
+private fun decodeAction(cliDsl: String, statements: List<DslParser.FuncStatementsContext>): ActionValueBase<*> {
     val actions = statements.mapNotNull { it.findAction() }
         .toList()
     if (actions.size >= 2) {
-        actions[1].throwExpected("More than one action property is not allowed")
+        actions[1].throwExpected("More than one action property is not allowed", cliDsl)
     }
 
     if (actions.size == 1) {
         val child = actions.first()
-        return child.assertRequire { findActionValue() }.let {
+        return child.assertRequire(cliDsl) { findActionValue() }.let {
             it.findStrintTemplate()?.let {
                 TemplateActionValue(
-                    decodeTemplate(it)
+                    decodeTemplate(cliDsl, it)
                 )
             } ?: it.SCOPE_PARAMS()?.text?.let { ScopeParamsActionValue() }
-                ?: it.assertRequire { findCustomScript() }.let {
+                ?: it.assertRequire(cliDsl) { findCustomScript() }.let {
                     CustomScriptActionValue(
                         it.IDENTIFIER()?.text,
-                        it.assertRequire { CustomScript_SCRIPT() }.text
+                        it.assertRequire(cliDsl) { CustomScript_SCRIPT() }.text
                     )
                 }
         }
@@ -100,75 +100,75 @@ private fun decodeAction(statements: List<DslParser.FuncStatementsContext>): Act
     return noopAction()
 }
 
-private fun destructureFunc(func: DslParser.FuncContext) =
+private fun destructureFunc(cliDsl: String, func: DslParser.FuncContext) =
     Triple(
-        func.assertRequire { findFuncBody() }.findFuncStatements(),
+        func.assertRequire(cliDsl) { findFuncBody() }.findFuncStatements(),
         func.findParams()?.findParam().orEmpty(),
-        decodeDocstring(func.findDocstring())
+        decodeDocstring(cliDsl, func.findDocstring())
     )
 
-private fun decodeDefaults(funcStatements: List<DslParser.FuncStatementsContext>, params: List<DslParser.ParamContext>): Map<String, String> =
+private fun decodeDefaults(cliDsl: String, funcStatements: List<DslParser.FuncStatementsContext>, params: List<DslParser.ParamContext>): Map<String, String> =
     params.associate {
-        it.assertRequire { IDENTIFIER() }.text to it.findLiteral()?.let(::decodeSimpleString)
+        it.assertRequire(cliDsl) { IDENTIFIER() }.text to it.findLiteral()?.let { decodeSimpleString(cliDsl, it) }
     }.filterNotNullValues() + funcStatements.mapNotNull { it.findDefaultOverride() }.associate {
-        it.assertRequire { IDENTIFIER() }.text to
-            decodeSimpleString(it.assertRequire { findLiteral() })
+        it.assertRequire(cliDsl) { IDENTIFIER() }.text to
+            decodeSimpleString(cliDsl, it.assertRequire(cliDsl) { findLiteral() })
     }
 
-private fun decodeConstants(statements: List<DslParser.FuncStatementsContext>): Array<Constant> =
+private fun decodeConstants(cliDsl: String, statements: List<DslParser.FuncStatementsContext>): Array<Constant> =
     statements.mapNotNull { it.findConstDef() }
         .map { context ->
-            context.assertRequire { findLiteral() }.let { literal ->
+            context.assertRequire(cliDsl) { findLiteral() }.let { literal ->
                 Constant(
-                    name = context.assertRequire { IDENTIFIER() }.text,
+                    name = context.assertRequire(cliDsl) { IDENTIFIER() }.text,
                     type = if (literal.findStrintTemplate() != null) Ref.Type.Arg else Ref.Type.Flag,
-                    value = getLiteralTemplate(literal)
+                    value = getLiteralTemplate(cliDsl, literal)
                 )
             }
         }.toTypedArray()
 
-private fun getLiteralTemplate(literal: DslParser.LiteralContext): Template =
+private fun getLiteralTemplate(cliDsl: String, literal: DslParser.LiteralContext): Template =
     literal
         .findStrintTemplate()
-        ?.let(::decodeTemplate)
-        ?: Template(listOf(SimpleString(literal.assertRequire { findBooleanLiteral() }.text)))
+        ?.let { decodeTemplate(cliDsl, it) }
+        ?: Template(listOf(SimpleString(literal.assertRequire(cliDsl) { findBooleanLiteral() }.text)))
 
-private fun decodeSimpleString(literal: DslParser.LiteralContext): String {
-    val tpl = getLiteralTemplate(literal)
+private fun decodeSimpleString(cliDsl: String, literal: DslParser.LiteralContext): String {
+    val tpl = getLiteralTemplate(cliDsl, literal)
     if (tpl.refReferences.any()) {
-        literal.throwExpected("String interpolation not supported for defaults")
+        literal.throwExpected("String interpolation not supported for defaults", cliDsl)
         // TODO maybe we should support it?
     }
     return tpl.str(emptyList())
 }
 
-private fun decodeChildren(statements: List<DslParser.FuncStatementsContext>): Array<DescendantToolchain> {
+private fun decodeChildren(cliDsl: String, statements: List<DslParser.FuncStatementsContext>): Array<DescendantToolchain> {
     val children = statements.mapNotNull { it.findChildren() }
         .toList()
     if (children.size >= 2) {
-        children[1].throwExpected("More than one child property not allowed")
+        children[1].throwExpected("More than one child property not allowed", cliDsl)
     }
     if (children.size == 1) {
         val child = children.first()
-        return child.findFunc().map(::decodeDescendantToolchain).toTypedArray()
+        return child.findFunc().map { decodeDescendantToolchain(cliDsl, it) }.toTypedArray()
     }
     return emptyArray()
 }
 
-private fun decodeParameters(params: List<DslParser.ParamContext>, paramDescriptions: Map<String, String>): Array<ParamDefinition> =
+private fun decodeParameters(cliDsl: String, params: List<DslParser.ParamContext>, paramDescriptions: Map<String, String>): Array<ParamDefinition> =
     params.map { parsedParam ->
-        val paramName = parsedParam.assertRequire { IDENTIFIER() }.text
+        val paramName = parsedParam.assertRequire(cliDsl) { IDENTIFIER() }.text
 
         ParamDefinition(
-            name = parsedParam.assertRequire { IDENTIFIER() }.text,
+            name = parsedParam.assertRequire(cliDsl) { IDENTIFIER() }.text,
             description = paramDescriptions[paramName] ?: emptyString(),
             optional = parsedParam.QMARK() != null,
             shorthand = parsedParam.ALPHANUMERIC()?.text,
-            type = parsedParam.assertRequire { findParamType() }.let {
+            type = parsedParam.assertRequire(cliDsl) { findParamType() }.let {
                 when {
                     it.FLAG() != null -> Ref.Type.Flag
                     it.ARGUMENT() != null -> Ref.Type.Arg
-                    else -> it.throwUnexpected("Could not parse parameter type")
+                    else -> it.throwUnexpected("Could not parse parameter type", cliDsl)
                 }
             }
         )

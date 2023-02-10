@@ -1,14 +1,17 @@
 package parser.exception
 
 import com.strumenta.kotlinmultiplatform.BitSet
+import newLine
 import org.antlr.v4.kotlinruntime.ANTLRErrorListener
 import org.antlr.v4.kotlinruntime.Parser
 import org.antlr.v4.kotlinruntime.RecognitionException
 import org.antlr.v4.kotlinruntime.Recognizer
+import org.antlr.v4.kotlinruntime.ast.Point
+import org.antlr.v4.kotlinruntime.ast.Position
 import org.antlr.v4.kotlinruntime.atn.ATNConfigSet
 import org.antlr.v4.kotlinruntime.dfa.DFA
 
-internal val errListener = object : ANTLRErrorListener {
+internal class CliDslErrorListener(private val sourceCode: String) : ANTLRErrorListener {
     override fun reportAmbiguity(
         recognizer: Parser,
         dfa: DFA,
@@ -51,6 +54,14 @@ internal val errListener = object : ANTLRErrorListener {
         msg: String,
         e: RecognitionException?
     ) {
-        throw Exception("$msg, Line: $line, Col: $charPositionInLine")
+        throw Exception(
+            "$msg, Line: $line, Col: $charPositionInLine${newLine()}${getSourceCodeErrorCaretIndicator(
+                sourceCode,
+                Position(
+                    Point(line, charPositionInLine),
+                    Point(line, charPositionInLine)
+                )
+            )}"
+        )
     }
 }
