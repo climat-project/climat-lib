@@ -3,12 +3,8 @@ package parser.template
 import domain.ref.Ref
 import domain.ref.RefWithValue
 import emptyString
-import kotlin.js.ExperimentalJsExport
-import kotlin.js.JsExport
 
-@OptIn(ExperimentalJsExport::class)
-@JsExport
-class Interpolation(
+internal class Interpolation(
     val name: String,
     val mapping: String?,
     val isFlipped: Boolean

@@ -8,7 +8,7 @@ import kotlin.js.JsExport
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
-data class RootToolchain(
+data class RootToolchain internal constructor(
     override val name: String,
     override val description: String,
     override val parameters: Array<ParamDefinition>,

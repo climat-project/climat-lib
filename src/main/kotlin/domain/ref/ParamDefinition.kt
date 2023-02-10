@@ -5,7 +5,7 @@ import kotlin.js.JsExport
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
-data class ParamDefinition(
+data class ParamDefinition internal constructor(
     override val name: String,
     override val type: Type,
     val optional: Boolean,

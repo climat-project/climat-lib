@@ -1,4 +1,4 @@
-package parser
+package parser.exception
 
 import com.strumenta.kotlinmultiplatform.BitSet
 import org.antlr.v4.kotlinruntime.ANTLRErrorListener

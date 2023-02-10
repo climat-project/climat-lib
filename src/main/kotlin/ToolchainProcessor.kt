@@ -1,7 +1,7 @@
 import domain.action.Action
 import domain.toolchain.RootToolchain
 import domain.toolchain.Toolchain
-import parser.decodeCliDsl
+import parser.dsl.decodeCliDsl
 import validation.computeValidations
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport

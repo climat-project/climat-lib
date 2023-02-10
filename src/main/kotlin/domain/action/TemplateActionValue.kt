@@ -6,4 +6,4 @@ import kotlin.js.JsExport
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
-class TemplateActionValue(val template: Template) : ActionValueBase<String>()
+class TemplateActionValue internal constructor(internal val template: Template) : ActionValueBase<String>()

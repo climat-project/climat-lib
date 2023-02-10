@@ -1,6 +1,6 @@
 package validation
 
-import parser.decodeCliDsl
+import parser.dsl.decodeCliDsl
 import utils.getValidationMessages
 import validation.validations.ValidationCode
 import kotlin.test.Test

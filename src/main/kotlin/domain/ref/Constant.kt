@@ -6,8 +6,8 @@ import kotlin.js.JsExport
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
-data class Constant(
+data class Constant internal constructor(
     override val name: String,
     override val type: Type,
-    val value: Template
+    internal val value: Template
 ) : Ref()

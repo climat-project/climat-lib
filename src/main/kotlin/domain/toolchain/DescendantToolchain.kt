@@ -10,7 +10,7 @@ import kotlin.js.JsExport
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
-data class DescendantToolchain(
+data class DescendantToolchain internal constructor(
     override val name: String,
     override val description: String = emptyString(),
     override val parameters: Array<ParamDefinition> = emptyArray(),

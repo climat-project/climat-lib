@@ -5,4 +5,4 @@ import kotlin.js.JsExport
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
-class NoopActionValue() : ActionValueBase<Nothing>()
+class NoopActionValue internal constructor() : ActionValueBase<Nothing>()

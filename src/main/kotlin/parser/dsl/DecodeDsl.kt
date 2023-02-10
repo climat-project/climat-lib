@@ -1,4 +1,4 @@
-package parser
+package parser.dsl
 
 import climat.lang.DslLexer
 import climat.lang.DslParser
@@ -16,6 +16,11 @@ import filterNotNullValues
 import noopAction
 import org.antlr.v4.kotlinruntime.CharStreams
 import org.antlr.v4.kotlinruntime.CommonTokenStream
+import parser.docstring.decodeDocstring
+import parser.exception.assertRequire
+import parser.exception.errListener
+import parser.exception.throwExpected
+import parser.exception.throwUnexpected
 import parser.template.SimpleString
 import parser.template.Template
 import parser.template.decodeTemplate

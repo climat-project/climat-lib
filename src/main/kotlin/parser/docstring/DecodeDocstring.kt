@@ -1,18 +1,8 @@
-package parser
+package parser.docstring
 
 import climat.lang.DslParser
 import emptyString
-
-internal data class Docstring(
-    val functionDoc: String,
-    val paramDoc: Map<String, String>
-) {
-
-    companion object {
-        val empty: Docstring
-            get() = Docstring(emptyString(), emptyMap())
-    }
-}
+import parser.exception.assertRequire
 
 internal fun decodeDocstring(docstring: DslParser.DocstringContext?): Docstring {
     if (docstring == null) {

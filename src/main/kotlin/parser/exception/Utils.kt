@@ -1,4 +1,4 @@
-package parser
+package parser.exception
 
 import org.antlr.v4.kotlinruntime.ParserRuleContext
 

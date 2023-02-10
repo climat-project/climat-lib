@@ -1,4 +1,3 @@
-@file:OptIn(ExperimentalJsExport::class)
 
 package domain.action
 
@@ -6,8 +5,10 @@ import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 
 typealias Action = ActionValueBase<*>
+
+@OptIn(ExperimentalJsExport::class)
 @JsExport
-abstract class ActionValueBase<VType>() {
+abstract class ActionValueBase<VType> internal constructor() {
 
     var value: VType? = null
 

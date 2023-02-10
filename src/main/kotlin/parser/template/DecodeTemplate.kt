@@ -1,8 +1,8 @@
 package parser.template
 
 import climat.lang.DslParser
-import parser.assertRequire
-import parser.throwUnexpected
+import parser.exception.assertRequire
+import parser.exception.throwUnexpected
 
 internal fun decodeTemplate(strTpl: DslParser.StrintTemplateContext): Template {
     return Template(

@@ -1,5 +1,6 @@
 package parser
 
+import parser.dsl.decodeCliDsl
 import kotlin.test.Test
 
 class ParserSanityCheck {

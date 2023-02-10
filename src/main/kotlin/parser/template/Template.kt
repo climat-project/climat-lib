@@ -2,12 +2,8 @@ package parser.template
 
 import domain.ref.RefWithValue
 import emptyString
-import kotlin.js.ExperimentalJsExport
-import kotlin.js.JsExport
 
-@OptIn(ExperimentalJsExport::class)
-@JsExport
-data class Template(
+internal data class Template(
     private val pieces: List<IPiece>,
 ) {
     fun str(values: Collection<RefWithValue>): String =
