@@ -1,5 +1,6 @@
 package domain.action
 
+import jsExportable.JsExportableMap
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 
@@ -8,4 +9,7 @@ import kotlin.js.JsExport
 class CustomScriptActionValue(
     val name: String?,
     val customScript: String
-) : ActionValueBase<Map<String, String>>()
+) : ActionValueBase<Map<String, String>>() {
+    val valueForJs: JsExportableMap<String, String>?
+        get() = value?.let(::JsExportableMap)
+}

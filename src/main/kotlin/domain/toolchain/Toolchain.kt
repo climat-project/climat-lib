@@ -3,6 +3,7 @@ package domain.toolchain
 import domain.action.Action
 import domain.ref.Constant
 import domain.ref.ParamDefinition
+import jsExportable.JsExportableMap
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 
@@ -16,4 +17,7 @@ abstract class Toolchain {
     abstract val action: Action
     abstract val children: Array<DescendantToolchain>
     abstract val constants: Array<Constant>
+
+    val parameterDefaultsForJs: JsExportableMap<String, String>
+        get() = JsExportableMap(parameterDefaults)
 }

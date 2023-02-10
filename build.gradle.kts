@@ -29,7 +29,6 @@ buildscript {
 
 plugins {
     kotlin("multiplatform") version "1.8.0"
-    kotlin("plugin.serialization") version "1.7.20"
     id("org.jlleitschuh.gradle.ktlint") version "11.0.0"
     id("dev.petuska.npm.publish") version "3.2.0"
     id("org.barfuin.gradle.taskinfo") version "1.0.5"
@@ -51,12 +50,11 @@ kotlin {
         val commonMain by getting {
             dependsOn(commonAntlr)
             kotlin.srcDir("src/main/kotlin")
-            resources.srcDir("src/main/resources")
             dependencies {
                 implementation("org.jetbrains.kotlinx:kotlinx-cli:0.3.5-develop-0")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
             }
         }
+
         val commonTest by getting {
             kotlin.srcDir("src/test/kotlin")
             dependencies {
