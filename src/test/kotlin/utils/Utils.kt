@@ -1,8 +1,8 @@
 package utils
 
-import domain.toolchain.Toolchain
-import validation.computeValidations
-import validation.validations.ValidationCode
+import com.climat.library.domain.toolchain.Toolchain
+import com.climat.library.validation.computeValidations
+import com.climat.library.validation.validations.ValidationCode
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 

@@ -1,6 +1,6 @@
 package e2e
-import domain.action.TemplateActionValue
-import toolchain.ToolchainProcessor
+import com.climat.library.domain.action.TemplateActionValue
+import com.climat.library.toolchain.ToolchainProcessor
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
 

@@ -1,9 +1,9 @@
 package validation
 
-import parser.dsl.decodeCliDsl
+import com.climat.library.parser.dsl.decodeCliDsl
+import com.climat.library.validation.validations.ValidationCode
 import utils.assertContainsInMessages
 import utils.getValidationMessages
-import validation.validations.ValidationCode
 import kotlin.test.Test
 
 class TestDuplicateParamNames {
