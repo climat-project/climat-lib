@@ -1,6 +1,7 @@
 package parser.exception
 
 import com.strumenta.kotlinmultiplatform.Math
+import crossPlatformLineSplit
 import newLine
 import org.antlr.v4.kotlinruntime.ParserRuleContext
 import org.antlr.v4.kotlinruntime.ast.Position
@@ -50,7 +51,7 @@ private fun encase(lines: List<String>, lineNumberingStart: Int, lineSkipStart: 
 internal fun getSourceCodeErrorCaretIndicator(code: String, position: Position): String {
     val caret = "^"
 
-    var codeLines = code.split(newLine()).toMutableList()
+    val codeLines = code.crossPlatformLineSplit().toMutableList()
     val (start, end) = position
     val startLine = start.line - 1
     val startColumn = start.column

@@ -55,7 +55,7 @@ internal class CliDslErrorListener(private val sourceCode: String) : ANTLRErrorL
         e: RecognitionException?
     ) {
         throw Exception(
-            "$msg, Line: $line, Col: $charPositionInLine${newLine()}${getSourceCodeErrorCaretIndicator(
+            "$msg, at line: $line, col: $charPositionInLine${newLine()}${getSourceCodeErrorCaretIndicator(
                 sourceCode,
                 Position(
                     Point(line, charPositionInLine),

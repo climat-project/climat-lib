@@ -12,8 +12,14 @@ internal fun <T> not(predicate: (T) -> Boolean): (T) -> Boolean = { it: T -> !pr
 
 internal fun emptyString(): String = ""
 
-// TODO support multiplatform?
-internal fun newLine(): String = "\n"
+internal fun newLine(): String = unixNewLine()
+
+internal fun windowsNewLine(): String = "\r\n"
+internal fun unixNewLine(): String = "\n"
+internal fun macNewLine(): String = "\r"
+
+internal fun String.crossPlatformLineSplit(): List<String> =
+    this.split(windowsNewLine(), macNewLine(), unixNewLine())
 
 fun <K, V> Map<K, V?>.filterNotNullValues(): Map<K, V> =
     mapNotNull { (key, value) -> value?.let { key to it } }.toMap()

@@ -37,6 +37,12 @@ class ToolchainProcessor {
 
     @JsName("executeFromString")
     fun execute(args: String) {
-        execute(args.split(Regex("\\s+")).toTypedArray())
+        execute(
+            if (args.isBlank()) {
+                emptyArray()
+            } else {
+                args.split(Regex("\\s+")).toTypedArray()
+            }
+        )
     }
 }
