@@ -34,7 +34,7 @@ plugins {
     id("org.barfuin.gradle.taskinfo") version "1.0.5"
 }
 
-group = "me.marius"
+group = "com.climat.library"
 version = "0.0.1"
 
 kotlin {

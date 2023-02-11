@@ -21,7 +21,7 @@ internal fun macNewLine(): String = "\r"
 internal fun String.crossPlatformLineSplit(): List<String> =
     this.split(windowsNewLine(), macNewLine(), unixNewLine())
 
-fun <K, V> Map<K, V?>.filterNotNullValues(): Map<K, V> =
+internal fun <K, V> Map<K, V?>.filterNotNullValues(): Map<K, V> =
     mapNotNull { (key, value) -> value?.let { key to it } }.toMap()
 
 internal fun noopAction() = NoopActionValue()
