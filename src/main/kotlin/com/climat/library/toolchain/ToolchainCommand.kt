@@ -97,8 +97,10 @@ internal class ToolchainCommand(
         val executedChild = toolchainSubcommands.find { it.executed }
         if (executedChild == null) {
             val act = toolchain.action
-            setActualCommand(act, params.values)
-            handler(act, toolchain)
+            if (act.type != ActionValueBase.Type.Noop) {
+                setActualCommand(act, params.values)
+                handler(act, toolchain)
+            }
         } else {
             executedChild.executed = false
         }

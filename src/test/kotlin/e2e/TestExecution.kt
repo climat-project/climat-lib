@@ -30,16 +30,17 @@ class TestExecution {
         export(type?: flag) {
           action "echo 'abcd'"
         },
+        noop {}
       ]
       
     }"""
 
-    private fun exec(args: String): String {
+    private fun exec(args: String): String? {
         var ans: TemplateActionValue? = null
         ToolchainProcessor(cliDsl, { act, _ ->
             ans = act as TemplateActionValue
         }).execute(args)
-        return ans!!.value!!
+        return ans?.value
     }
 
     @Test
@@ -50,7 +51,8 @@ class TestExecution {
             "new template --param2 we",
             "new --interactive template --param2 we --param1 nondefault",
             "renew",
-            ""
+            "",
+            "noop"
         )
             .map(::exec)
             .toTypedArray()
@@ -62,7 +64,8 @@ class TestExecution {
                 "echo 'false' 'default' --mapped=default",
                 "echo 'true' 'nondefault' --interactiveSwitch --mapped=nondefault",
                 "echo 'qwe' --c=constantValue constantValue --switch",
-                "echo root action"
+                "echo root action",
+                null
             ),
             executed
         )
