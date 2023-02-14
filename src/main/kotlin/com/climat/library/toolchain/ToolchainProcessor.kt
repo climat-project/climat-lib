@@ -5,6 +5,7 @@ import com.climat.library.domain.toolchain.RootToolchain
 import com.climat.library.domain.toolchain.Toolchain
 import com.climat.library.parser.dsl.decodeCliDsl
 import com.climat.library.validation.computeValidations
+import kotlinx.cli.ArgParser
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 import kotlin.js.JsName
@@ -19,7 +20,7 @@ class ToolchainProcessor {
             decodeCliDsl(cliDsl)
     }
 
-    @JsName("createFromJsonString")
+    @JsName("createFromCliDslString")
     constructor(cliDsl: String, actionHandler: (parsedAction: Action, context: Toolchain) -> Unit, skipValidation: Boolean = false) :
         this(decodeCliDsl(cliDsl), actionHandler, skipValidation)
 
@@ -27,14 +28,14 @@ class ToolchainProcessor {
     constructor(toolchain: RootToolchain, actionHandler: (parsedAction: Action, context: Toolchain) -> Unit, skipValidation: Boolean = false) {
         if (!skipValidation)
             _validate(toolchain)
-
-        this.parser = ToolchainCommand(toolchain, actionHandler)
+        this.parser = ArgParser(toolchain.name)
+        this.parser.subcommands(ToolchainCommand(toolchain, actionHandler))
     }
 
-    private val parser: ToolchainCommand
+    private val parser: ArgParser
 
     fun execute(args: Array<String>) {
-        parser.parse(args)
+        parser.parse(arrayOf(parser.programName) + args)
     }
 
     @JsName("executeFromString")

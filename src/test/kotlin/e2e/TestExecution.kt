@@ -10,18 +10,19 @@ class TestExecution {
     cli-alias-aggregator {
       const C1 = "constantValue"
       const C2 = true
+      action "echo root action"
       
       children [
         new(interactive?: flag) {
           action "echo 'abcd'"
           children [
             template(param1?: arg = "default", param2?: arg) {
-              action "echo '$(interactive)' '$(param1)' $(interactive:--interactiveSwitch) $(param1:--mapped)"
+              action "echo '${'$'}(interactive)' '${'$'}(param1)' ${'$'}(interactive:--interactiveSwitch) ${'$'}(param1:--mapped)"
             }
           ]
         },
         renew {
-          action "echo 'qwe' $(C1:--c) $(C1) $(C2:--switch)"
+          action "echo 'qwe' ${'$'}(C1:--c) ${'$'}(C1) ${'$'}(C2:--switch)"
         },
         remove(force?: flag) {
           action "echo 'what ever'"
@@ -30,6 +31,7 @@ class TestExecution {
           action "echo 'abcd'"
         },
       ]
+      
     }"""
 
     private fun exec(args: String): String {
@@ -47,7 +49,8 @@ class TestExecution {
             "new --interactive template --param1 abc",
             "new template --param2 we",
             "new --interactive template --param2 we --param1 nondefault",
-            "renew"
+            "renew",
+            ""
         )
             .map(::exec)
             .toTypedArray()
@@ -58,7 +61,8 @@ class TestExecution {
                 "echo 'true' 'abc' --interactiveSwitch --mapped=abc",
                 "echo 'false' 'default' --mapped=default",
                 "echo 'true' 'nondefault' --interactiveSwitch --mapped=nondefault",
-                "echo 'qwe' --c=constantValue constantValue --switch"
+                "echo 'qwe' --c=constantValue constantValue --switch",
+                "echo root action"
             ),
             executed
         )
