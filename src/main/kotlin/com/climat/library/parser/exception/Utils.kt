@@ -1,7 +1,7 @@
 package com.climat.library.parser.exception
 
-import com.climat.library.crossPlatformLineSplit
-import com.climat.library.newLine
+import com.climat.library.utils.crossPlatformLineSplit
+import com.climat.library.utils.newLine
 import com.strumenta.kotlinmultiplatform.Math
 import org.antlr.v4.kotlinruntime.ParserRuleContext
 import org.antlr.v4.kotlinruntime.ast.Position

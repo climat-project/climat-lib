@@ -1,8 +1,8 @@
 package com.climat.library.parser.docstring
 
 import climat.lang.DslParser
-import com.climat.library.emptyString
 import com.climat.library.parser.exception.assertRequire
+import com.climat.library.utils.emptyString
 
 internal fun decodeDocstring(cliDsl: String, docstring: DslParser.DocstringContext?): Docstring {
     if (docstring == null) {

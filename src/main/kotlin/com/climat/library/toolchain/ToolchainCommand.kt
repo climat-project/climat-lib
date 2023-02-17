@@ -11,8 +11,8 @@ import com.climat.library.domain.ref.Ref
 import com.climat.library.domain.ref.RefWithValue
 import com.climat.library.domain.refs
 import com.climat.library.domain.toolchain.Toolchain
-import com.climat.library.emptyString
-import com.climat.library.toolchainParameterTypeToCliArgType
+import com.climat.library.utils.emptyString
+import com.climat.library.utils.toolchainParameterTypeToCliArgType
 import kotlinx.cli.ArgType
 import kotlinx.cli.CLIEntity
 import kotlinx.cli.ExperimentalCli

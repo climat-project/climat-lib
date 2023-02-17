@@ -1,7 +1,7 @@
 package com.climat.library.parser.template
 
 import com.climat.library.domain.ref.RefWithValue
-import com.climat.library.emptyString
+import com.climat.library.utils.emptyString
 
 internal data class Template(
     private val pieces: List<IPiece>,

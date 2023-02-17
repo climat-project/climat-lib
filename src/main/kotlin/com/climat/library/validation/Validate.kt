@@ -2,7 +2,7 @@ package com.climat.library.validation
 
 import com.climat.library.domain.toolchain.RootToolchain
 import com.climat.library.domain.toolchain.Toolchain
-import com.climat.library.newLine
+import com.climat.library.utils.newLine
 import com.climat.library.validation.validations.AncestorSubcommandWithSameName
 import com.climat.library.validation.validations.BooleanFlippedMappings
 import com.climat.library.validation.validations.DefaultForFlag

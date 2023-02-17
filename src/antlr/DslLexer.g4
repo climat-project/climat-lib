@@ -27,7 +27,6 @@ ARGUMENT: 'arg';
 
 // Props
 ACTION_PROP: 'action';
-ALIASES_PROP: 'aliases';
 CHILDREN_PROP: 'children';
 
 // Default
@@ -39,8 +38,11 @@ MULTILINE_COMMENT: '/*' .*? '*/' -> channel(COMMENT);
 SINGLELINE_COMMENT: '//' .*? '\n' -> channel(COMMENT);
 
 // Sub
-SEALED: 'sealed';
-SHIFTED: 'shifted';
+MOD_SEAL: '@seal';
+MOD_SHIFT: '@shift';
+MOD_ALIAS: '@alias';
+MOD_ALIASES: '@aliases';
+
 SUB: 'sub';
 
 // Actions

@@ -11,9 +11,6 @@ import com.climat.library.domain.ref.ParamDefinition
 import com.climat.library.domain.ref.Ref
 import com.climat.library.domain.toolchain.DescendantToolchain
 import com.climat.library.domain.toolchain.RootToolchain
-import com.climat.library.emptyString
-import com.climat.library.filterNotNullValues
-import com.climat.library.noopAction
 import com.climat.library.parser.docstring.decodeDocstring
 import com.climat.library.parser.exception.CliDslErrorListener
 import com.climat.library.parser.exception.assertRequire
@@ -22,6 +19,10 @@ import com.climat.library.parser.exception.throwUnexpected
 import com.climat.library.parser.template.SimpleString
 import com.climat.library.parser.template.Template
 import com.climat.library.parser.template.decodeTemplate
+import com.climat.library.utils.emptyString
+import com.climat.library.utils.filterNotNullValues
+import com.climat.library.utils.noopAction
+import com.climat.library.utils.then
 import org.antlr.v4.kotlinruntime.CharStreams
 import org.antlr.v4.kotlinruntime.CommonTokenStream
 
@@ -47,7 +48,7 @@ internal fun decodeCliDsl(cliDsl: String): RootToolchain {
 }
 
 private fun decodeSub(cliDsl: String, sub: DslParser.SubContext): DescendantToolchain {
-    val (statements, params, docstring) = destructure(cliDsl, sub)
+    val (statements, params, docstring, modifiers) = destructure(cliDsl, sub)
 
     return DescendantToolchain(
         name = sub.assertRequire(cliDsl) { IDENTIFIER() }.text,
@@ -57,21 +58,15 @@ private fun decodeSub(cliDsl: String, sub: DslParser.SubContext): DescendantTool
         action = decodeSubAction(cliDsl, statements),
         children = decodeSubChildren(cliDsl, statements),
         constants = decodeSubConstants(cliDsl, statements),
-        aliases = decodeAliases(cliDsl, statements)
+        aliases = decodeSubAliases(cliDsl, modifiers)
     )
 }
 
-private fun decodeAliases(cliDsl: String, statements: List<DslParser.SubStatementsContext>): Array<String> {
-    val aliasProps = statements.mapNotNull { it.findAliases() }
-        .toList()
-    if (aliasProps.size >= 2) {
-        aliasProps[1].throwExpected("More than one aliases property not allowed", cliDsl)
-    }
-    if (aliasProps.size == 1) {
-        val alias = aliasProps.first()
-        return alias.IDENTIFIER().map { it.text }.toTypedArray()
-    }
-    return emptyArray()
+private fun decodeSubAliases(cliDsl: String, statements: List<DslParser.SubModifiersContext>): Array<String> {
+    val aliases =
+        statements.mapNotNull { it.findAliasesModifier() }.flatMap { it.IDENTIFIER() }.map { it.text } +
+            statements.mapNotNull { it.findAliasModifier() }.map { it.assertRequire(cliDsl) { IDENTIFIER() }.text }
+    return aliases.toTypedArray()
 }
 
 private fun decodeSubAction(cliDsl: String, statements: List<DslParser.SubStatementsContext>): ActionValueBase<*> =
@@ -103,17 +98,15 @@ private fun decodeRootAction(cliDsl: String, statements: List<DslParser.RootStat
 }
 
 private fun destructure(cliDsl: String, sub: DslParser.SubContext) =
-    Triple(
-        sub.assertRequire(cliDsl) { findSubBody() }.findSubStatements(),
-        sub.findParams()?.findParam().orEmpty(),
-        decodeDocstring(cliDsl, sub.findDocstring())
-    )
+    sub.assertRequire(cliDsl) { findSubBody() }.findSubStatements() then
+        sub.findParams()?.findParam().orEmpty() then
+        decodeDocstring(cliDsl, sub.findDocstring()) then
+        sub.findSubModifiers()
+
 private fun destructure(cliDsl: String, root: DslParser.RootContext) =
-    Triple(
-        root.assertRequire(cliDsl) { findRootBody() }.findRootStatements(),
-        root.findParams()?.findParam().orEmpty(),
+    root.assertRequire(cliDsl) { findRootBody() }.findRootStatements() then
+        root.findParams()?.findParam().orEmpty() then
         decodeDocstring(cliDsl, root.findDocstring())
-    )
 
 private fun decodeSubDefaults(cliDsl: String, subStatements: List<DslParser.SubStatementsContext>, params: List<DslParser.ParamContext>): Map<String, String> =
     decodeRootDefaults(cliDsl, params) + subStatements.mapNotNull { it.findDefaultOverride() }.associate {

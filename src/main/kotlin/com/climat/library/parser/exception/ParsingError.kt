@@ -1,7 +1,7 @@
 package com.climat.library.parser.exception
 
-import com.climat.library.emptyString
-import com.climat.library.newLine
+import com.climat.library.utils.emptyString
+import com.climat.library.utils.newLine
 import org.antlr.v4.kotlinruntime.ParserRuleContext
 
 open class ParsingError(

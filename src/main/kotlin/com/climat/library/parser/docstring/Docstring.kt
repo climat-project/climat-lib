@@ -1,6 +1,6 @@
 package com.climat.library.parser.docstring
 
-import com.climat.library.emptyString
+import com.climat.library.utils.emptyString
 
 internal data class Docstring(
     val subDoc: String,

@@ -2,23 +2,24 @@ parser grammar DslParser;
 options { tokenVocab=DslLexer; }
 
 root: docstring? rootModifiers* IDENTIFIER (LPAREN params? RPAREN)? rootBody EOF;
-rootModifiers: SEALED;
+rootModifiers: MOD_SEAL;
 rootBody: LCURLY rootStatements* RCURLY;
 rootStatements: children | action | constDef;
 
 sub: docstring? subModifiers* SUB IDENTIFIER (LPAREN params? RPAREN)? subBody;
 // TODO implement functionality for SEALED and SHIFTED modifiers
-subModifiers: rootModifiers | SHIFTED;
+subModifiers: rootModifiers | MOD_SHIFT | aliasModifier | aliasesModifier;
+aliasModifier: MOD_ALIAS LPAREN IDENTIFIER RPAREN;
+aliasesModifier: MOD_ALIASES LPAREN IDENTIFIER+ RPAREN;
 params: param (COMMA param)* COMMA?;
 param: IDENTIFIER ALPHANUMERIC? (QMARK)? COLON paramType (EQ literal)?;
 paramType: FLAG | ARGUMENT;
 
 subBody: LCURLY subStatements* RCURLY;
-subStatements: rootStatements | aliases | defaultOverride;
+subStatements: rootStatements | defaultOverride;
 
 children: CHILDREN_PROP LBRAKET sub+ RBRAKET;
 action: ACTION_PROP actionValue;
-aliases: ALIASES_PROP LBRAKET (IDENTIFIER (COMMA IDENTIFIER)* COMMA? )? RBRAKET;
 constDef: CONST IDENTIFIER EQ literal;
 defaultOverride: OVERRIDE DEFAULT IDENTIFIER EQ literal;
 

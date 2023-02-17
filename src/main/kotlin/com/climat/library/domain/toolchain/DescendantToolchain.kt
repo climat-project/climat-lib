@@ -3,8 +3,8 @@ package com.climat.library.domain.toolchain
 import com.climat.library.domain.action.Action
 import com.climat.library.domain.ref.Constant
 import com.climat.library.domain.ref.ParamDefinition
-import com.climat.library.emptyString
-import com.climat.library.noopAction
+import com.climat.library.utils.emptyString
+import com.climat.library.utils.noopAction
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 

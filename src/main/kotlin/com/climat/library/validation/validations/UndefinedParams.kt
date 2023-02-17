@@ -1,7 +1,7 @@
 package com.climat.library.validation.validations
 
 import com.climat.library.domain.action.TemplateActionValue
-import com.climat.library.not
+import com.climat.library.utils.not
 import com.climat.library.validation.ValidationBase
 import com.climat.library.validation.ValidationContext
 import com.climat.library.validation.ValidationResult

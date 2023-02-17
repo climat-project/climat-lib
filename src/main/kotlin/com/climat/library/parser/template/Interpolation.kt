@@ -2,7 +2,7 @@ package com.climat.library.parser.template
 
 import com.climat.library.domain.ref.Ref
 import com.climat.library.domain.ref.RefWithValue
-import com.climat.library.emptyString
+import com.climat.library.utils.emptyString
 
 internal class Interpolation(
     val name: String,

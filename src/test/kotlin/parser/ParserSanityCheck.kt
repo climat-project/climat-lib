@@ -9,10 +9,10 @@ class ParserSanityCheck {
         root {
             const rootConst = "rootConst"
             children [
+                @aliases(alias1 alias3)
                 sub fe() {                           // Single line Comment
-                    aliases [alias1, alias3]     
                 }
-                sealed sub js {}
+                @seal sub js {}
                 
                 /* Multi
                 Line
@@ -23,6 +23,7 @@ class ParserSanityCheck {
                 abc
                 @param p1 doc
                 ""${'"'}
+                
                 sub c3(p1 s: arg, p2 1: flag, p3?: arg, p4?: flag,
                    p5?: arg = "wat",
                    p6?: flag = false) {
@@ -34,17 +35,17 @@ class ParserSanityCheck {
                     action scope params
                     
                     children [
-                        sealed sub aa{
+                        @seal sub aa{
                             const ae = "wat"
                             const be = false
                             override default p1 = "w"
                         }
-                        shifted sub bb{
+                        @shift sub bb{
                         }
-                        sealed shifted sub cc{
+                        @seal @shift sub cc{
                             action <random script>
                         }
-                        shifted sealed sub dd{}
+                        @shift @seal sub dd{}
                     ]
                 }
             ]
