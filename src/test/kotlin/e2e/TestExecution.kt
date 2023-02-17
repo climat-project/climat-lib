@@ -7,7 +7,7 @@ import kotlin.test.assertContentEquals
 class TestExecution {
 
     private val cliDsl = """
-    sub cli-alias-aggregator {
+    cli-alias-aggregator {
       const C1 = "constantValue"
       const C2 = true
       action "echo root action"

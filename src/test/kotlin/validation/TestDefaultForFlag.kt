@@ -9,7 +9,7 @@ import kotlin.test.assertEquals
 class TestDefaultForFlag {
 
     private val toolchain = """
-        sub root() {
+        root() {
             children [
                 sub child(param1: arg = "str_default",
                       param2: flag = true,

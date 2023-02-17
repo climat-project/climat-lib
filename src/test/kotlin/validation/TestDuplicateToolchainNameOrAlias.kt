@@ -9,7 +9,7 @@ import kotlin.test.Test
 class TestDuplicateToolchainNameOrAlias {
 
     private val toolchain = """
-        sub root {
+        root {
             action "dummy action"
             
             children [

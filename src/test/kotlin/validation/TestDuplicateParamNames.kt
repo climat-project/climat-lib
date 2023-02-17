@@ -9,7 +9,7 @@ import kotlin.test.Test
 class TestDuplicateParamNames {
 
     private val toolchain = """
-        sub root(param?: flag, param?: arg) {
+        root(param?: flag, param?: arg) {
             action "dummy action"
             children [
                 sub root_child(param1?: flag, param2?: arg, param3?: arg) {

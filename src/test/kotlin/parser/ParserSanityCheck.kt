@@ -6,7 +6,7 @@ import kotlin.test.Test
 class ParserSanityCheck {
 
     val cliDsl = """
-        sub root {
+        root {
             const rootConst = "rootConst"
             children [
                 sub fe() {                           // Single line Comment

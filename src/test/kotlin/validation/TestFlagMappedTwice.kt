@@ -8,7 +8,7 @@ import kotlin.test.Test
 
 class TestFlagMappedTwice {
     private val toolchain = """
-        sub root(root_param1: arg, root_param2: arg) {
+        root(root_param1: arg, root_param2: arg) {
             action "dummy command $(root_param) $(root_param1:dummyCommandParam) $(root_param2:dummyCommandParam)"
             children [
                 sub child {

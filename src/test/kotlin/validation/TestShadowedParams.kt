@@ -8,7 +8,7 @@ import kotlin.test.Test
 
 class TestShadowedParams {
     private val toolchain = """
-        sub root(param1: arg, param2: arg) {
+        root(param1: arg, param2: arg) {
             children [
                 sub child1(param1: arg, param3: arg) {
                     children [

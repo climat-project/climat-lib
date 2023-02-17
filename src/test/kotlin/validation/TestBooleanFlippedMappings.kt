@@ -8,7 +8,7 @@ import kotlin.test.Test
 
 class TestBooleanFlippedMappings {
     private val toolchain = """
-        sub root(arg1: arg, arg2: arg, arg3: flag) {
+        root(arg1: arg, arg2: arg, arg3: flag) {
             action "dummy command $(!arg1)"
             children [
                 sub child1() { action "dummy2 command $(!arg2) $(!arg3)" }

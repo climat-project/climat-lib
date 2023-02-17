@@ -8,7 +8,7 @@ import kotlin.test.Test
 
 class TestAncestorSubcommandWithSameName {
     private val toolchain = """
-        sub root {
+        root {
             children [
                 sub child {
                     children[

@@ -8,7 +8,7 @@ import kotlin.test.Test
 
 class TestUndefinedParams {
     private val toolchain = """
-        sub root(param1?: flag, param2?: arg) {
+        root(param1?: flag, param2?: arg) {
             action "dummy $(undef)"
             children [
                 sub root_child(param1?: flag, param_2?:arg, param3?: arg) {

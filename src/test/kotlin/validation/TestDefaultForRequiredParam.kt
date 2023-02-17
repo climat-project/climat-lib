@@ -10,7 +10,7 @@ import kotlin.test.Test
 class TestDefaultForRequiredParam {
 
     private val toolchain = """
-        sub root(rootParam: arg) {
+        root(rootParam: arg) {
             children [
                 sub child(param1: arg = "str_default_1",
                       param2: flag = "bool_default",
