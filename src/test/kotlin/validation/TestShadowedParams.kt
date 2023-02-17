@@ -9,14 +9,10 @@ import kotlin.test.Test
 class TestShadowedParams {
     private val toolchain = """
         root(param1: arg, param2: arg) {
-            children [
-                sub child1(param1: arg, param3: arg) {
-                    children [
-                        sub grandchild(param1?: flag, param3?: flag) {}
-                    ]
-                }
-                sub child2(param2?: flag, param4?: flag) {}
-            ]
+            sub child1(param1: arg, param3: arg) {
+                    sub grandchild(param1?: flag, param3?: flag) {}
+            }
+            sub child2(param2?: flag, param4?: flag) {}
         }
     """
 

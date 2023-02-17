@@ -9,17 +9,11 @@ import kotlin.test.Test
 class TestAncestorSubcommandWithSameName {
     private val toolchain = """
         root {
-            children [
-                sub child {
-                    children[
-                        sub root() {
-                            children [
-                                sub child {}
-                            ]
-                        }
-                    ]
+            sub child {
+                sub root() {
+                    sub child {}
                 }
-            ]
+            }
         }
     """
 

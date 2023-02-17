@@ -150,18 +150,10 @@ private fun decodeSimpleString(cliDsl: String, literal: DslParser.LiteralContext
 
 private fun decodeSubChildren(cliDsl: String, statements: List<DslParser.SubStatementsContext>): Array<DescendantToolchain> =
     decodeRootChildren(cliDsl, statements.mapNotNull { it.findRootStatements() })
-private fun decodeRootChildren(cliDsl: String, statements: List<DslParser.RootStatementsContext>): Array<DescendantToolchain> {
-    val children = statements.mapNotNull { it.findChildren() }
-        .toList()
-    if (children.size >= 2) {
-        children[1].throwExpected("More than one child property not allowed", cliDsl)
-    }
-    if (children.size == 1) {
-        val child = children.first()
-        return child.findSub().map { decodeSub(cliDsl, it) }.toTypedArray()
-    }
-    return emptyArray()
-}
+private fun decodeRootChildren(cliDsl: String, statements: List<DslParser.RootStatementsContext>): Array<DescendantToolchain> =
+    statements.mapNotNull { it.findSub() }
+        .map { decodeSub(cliDsl, it) }
+        .toTypedArray()
 
 private fun decodeParameters(cliDsl: String, params: List<DslParser.ParamContext>, paramDescriptions: Map<String, String>): Array<ParamDefinition> =
     params.map { parsedParam ->

@@ -27,7 +27,6 @@ ARGUMENT: 'arg';
 
 // Props
 ACTION_PROP: 'action';
-CHILDREN_PROP: 'children';
 
 // Default
 OVERRIDE: 'override';

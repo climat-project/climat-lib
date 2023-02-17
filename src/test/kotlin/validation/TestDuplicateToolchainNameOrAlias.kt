@@ -12,44 +12,39 @@ class TestDuplicateToolchainNameOrAlias {
         root {
             action "dummy action"
             
-            children [
-                sub root_child() { action "dummy action 2" }
-                sub root_child2() {
-                    action "dummy action 3"
-                    children [
-                        sub root_grandchild() { action "dummy action 5" }
-                        sub root_grandchild() { action "dummy action 6" }
-                    ]
+            sub root_child() { action "dummy action 2" }
+            sub root_child2() {
+                action "dummy action 3"
+                
+                sub root_grandchild() { action "dummy action 5" }
+                sub root_grandchild() { action "dummy action 6" }
+            }
+            sub root_child() {
+                action "dummy action 4"
+                
+                sub root_grandchild() { action "dummy action 5" }
+                sub root_grandchild() { action "dummy action 6" }
+                sub root_child {
+                    action "dummy action 6" 
+                    
+                    @aliases(grand_grand_child_alias grand_grand_child_2)
+                    sub grand_grand_child() {
+                    }
+                    
+                    @alias(grand_grand_child_2)
+                    sub grand_grand_child_2() {
+                    }
+                    
+                    @alias(xylophone)
+                    @aliases(grand_grand_child_3_alias grand_grand_child_3_alias)
+                    sub grand_grand_child_3() {
+                    }
+                    
+                    @aliases(xylophone)
+                    sub grand_grand_child_4() {
+                    }
                 }
-                sub root_child() {
-                    action "dummy action 4"
-                    children [
-                        sub root_grandchild() { action "dummy action 5" }
-                        sub root_grandchild() { action "dummy action 6" }
-                        sub root_child {
-                            action "dummy action 6" 
-                            children [
-                                @aliases(grand_grand_child_alias grand_grand_child_2)
-                                sub grand_grand_child() {
-                                }
-                                
-                                @alias(grand_grand_child_2)
-                                sub grand_grand_child_2() {
-                                }
-                                
-                                @alias(xylophone)
-                                @aliases(grand_grand_child_3_alias grand_grand_child_3_alias)
-                                sub grand_grand_child_3() {
-                                }
-                                
-                                @aliases(xylophone)
-                                sub grand_grand_child_4() {
-                                }
-                            ]
-                        }
-                    ]
-                }
-            ]
+            }
         }
     """
     @Test

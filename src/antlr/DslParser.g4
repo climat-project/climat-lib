@@ -4,7 +4,7 @@ options { tokenVocab=DslLexer; }
 root: docstring? rootModifiers* IDENTIFIER (LPAREN params? RPAREN)? rootBody EOF;
 rootModifiers: MOD_SEAL;
 rootBody: LCURLY rootStatements* RCURLY;
-rootStatements: children | action | constDef;
+rootStatements: sub | action | constDef;
 
 sub: docstring? subModifiers* SUB IDENTIFIER (LPAREN params? RPAREN)? subBody;
 // TODO implement functionality for SEALED and SHIFTED modifiers
@@ -18,7 +18,6 @@ paramType: FLAG | ARGUMENT;
 subBody: LCURLY subStatements* RCURLY;
 subStatements: rootStatements | defaultOverride;
 
-children: CHILDREN_PROP LBRAKET sub+ RBRAKET;
 action: ACTION_PROP actionValue;
 constDef: CONST IDENTIFIER EQ literal;
 defaultOverride: OVERRIDE DEFAULT IDENTIFIER EQ literal;

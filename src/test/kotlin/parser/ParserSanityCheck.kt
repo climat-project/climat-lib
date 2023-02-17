@@ -8,47 +8,44 @@ class ParserSanityCheck {
     val cliDsl = """
         root {
             const rootConst = "rootConst"
-            children [
-                @aliases(alias1 alias3)
-                sub fe() {                           // Single line Comment
+            
+            @aliases(alias1 alias3)
+            sub fe() {                           // Single line Comment
+            }
+            
+            @seal sub js {}
+            
+            /* Multi
+            Line
+            Comment 
+            */
+            
+            ""${'"'}
+            abc
+            @param p1 doc
+            ""${'"'}
+            sub c3(p1 s: arg, p2 1: flag, p3?: arg, p4?: flag,
+               p5?: arg = "wat",
+               p6?: flag = false) {
+               const myConst = "abc $(p1) cde"
+               action "random action"
+            }
+            
+            sub c4 {
+                action scope params
+                
+                @seal sub aa{
+                    const ae = "wat"
+                    const be = false
+                    override default p1 = "w"
                 }
-                @seal sub js {}
-                
-                /* Multi
-                Line
-                Comment 
-                */
-                
-                ""${'"'}
-                abc
-                @param p1 doc
-                ""${'"'}
-                
-                sub c3(p1 s: arg, p2 1: flag, p3?: arg, p4?: flag,
-                   p5?: arg = "wat",
-                   p6?: flag = false) {
-                   const myConst = "abc $(p1) cde"
-                   action "random action"
+                @shift sub bb{
                 }
-                
-                sub c4 {
-                    action scope params
-                    
-                    children [
-                        @seal sub aa{
-                            const ae = "wat"
-                            const be = false
-                            override default p1 = "w"
-                        }
-                        @shift sub bb{
-                        }
-                        @seal @shift sub cc{
-                            action <random script>
-                        }
-                        @shift @seal sub dd{}
-                    ]
+                @seal @shift sub cc{
+                    action <random script>
                 }
-            ]
+                @shift @seal sub dd{}
+            }
         }
     """
 

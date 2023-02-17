@@ -10,11 +10,10 @@ class TestFlagMappedTwice {
     private val toolchain = """
         root(root_param1: arg, root_param2: arg) {
             action "dummy command $(root_param) $(root_param1:dummyCommandParam) $(root_param2:dummyCommandParam)"
-            children [
-                sub child {
-                    action "dummy2 command $(r:cparam) $(c:cparam)"
-                }
-            ]
+            
+            sub child {
+                action "dummy2 command $(r:cparam) $(c:cparam)"
+            }
         }
     """
 

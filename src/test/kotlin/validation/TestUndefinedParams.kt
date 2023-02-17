@@ -10,11 +10,9 @@ class TestUndefinedParams {
     private val toolchain = """
         root(param1?: flag, param2?: arg) {
             action "dummy $(undef)"
-            children [
-                sub root_child(param1?: flag, param_2?:arg, param3?: arg) {
-                    action "dummy $(param1) $(param2) $(param_2) $(undef) $(undef2)"
-                }
-            ]
+            sub root_child(param1?: flag, param_2?:arg, param3?: arg) {
+                action "dummy $(param1) $(param2) $(param_2) $(undef) $(undef2)"
+            }
         }
     """
     @Test

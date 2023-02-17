@@ -11,14 +11,12 @@ class TestDefaultForRequiredParam {
 
     private val toolchain = """
         root(rootParam: arg) {
-            children [
-                sub child(param1: arg = "str_default_1",
-                      param2: flag = "bool_default",
-                      param3?: arg = "str_default_2",
-                      param4?: flag = "str_default_3") {
-                    override default rootParam = "str_default_4"
-                }
-            ]
+            sub child(param1: arg = "str_default_1",
+                  param2: flag = "bool_default",
+                  param3?: arg = "str_default_2",
+                  param4?: flag = "str_default_3") {
+                override default rootParam = "str_default_4"
+            }
         }
     """
 
