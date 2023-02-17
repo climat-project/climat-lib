@@ -38,9 +38,10 @@ DEFAULT: 'default';
 MULTILINE_COMMENT: '/*' .*? '*/' -> channel(COMMENT);
 SINGLELINE_COMMENT: '//' .*? '\n' -> channel(COMMENT);
 
-// Modifiers
+// Sub
 SEALED: 'sealed';
 SHIFTED: 'shifted';
+SUB: 'sub';
 
 // Actions
 SCOPE_PARAMS: 'scope params';

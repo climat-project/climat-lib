@@ -6,39 +6,45 @@ import kotlin.test.Test
 class ParserSanityCheck {
 
     val cliDsl = """
-        root {
+        sub root {
             const rootConst = "rootConst"
             children [
-                fe() {
-                    aliases [alias1, alias3]
-                },
-                sealed js {},
+                sub fe() {                           // Single line Comment
+                    aliases [alias1, alias3]     
+                }
+                sealed sub js {}
+                
+                /* Multi
+                Line
+                Comment 
+                */
+                
                 ""${'"'}
                 abc
                 @param p1 doc
                 ""${'"'}
-                c3(p1 s: arg, p2 1: flag, p3?: arg, p4?: flag,
+                sub c3(p1 s: arg, p2 1: flag, p3?: arg, p4?: flag,
                    p5?: arg = "wat",
                    p6?: flag = false) {
                    const myConst = "abc $(p1) cde"
                    action "random action"
-                },
+                }
                 
-                c4 {
+                sub c4 {
                     action scope params
                     
                     children [
-                        sealed aa{
+                        sealed sub aa{
                             const ae = "wat"
                             const be = false
                             override default p1 = "w"
-                        },
-                        shifted bb{
-                        },
-                        sealed shifted cc{
+                        }
+                        shifted sub bb{
+                        }
+                        sealed shifted sub cc{
                             action <random script>
-                        },
-                        shifted sealed dd{}
+                        }
+                        shifted sealed sub dd{}
                     ]
                 }
             ]

@@ -8,9 +8,9 @@ import kotlin.test.Test
 
 class TestDefaultForUndefinedParam {
     private val toolchain = """
-        root(rootParam: arg) {
+        sub root(rootParam: arg) {
             children [
-                child(param1: arg = "str_default_1", param2: flag = "bool_default") {
+                sub child(param1: arg = "str_default_1", param2: flag = "bool_default") {
                     override default param3 = "str_default_2"
                     override default param4 = "str_default_3"
                     override default rootParam = "str_default_4"

@@ -7,30 +7,30 @@ import kotlin.test.assertContentEquals
 class TestExecution {
 
     private val cliDsl = """
-    cli-alias-aggregator {
+    sub cli-alias-aggregator {
       const C1 = "constantValue"
       const C2 = true
       action "echo root action"
       
       children [
-        new(interactive?: flag) {
+        sub new(interactive?: flag) {
           action "echo 'abcd'"
           children [
-            template(param1?: arg = "default", param2?: arg) {
+            sub template(param1?: arg = "default", param2?: arg) {
               action "echo '${'$'}(interactive)' '${'$'}(param1)' ${'$'}(interactive:--interactiveSwitch) ${'$'}(param1:--mapped)"
             }
           ]
-        },
-        renew {
+        }
+        sub renew {
           action "echo 'qwe' ${'$'}(C1:--c) ${'$'}(C1) ${'$'}(C2:--switch)"
-        },
-        remove(force?: flag) {
+        }
+        sub remove(force?: flag) {
           action "echo 'what ever'"
-        },
-        export(type?: flag) {
+        }
+        sub export(type?: flag) {
           action "echo 'abcd'"
-        },
-        noop {}
+        }
+        sub noop {}
       ]
       
     }"""

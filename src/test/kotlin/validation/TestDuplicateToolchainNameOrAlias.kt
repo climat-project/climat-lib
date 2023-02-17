@@ -9,40 +9,40 @@ import kotlin.test.Test
 class TestDuplicateToolchainNameOrAlias {
 
     private val toolchain = """
-        root {
+        sub root {
             action "dummy action"
             
             children [
-                root_child() { action "dummy action 2" },
-                root_child2() {
+                sub root_child() { action "dummy action 2" }
+                sub root_child2() {
                     action "dummy action 3"
                     children [
-                        root_grandchild() { action "dummy action 5" },
-                        root_grandchild() { action "dummy action 6" }
+                        sub root_grandchild() { action "dummy action 5" }
+                        sub root_grandchild() { action "dummy action 6" }
                     ]
-                },
-                root_child() {
+                }
+                sub root_child() {
                     action "dummy action 4"
                     children [
-                        root_grandchild() { action "dummy action 5" },
-                        root_grandchild() { action "dummy action 6" },
-                        root_child { 
+                        sub root_grandchild() { action "dummy action 5" }
+                        sub root_grandchild() { action "dummy action 6" }
+                        sub root_child { 
                             action "dummy action 6" 
                             children [
-                                grand_grand_child() {
+                                sub grand_grand_child() {
                                     aliases [grand_grand_child_alias, grand_grand_child_2]
-                                },
-                                grand_grand_child_2() {
+                                }
+                                sub grand_grand_child_2() {
                                     aliases [grand_grand_child_2]
-                                },
-                                grand_grand_child_3() {
+                                }
+                                sub grand_grand_child_3() {
                                     aliases [
                                         grand_grand_child_3_alias, 
                                         xylophone,
                                         grand_grand_child_3_alias
                                     ]
-                                },
-                                grand_grand_child_4() {
+                                }
+                                sub grand_grand_child_4() {
                                     aliases [xylophone]
                                 }
                             ]
