@@ -1,20 +1,19 @@
 parser grammar DslParser;
 options { tokenVocab=DslLexer; }
 
-root: func EOF;
+root: sub EOF;
 
+sub: docstring? subModifiers* SUB IDENTIFIER (LPAREN params? RPAREN)? subBody;
 // TODO implement functionality for SEALED and SHIFTED modifiers
-funcModifiers: SEALED | SHIFTED;
-
-func: docstring? funcModifiers* SUB IDENTIFIER (LPAREN params? RPAREN)? funcBody;
+subModifiers: SEALED | SHIFTED;
 params: param (COMMA param)* COMMA?;
 param: IDENTIFIER ALPHANUMERIC? (QMARK)? COLON paramType (EQ literal)?;
 paramType: FLAG | ARGUMENT;
 
-funcBody: LCURLY funcStatements* RCURLY;
-funcStatements: children | action | aliases | constDef | defaultOverride;
+subBody: LCURLY subStatements* RCURLY;
+subStatements: children | action | aliases | constDef | defaultOverride;
 
-children: CHILDREN_PROP LBRAKET func+ RBRAKET;
+children: CHILDREN_PROP LBRAKET sub+ RBRAKET;
 action: ACTION_PROP actionValue;
 aliases: ALIASES_PROP LBRAKET (IDENTIFIER (COMMA IDENTIFIER)* COMMA? )? RBRAKET;
 constDef: CONST IDENTIFIER EQ literal;

@@ -3,7 +3,7 @@ package com.climat.library.parser.docstring
 import com.climat.library.emptyString
 
 internal data class Docstring(
-    val functionDoc: String,
+    val subDoc: String,
     val paramDoc: Map<String, String>
 ) {
 

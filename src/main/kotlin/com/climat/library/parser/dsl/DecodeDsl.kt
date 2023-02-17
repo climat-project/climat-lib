@@ -30,13 +30,13 @@ internal fun decodeCliDsl(cliDsl: String): RootToolchain {
     val parser = DslParser(CommonTokenStream(lexer))
     parser.addErrorListener(CliDslErrorListener(cliDsl))
 
-    val func = parser.root().assertRequire(cliDsl) { findFunc() }
+    val sub = parser.root().assertRequire(cliDsl) { findSub() }
 
-    val (statements, params, docstring) = destructureFunc(cliDsl, func)
+    val (statements, params, docstring) = destructureSub(cliDsl, sub)
 
     return RootToolchain(
-        name = func.assertRequire(cliDsl) { IDENTIFIER() }.text,
-        description = docstring.functionDoc,
+        name = sub.assertRequire(cliDsl) { IDENTIFIER() }.text,
+        description = docstring.subDoc,
         parameters = decodeParameters(cliDsl, params, docstring.paramDoc),
         parameterDefaults = decodeDefaults(cliDsl, statements, params),
         action = decodeAction(cliDsl, statements),
@@ -46,12 +46,12 @@ internal fun decodeCliDsl(cliDsl: String): RootToolchain {
     )
 }
 
-private fun decodeDescendantToolchain(cliDsl: String, func: DslParser.FuncContext): DescendantToolchain {
-    val (statements, params, docstring) = destructureFunc(cliDsl, func)
+private fun decodeDescendantToolchain(cliDsl: String, sub: DslParser.SubContext): DescendantToolchain {
+    val (statements, params, docstring) = destructureSub(cliDsl, sub)
 
     return DescendantToolchain(
-        name = func.assertRequire(cliDsl) { IDENTIFIER() }.text,
-        description = docstring.functionDoc,
+        name = sub.assertRequire(cliDsl) { IDENTIFIER() }.text,
+        description = docstring.subDoc,
         parameters = decodeParameters(cliDsl, params, docstring.paramDoc),
         parameterDefaults = decodeDefaults(cliDsl, statements, params),
         action = decodeAction(cliDsl, statements),
@@ -61,7 +61,7 @@ private fun decodeDescendantToolchain(cliDsl: String, func: DslParser.FuncContex
     )
 }
 
-private fun decodeAliases(cliDsl: String, statements: List<DslParser.FuncStatementsContext>): Array<String> {
+private fun decodeAliases(cliDsl: String, statements: List<DslParser.SubStatementsContext>): Array<String> {
     val aliasProps = statements.mapNotNull { it.findAliases() }
         .toList()
     if (aliasProps.size >= 2) {
@@ -74,7 +74,7 @@ private fun decodeAliases(cliDsl: String, statements: List<DslParser.FuncStateme
     return emptyArray()
 }
 
-private fun decodeAction(cliDsl: String, statements: List<DslParser.FuncStatementsContext>): ActionValueBase<*> {
+private fun decodeAction(cliDsl: String, statements: List<DslParser.SubStatementsContext>): ActionValueBase<*> {
     val actions = statements.mapNotNull { it.findAction() }
         .toList()
     if (actions.size >= 2) {
@@ -100,22 +100,22 @@ private fun decodeAction(cliDsl: String, statements: List<DslParser.FuncStatemen
     return noopAction()
 }
 
-private fun destructureFunc(cliDsl: String, func: DslParser.FuncContext) =
+private fun destructureSub(cliDsl: String, sub: DslParser.SubContext) =
     Triple(
-        func.assertRequire(cliDsl) { findFuncBody() }.findFuncStatements(),
-        func.findParams()?.findParam().orEmpty(),
-        decodeDocstring(cliDsl, func.findDocstring())
+        sub.assertRequire(cliDsl) { findSubBody() }.findSubStatements(),
+        sub.findParams()?.findParam().orEmpty(),
+        decodeDocstring(cliDsl, sub.findDocstring())
     )
 
-private fun decodeDefaults(cliDsl: String, funcStatements: List<DslParser.FuncStatementsContext>, params: List<DslParser.ParamContext>): Map<String, String> =
+private fun decodeDefaults(cliDsl: String, subStatements: List<DslParser.SubStatementsContext>, params: List<DslParser.ParamContext>): Map<String, String> =
     params.associate {
         it.assertRequire(cliDsl) { IDENTIFIER() }.text to it.findLiteral()?.let { decodeSimpleString(cliDsl, it) }
-    }.filterNotNullValues() + funcStatements.mapNotNull { it.findDefaultOverride() }.associate {
+    }.filterNotNullValues() + subStatements.mapNotNull { it.findDefaultOverride() }.associate {
         it.assertRequire(cliDsl) { IDENTIFIER() }.text to
             decodeSimpleString(cliDsl, it.assertRequire(cliDsl) { findLiteral() })
     }
 
-private fun decodeConstants(cliDsl: String, statements: List<DslParser.FuncStatementsContext>): Array<Constant> =
+private fun decodeConstants(cliDsl: String, statements: List<DslParser.SubStatementsContext>): Array<Constant> =
     statements.mapNotNull { it.findConstDef() }
         .map { context ->
             context.assertRequire(cliDsl) { findLiteral() }.let { literal ->
@@ -142,7 +142,7 @@ private fun decodeSimpleString(cliDsl: String, literal: DslParser.LiteralContext
     return tpl.str(emptyList())
 }
 
-private fun decodeChildren(cliDsl: String, statements: List<DslParser.FuncStatementsContext>): Array<DescendantToolchain> {
+private fun decodeChildren(cliDsl: String, statements: List<DslParser.SubStatementsContext>): Array<DescendantToolchain> {
     val children = statements.mapNotNull { it.findChildren() }
         .toList()
     if (children.size >= 2) {
@@ -150,7 +150,7 @@ private fun decodeChildren(cliDsl: String, statements: List<DslParser.FuncStatem
     }
     if (children.size == 1) {
         val child = children.first()
-        return child.findFunc().map { decodeDescendantToolchain(cliDsl, it) }.toTypedArray()
+        return child.findSub().map { decodeDescendantToolchain(cliDsl, it) }.toTypedArray()
     }
     return emptyArray()
 }
