@@ -1,10 +1,7 @@
 package e2e
-import com.climat.library.domain.action.TemplateActionValue
-import com.climat.library.toolchain.ToolchainProcessor
 import kotlin.test.Test
-import kotlin.test.assertContentEquals
 
-class TestExecution {
+class TestExecution : E2ETestBase() {
 
     private val cliDsl = """
     cli-alias-aggregator {
@@ -32,39 +29,29 @@ class TestExecution {
       sub noop {}
     }"""
 
-    private fun exec(args: String): String? {
-        var ans: TemplateActionValue? = null
-        ToolchainProcessor(cliDsl, { act, _ ->
-            ans = act as TemplateActionValue
-        }).execute(args)
-        return ans?.value
-    }
-
     @Test
     fun testHappyFlow() {
-        val executed = listOf(
-            "new",
-            "new --interactive template --param1 abc",
-            "new template --param2 we",
-            "new --interactive template --param2 we --param1 nondefault",
-            "renew",
-            "",
-            "noop"
-        )
-            .map(::exec)
-            .toTypedArray()
-        println(executed)
-        assertContentEquals(
-            arrayOf(
+        cliDsl.assertResults(
+            "new" to
                 "echo 'abcd'",
+
+            "new --interactive template --param1 abc" to
                 "echo 'true' 'abc' --interactiveSwitch --mapped=abc",
+
+            "new template --param2 we" to
                 "echo 'false' 'default' --mapped=default",
+
+            "new --interactive template --param2 we --param1 nondefault" to
                 "echo 'true' 'nondefault' --interactiveSwitch --mapped=nondefault",
+
+            "renew" to
                 "echo 'qwe' --c=constantValue constantValue --switch",
+
+            "" to
                 "echo root action",
+
+            "noop" to
                 null
-            ),
-            executed
         )
     }
 }

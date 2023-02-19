@@ -13,7 +13,7 @@ internal class Interpolation(
         val value = values.find { it.ref.name == name }!!
         return if (mapping != null) {
             when (value.ref.type) {
-                Ref.Type.Flag -> if (value.value.toBooleanStrict()) {
+                Ref.Type.Flag -> if (value.value.toBooleanStrict() xor isFlipped) {
                     mapping
                 } else {
                     emptyString()
