@@ -52,7 +52,7 @@ CUSTOM_SCRIPT_BEGIN: '<' -> pushMode(CustomScript);
 DOCSTRING_BEGIN: '"""' -> pushMode(Docstring);
 
 WS: [ \t\n\r\f]+ -> channel(WHITESPACE_CHANNEL);
-ALPHANUMERIC: [a-zA-Z0-9];
+fragment ALPHANUMERIC: [a-zA-Z0-9];
 IDENTIFIER: (ALPHANUMERIC | [_-])+;
 
 mode Template;

@@ -163,7 +163,7 @@ private fun decodeParameters(cliDsl: String, params: List<DslParser.ParamContext
             name = parsedParam.assertRequire(cliDsl) { IDENTIFIER() }.text,
             description = paramDescriptions[paramName] ?: emptyString(),
             optional = parsedParam.QMARK() != null,
-            shorthand = parsedParam.ALPHANUMERIC()?.text,
+            shorthand = parsedParam.findParamShort()?.text,
             type = parsedParam.assertRequire(cliDsl) { findParamType() }.let {
                 when {
                     it.FLAG() != null -> Ref.Type.Flag

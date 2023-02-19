@@ -12,8 +12,9 @@ subModifiers: rootModifiers | MOD_SHIFT | aliasModifier | aliasesModifier;
 aliasModifier: MOD_ALIAS LPAREN IDENTIFIER RPAREN;
 aliasesModifier: MOD_ALIASES LPAREN IDENTIFIER+ RPAREN;
 params: param (COMMA param)* COMMA?;
-param: IDENTIFIER ALPHANUMERIC? (QMARK)? COLON paramType (EQ literal)?;
+param: IDENTIFIER paramShort? (QMARK)? COLON paramType (EQ literal)?;
 paramType: FLAG | ARGUMENT;
+paramShort: IDENTIFIER;
 
 subBody: LCURLY subStatements* RCURLY;
 subStatements: rootStatements | defaultOverride;
