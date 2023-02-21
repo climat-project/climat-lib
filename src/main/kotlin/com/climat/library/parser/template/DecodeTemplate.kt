@@ -4,7 +4,7 @@ import climat.lang.DslParser
 import com.climat.library.parser.exception.assertRequire
 import com.climat.library.parser.exception.throwUnexpected
 
-internal fun decodeTemplate(cliDsl: String, strTpl: DslParser.StrintTemplateContext): Template {
+internal fun decodeTemplate(cliDsl: String, strTpl: DslParser.StringTemplateContext): Template {
     return Template(
         strTpl.findEntry().map {
             it.findContent()?.let { SimpleString(it.text) }

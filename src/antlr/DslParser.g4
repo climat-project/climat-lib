@@ -24,13 +24,13 @@ action: ACTION_PROP actionValue;
 constDef: CONST IDENTIFIER EQ literal;
 defaultOverride: OVERRIDE DEFAULT IDENTIFIER EQ literal;
 
-actionValue: strintTemplate | SCOPE_PARAMS | customScript;
+actionValue: stringTemplate | SCOPE_PARAMS | customScript;
 customScript: IDENTIFIER? CUSTOM_SCRIPT_BEGIN CustomScript_SCRIPT? CustomScript_END;
 
-literal: strintTemplate | booleanLiteral;
+literal: stringTemplate | booleanLiteral;
 booleanLiteral: TRUE | FALSE;
 
-strintTemplate: DOUBLE_QUOTE entry* Template_CLOSE;
+stringTemplate: DOUBLE_QUOTE entry* Template_CLOSE;
 entry: content | interpolation;
 content: Template_CONTENT;
 interpolation: Template_INTERPOLATION_OPEN Interpolation_NEGATE? Interpolation_IDENTIFIER mapping? Interpolation_RPAREN;
