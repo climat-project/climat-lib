@@ -6,14 +6,11 @@ import com.climat.library.domain.action.NoopActionValue
 import com.climat.library.domain.action.ScopeParamsActionValue
 import com.climat.library.domain.action.TemplateActionValue
 import com.climat.library.domain.isLeaf
-import com.climat.library.domain.ref.Ref
 import com.climat.library.domain.ref.RefWithValue
 import com.climat.library.domain.toolchain.DescendantToolchain
 import com.climat.library.domain.toolchain.RootToolchain
 import com.climat.library.domain.toolchain.Toolchain
 
-val ARG_PREFIX = "--"
-val SHORTHAND_ARG_PREFIX = "-"
 internal fun processToolchain(
     toolchain: RootToolchain,
     params: MutableList<String>,
@@ -71,43 +68,6 @@ private fun processToolchain(
     } else {
         processToolchain(onlyMatching.children, params, scopeRefs, handler)
     }
-}
-
-internal fun processRefs(
-    toolchain: Toolchain,
-    params: MutableList<String>
-): Map<String, RefWithValue> {
-    val (optional, required) = toolchain.parameters.partition { it.optional }
-    val ans = required.associate {
-        it.name to RefWithValue(it, params.removeFirst())
-    }.toMutableMap()
-
-    val optionals = optional.associateBy { it.name }.toMutableMap()
-    while (optionals.isNotEmpty() && params.isNotEmpty() && params.first().startsWith(ARG_PREFIX)) {
-        val next = params.removeFirst().drop(ARG_PREFIX.length)
-
-        val param = optionals.remove(next) ?: throw Exception("Argument $next not defined") // TODO: proper error
-
-        ans[next] = RefWithValue(
-            param,
-            if (param.type == Ref.Type.Flag) {
-                true.toString()
-            } else {
-                params.removeFirst()
-            }
-        )
-    }
-
-    optionals.values.filter { it.type != Ref.Type.Flag }
-        .forEach {
-            val default = toolchain.parameterDefaults[it.name] ?: throw Exception("No value provided for ${it.name}")
-            ans[it.name] = RefWithValue(it, default)
-        }
-    optionals.values.filter { it.type == Ref.Type.Flag }.forEach { ans[it.name] = RefWithValue(it, false.toString()) }
-
-    return ans + toolchain.constants.fold(emptyList<RefWithValue>()) { acc, it ->
-        acc + listOf(RefWithValue(it, it.value.str(acc)))
-    }.associateBy { it.ref.name }
 }
 
 private fun setActualCommand(

@@ -53,7 +53,7 @@ class Parameters : E2ETestBase() {
     }
 
     @Test
-    @Ignore // "Functionality not supported by kotlinx.cli"
+    @Ignore // Reason: Hard to implement, not sure if it brings value
     fun overridingDefaults() {
         """
             hello-world(location l: arg? = "the other side") {
