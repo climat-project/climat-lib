@@ -10,20 +10,20 @@ class TestExecution : E2ETestBase() {
       action "echo root action"
       
       
-      sub new(interactive?: flag) {
+      sub new(interactive: flag) {
         action "echo 'abcd'"
         
-        sub template(param1?: arg = "default", param2?: arg) {
+        sub template(param1: arg? = "default", param2: arg?) {
           action "echo '$(interactive)' '$(param1)' $(interactive:--interactiveSwitch) $(param1:--mapped)"
         }
       }
       sub renew {
         action "echo 'qwe' $(C1:--c) $(C1) $(C2:--switch)"
       }
-      sub remove(force?: flag) {
+      sub remove(force: flag) {
         action "echo 'what ever'"
       }
-      sub export(type?: flag) {
+      sub export(type: flag) {
         action "echo 'abcd'"
       }
       sub noop {}

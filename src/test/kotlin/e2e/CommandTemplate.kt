@@ -7,7 +7,7 @@ class CommandTemplate : E2ETestBase() {
     @Test
     fun mappingFlags() {
         """
-            hello-world(goodDay?: flag) {
+            hello-world(goodDay: flag) {
                 sub foo {
                     action "echo Hello World $(goodDay)"
                 }

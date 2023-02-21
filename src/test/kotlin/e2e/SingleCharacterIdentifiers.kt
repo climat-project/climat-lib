@@ -12,7 +12,7 @@ class SingleCharacterIdentifiers : E2ETestBase() {
                 
                 @alias(r)
                 @aliases(b g)
-                sub c(abc a?: flag) {
+                sub c(abc a: flag) {
                     action "echo c called!"
                 }
             }

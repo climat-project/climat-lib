@@ -28,7 +28,7 @@ class Parameters : E2ETestBase() {
     @Test
     fun optionals() {
         """
-            hello-world(location l?: arg) {
+            hello-world(location l: arg?) {
                 action "echo Hello World from $(location)"
             }
         """
@@ -42,7 +42,7 @@ class Parameters : E2ETestBase() {
     @Test
     fun defaults() {
         """
-            hello-world(location l?: arg = "the other side") {
+            hello-world(location l: arg? = "the other side") {
                 action "echo Hello World from $(location)"
             }
         """
@@ -56,7 +56,7 @@ class Parameters : E2ETestBase() {
     @Ignore // "Functionality not supported by kotlinx.cli"
     fun overridingDefaults() {
         """
-            hello-world(location l?: arg = "the other side") {
+            hello-world(location l: arg? = "the other side") {
                 action "echo Hello World from $(location)"
 
                 sub child {

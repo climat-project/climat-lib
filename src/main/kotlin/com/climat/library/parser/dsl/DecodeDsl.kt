@@ -159,17 +159,18 @@ private fun decodeParameters(cliDsl: String, params: List<DslParser.ParamContext
     params.map { parsedParam ->
         val paramName = parsedParam.assertRequire(cliDsl) { IDENTIFIER() }.text
 
+        val (paramType, optional) = parsedParam.assertRequire(cliDsl) { findParamType() }.let {
+            when {
+                it.FLAG() != null -> Ref.Type.Flag to true
+                it.findArgument() != null -> Ref.Type.Arg to (it.findArgument()!!.QMARK() != null)
+                else -> it.throwUnexpected("Could not parse parameter type", cliDsl)
+            }
+        }
         ParamDefinition(
             name = parsedParam.assertRequire(cliDsl) { IDENTIFIER() }.text,
             description = paramDescriptions[paramName] ?: emptyString(),
-            optional = parsedParam.QMARK() != null,
+            optional = optional,
             shorthand = parsedParam.findParamShort()?.text,
-            type = parsedParam.assertRequire(cliDsl) { findParamType() }.let {
-                when {
-                    it.FLAG() != null -> Ref.Type.Flag
-                    it.ARGUMENT() != null -> Ref.Type.Arg
-                    else -> it.throwUnexpected("Could not parse parameter type", cliDsl)
-                }
-            }
+            type = paramType
         )
     }.toTypedArray()

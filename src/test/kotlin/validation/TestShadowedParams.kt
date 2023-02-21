@@ -10,9 +10,9 @@ class TestShadowedParams {
     private val toolchain = """
         root(param1: arg, param2: arg) {
             sub child1(param1: arg, param3: arg) {
-                    sub grandchild(param1?: flag, param3?: flag) {}
+                    sub grandchild(param1: flag, param3: flag) {}
             }
-            sub child2(param2?: flag, param4?: flag) {}
+            sub child2(param2: flag, param4: flag) {}
         }
     """
 
