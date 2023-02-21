@@ -5,7 +5,6 @@ import com.climat.library.domain.toolchain.RootToolchain
 import com.climat.library.domain.toolchain.Toolchain
 import com.climat.library.parser.dsl.decodeCliDsl
 import com.climat.library.validation.computeValidations
-import kotlinx.cli.ArgParser
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 import kotlin.js.JsName
@@ -28,14 +27,17 @@ class ToolchainProcessor {
     constructor(toolchain: RootToolchain, actionHandler: (parsedAction: Action, context: Toolchain) -> Unit, skipValidation: Boolean = false) {
         if (!skipValidation)
             _validate(toolchain)
-        this.parser = ArgParser(toolchain.name)
-        this.parser.subcommands(ToolchainCommand(toolchain, actionHandler))
+        this.toolchain = toolchain
+        this.actionHandler = actionHandler
     }
 
-    private val parser: ArgParser
+    private var actionHandler: (parsedAction: Action, context: Toolchain) -> Unit
+    private var toolchain: RootToolchain
 
     fun execute(args: Array<String>) {
-        parser.parse(arrayOf(parser.programName) + args)
+        val mutableArgs = args.toMutableList()
+        mutableArgs.add(0, toolchain.name)
+        processToolchain(toolchain, mutableArgs, actionHandler)
     }
 
     @JsName("executeFromString")

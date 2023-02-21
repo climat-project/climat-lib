@@ -1,6 +1,7 @@
-name: Gradle tests on push
+name: Build
 on: 
   workflow_dispatch:
+
 jobs:
   gradle:
     runs-on: ubuntu-latest

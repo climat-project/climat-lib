@@ -1,12 +1,5 @@
 package com.climat.library.utils
 import com.climat.library.domain.action.NoopActionValue
-import com.climat.library.domain.ref.Ref
-import kotlinx.cli.ArgType
-
-internal fun toolchainParameterTypeToCliArgType(it: Ref.Type): ArgType<*> = when (it) {
-    Ref.Type.Arg -> ArgType.String
-    Ref.Type.Flag -> ArgType.Boolean
-}
 
 internal fun <T> not(predicate: (T) -> Boolean): (T) -> Boolean = { it: T -> !predicate(it) }
 

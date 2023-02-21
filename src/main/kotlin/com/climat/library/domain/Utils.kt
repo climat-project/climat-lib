@@ -10,3 +10,6 @@ internal val Toolchain.refs: List<Ref>
 
 internal val DescendantToolchain.eachAlias: List<DescendantToolchain>
     get() = listOf(this) + this.aliases.map { this.copy(name = it) }
+
+internal val Toolchain.isLeaf: Boolean
+    get() = children.isEmpty()
