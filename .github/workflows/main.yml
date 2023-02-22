@@ -1,6 +1,10 @@
 name: Build
-on: 
-  workflow_dispatch:
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
 
 jobs:
   gradle:
@@ -15,5 +19,8 @@ jobs:
     - name: Setup Gradle
       uses: gradle/gradle-build-action@v2
     
-    - name: Execute Gradle build
+    - name: Execute Gradle tests
       run: ./gradlew allTests
+
+    - name: Check linting
+      run: ./gradlew ktlintCheck
