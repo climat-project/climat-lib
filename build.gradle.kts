@@ -1,19 +1,9 @@
-val githubUser: String by project
-val githubPassword: String by project
 val npmToken: String by project
 
 allprojects {
     repositories {
         mavenCentral()
         maven("https://jitpack.io")
-
-        maven {
-            url = uri("https://maven.pkg.github.com/wilversings/kotlinx-cli")
-            credentials {
-                username = githubUser
-                password = githubPassword
-            }
-        }
     }
 }
 
@@ -47,9 +37,6 @@ kotlin {
         val commonMain by getting {
             dependsOn(commonAntlr)
             kotlin.srcDir("src/main/kotlin")
-            dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-cli:0.3.5-develop-0")
-            }
         }
 
         val commonTest by getting {
@@ -75,6 +62,14 @@ kotlin {
     }
     jvm {
     }
+
+//    Native example.
+//    linuxX64 {
+//        binaries { sharedLib{} }
+//    }
+//    mingwX64 {
+//        binaries { sharedLib{} }
+//    }
 }
 
 ktlint.filter {

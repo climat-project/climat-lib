@@ -7,7 +7,6 @@ import com.climat.library.validation.validations.AncestorSubcommandWithSameName
 import com.climat.library.validation.validations.BooleanFlippedMappings
 import com.climat.library.validation.validations.DefaultForFlag
 import com.climat.library.validation.validations.DefaultForRequiredParam
-import com.climat.library.validation.validations.DefaultForUndefinedParam
 import com.climat.library.validation.validations.DuplicateRefNames
 import com.climat.library.validation.validations.DuplicateToolchainNamesOrAliases
 import com.climat.library.validation.validations.FlagMappedTwice
@@ -20,7 +19,6 @@ private val validators = listOf(
     BooleanFlippedMappings(),
     DefaultForFlag(),
     DefaultForRequiredParam(),
-    DefaultForUndefinedParam(),
     DuplicateToolchainNamesOrAliases(),
     DuplicateRefNames(),
     FlagMappedTwice(),

@@ -18,7 +18,4 @@ internal abstract class ValidationBase {
         getScopeRefs(ctx)
             .mapValues { it.value.filterIsInstance<ParamDefinition>() }
             .filterValues { it.isNotEmpty() }
-
-    protected fun getDefaultParamKeys(ctx: ValidationContext): Set<String> =
-        ctx.toolchain.parameterDefaults.keys
 }

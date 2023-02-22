@@ -11,9 +11,8 @@ internal class DefaultForRequiredParam : ValidationBase() {
 
     override fun validate(ctx: ValidationContext): Sequence<String> =
         (
-            getScopeParams(ctx).filter { (_, v) -> !v.last().optional }
+            getScopeParams(ctx).filter { (_, v) -> !v.last().optional && v.last().default != null }
                 .keys
-                .intersect(getDefaultParamKeys(ctx))
             ).let { defaultForRequired ->
             defaultForRequired.map {
                 "Param `$it` is required, and should not have default"

@@ -1,14 +1,15 @@
 package e2e
 
-import com.climat.library.toolchain.ToolchainProcessor
+import com.climat.library.toolchain.parse
+import com.climat.library.toolchain.validate
 import kotlin.test.Test
 
 class CustomScript {
 
     @Test
     fun testCompiles() {
-        ToolchainProcessor.validate(
-            ToolchainProcessor.parse(
+        validate(
+            parse(
                 """
                 hello-world(location l: arg) {
     

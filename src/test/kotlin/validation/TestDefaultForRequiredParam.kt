@@ -15,7 +15,6 @@ class TestDefaultForRequiredParam {
                   param2: flag = "bool_default",
                   param3: arg? = "str_default_2",
                   param4: flag = "str_default_3") {
-                override default rootParam = "str_default_4"
             }
         }
     """
@@ -25,7 +24,6 @@ class TestDefaultForRequiredParam {
         val validationResults = decodeCliDsl(toolchain).getValidationMessages(ValidationCode.DefaultForRequiredParam)
         assertContainsInMessages(
             validationResults,
-            listOf("child", "rootParam"),
             listOf("child", "param1")
         )
     }

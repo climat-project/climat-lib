@@ -11,4 +11,5 @@ data class ParamDefinition internal constructor(
     val optional: Boolean,
     val shorthand: String?,
     val description: String,
+    val default: String?
 ) : Ref()

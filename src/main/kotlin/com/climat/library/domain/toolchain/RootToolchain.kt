@@ -12,9 +12,9 @@ data class RootToolchain internal constructor(
     override val name: String,
     override val description: String,
     override val parameters: Array<ParamDefinition>,
-    override val parameterDefaults: Map<String, String>,
     override val action: Action,
     override val children: Array<DescendantToolchain>,
     override val constants: Array<Constant>,
+    override val allowUnmatched: Boolean,
     val resources: Array<String>
 ) : Toolchain()

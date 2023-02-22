@@ -15,12 +15,7 @@ class TestDefaultForFlag {
                 param3: flag = "random",
                 param4: flag,
                 param5: flag) {
-                
-              
-                    sub grandchild() {
-                        override default param1 = "str_default_2"
-                        override default param4 = false
-                    }
+               
             }
         }
     """
@@ -28,6 +23,6 @@ class TestDefaultForFlag {
     @Test
     fun test() {
         val validationResults = decodeCliDsl(toolchain).getValidationMessages(ValidationCode.DefaultForFlag)
-        assertEquals(3, validationResults.count())
+        assertEquals(2, validationResults.count())
     }
 }
