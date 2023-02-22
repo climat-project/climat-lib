@@ -3,7 +3,6 @@ package com.climat.library.parser.dsl
 import climat.lang.DslLexer
 import climat.lang.DslParser
 import com.climat.library.domain.toolchain.RootToolchain
-import com.climat.library.domain.toolchain.RootToolchainSourceMap
 import com.climat.library.parser.docstring.decodeDocstring
 import com.climat.library.parser.exception.CliDslErrorListener
 import com.climat.library.parser.exception.assertRequire
@@ -22,6 +21,8 @@ internal fun decodeCliDsl(cliDsl: String): RootToolchain {
     val allowUnmatchedMod = modifiers.firstNotNullOfOrNull { it.MOD_ALLOW_UNMATCHED() }
 
     return RootToolchain(
+        sourceCode = cliDsl,
+
         name = identifier.text,
         description = docstring.subDoc,
         parameters = decodeParameters(cliDsl, params, docstring.paramDoc),
@@ -31,12 +32,7 @@ internal fun decodeCliDsl(cliDsl: String): RootToolchain {
         allowUnmatched = allowUnmatchedMod != null,
         resources = emptyArray(),
 
-        sourceMap = RootToolchainSourceMap(
-            name = identifier.sourceInterval,
-            allowUnmatched = allowUnmatchedMod?.sourceInterval,
-            resources = emptyArray()
-        )
-
+        sourceMap = root.sourceInterval
     )
 }
 

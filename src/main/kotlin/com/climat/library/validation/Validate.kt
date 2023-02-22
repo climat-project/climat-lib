@@ -40,7 +40,7 @@ internal fun computeValidations(
                     toolchain = current
                 )
             ).map {
-                ValidationResult(it, validator.code, validator.type, current)
+                ValidationResult(it.message, validator.code, validator.type, current)
             }
         } +
             current.children.flatMap {

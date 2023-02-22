@@ -10,6 +10,7 @@ import kotlin.js.JsExport
 @OptIn(ExperimentalJsExport::class)
 @JsExport
 data class RootToolchain internal constructor(
+    val sourceCode: String,
     override val name: String,
     override val description: String,
     override val parameters: Array<ParamDefinition>,
@@ -18,11 +19,5 @@ data class RootToolchain internal constructor(
     override val constants: Array<Constant>,
     override val allowUnmatched: Boolean,
     val resources: Array<String>,
-    override val sourceMap: RootToolchainSourceMap
+    override val sourceMap: Interval
 ) : Toolchain()
-
-internal data class RootToolchainSourceMap(
-    override val name: Interval,
-    override val allowUnmatched: Interval?,
-    val resources: Array<Interval>
-) : ToolchainSourceMap()

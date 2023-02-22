@@ -1,15 +1,14 @@
 package com.climat.library.domain.ref
 
-import org.antlr.v4.kotlinruntime.misc.Interval
+import com.climat.library.domain.action.SourceTraceable
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
-abstract class Ref {
+abstract class Ref : SourceTraceable() {
     abstract val name: String
     abstract val type: Type
-    internal abstract val sourceMap: Interval
 
     enum class Type {
         Flag,

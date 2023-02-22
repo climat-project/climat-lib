@@ -1,6 +1,6 @@
 package com.climat.library.domain.ref
 
-import com.climat.library.parser.template.Template
+import com.climat.library.domain.action.template.Template
 import org.antlr.v4.kotlinruntime.misc.Interval
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport

@@ -20,10 +20,5 @@ data class DescendantToolchain internal constructor(
     override val constants: Array<Constant> = emptyArray(),
     override val allowUnmatched: Boolean,
     val aliases: Array<Alias> = emptyArray(),
-    override val sourceMap: DescendantToolchainSourceMap,
+    override val sourceMap: Interval,
 ) : Toolchain()
-
-internal data class DescendantToolchainSourceMap(
-    override val name: Interval,
-    override val allowUnmatched: Interval?,
-) : ToolchainSourceMap()
