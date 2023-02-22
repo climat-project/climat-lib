@@ -38,7 +38,7 @@ internal fun processRefs(
                 it.name to RefWithValue(
                     it,
                     when (it.type) {
-                        Ref.Type.Arg -> toolchain.parameterDefaults[it.name] ?: emptyString()
+                        Ref.Type.Arg -> it.default ?: emptyString()
                         Ref.Type.Flag -> false.toString()
                     }
                 )

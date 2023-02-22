@@ -62,6 +62,14 @@ kotlin {
     }
     jvm {
     }
+
+//    Native example.
+//    linuxX64 {
+//        binaries { sharedLib{} }
+//    }
+//    mingwX64 {
+//        binaries { sharedLib{} }
+//    }
 }
 
 ktlint.filter {

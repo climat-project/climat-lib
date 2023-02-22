@@ -1,6 +1,5 @@
 package e2e
 
-import kotlin.test.Ignore
 import kotlin.test.Test
 
 class Parameters : E2ETestBase() {
@@ -49,30 +48,6 @@ class Parameters : E2ETestBase() {
             .assertResults(
                 "" to "echo Hello World from the other side",
                 "--location Cluj-Napoca" to "echo Hello World from Cluj-Napoca"
-            )
-    }
-
-    @Test
-    @Ignore // Reason: Hard to implement, not sure if it brings value
-    fun overridingDefaults() {
-        """
-            hello-world(location l: arg? = "the other side") {
-                action "echo Hello World from $(location)"
-
-                sub child {
-                    override default location = "this side"
-                    action "echo Hello Child from $(location)"
-                }
-            }
-        """
-            .assertResults(
-                "" to "echo Hello World from the other side",
-
-                "--location Cluj-Napoca" to "echo Hello World from Cluj-Napoca",
-
-                "child" to "echo Hello Child from this side",
-
-                "--location Cluj-Napoca child" to "echo Hello Child from Cluj-Napoca"
             )
     }
 }

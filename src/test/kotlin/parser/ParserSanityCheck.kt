@@ -37,7 +37,6 @@ class ParserSanityCheck {
                 @seal sub aa{
                     const ae = "wat"
                     const be = false
-                    override default p1 = "w"
                 }
                 @shift sub bb{
                 }

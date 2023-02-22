@@ -41,6 +41,7 @@ MOD_SEAL: '@seal';
 MOD_SHIFT: '@shift';
 MOD_ALIAS: '@alias';
 MOD_ALIASES: '@aliases';
+MOD_ALLOW_UNMATCHED: '@allow-unmatched';
 
 SUB: 'sub';
 

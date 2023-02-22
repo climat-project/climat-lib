@@ -14,9 +14,9 @@ data class DescendantToolchain internal constructor(
     override val name: String,
     override val description: String = emptyString(),
     override val parameters: Array<ParamDefinition> = emptyArray(),
-    override val parameterDefaults: Map<String, String> = emptyMap(),
     override val action: Action = noopAction(),
     override val children: Array<DescendantToolchain> = emptyArray(),
     override val constants: Array<Constant> = emptyArray(),
+    override val allowUnmatched: Boolean,
     val aliases: Array<String> = emptyArray(),
 ) : Toolchain()

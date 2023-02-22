@@ -15,15 +15,16 @@ internal fun decodeCliDsl(cliDsl: String): RootToolchain {
     val statements = root.assertRequire(cliDsl) { findRootBody() }.findRootStatements()
     val params = root.findParams()?.findParam().orEmpty()
     val docstring = decodeDocstring(cliDsl, root.findDocstring())
+    val modifiers = root.findRootModifiers()
 
     return RootToolchain(
         name = root.assertRequire(cliDsl) { IDENTIFIER() }.text,
         description = docstring.subDoc,
         parameters = decodeParameters(cliDsl, params, docstring.paramDoc),
-        parameterDefaults = decodeRootDefaults(cliDsl, params),
         action = decodeRootAction(cliDsl, statements),
         children = decodeRootChildren(cliDsl, statements),
         constants = decodeRootConstants(cliDsl, statements),
+        allowUnmatched = modifiers.any { it.MOD_ALLOW_UNMATCHED() != null },
         resources = emptyArray()
     )
 }

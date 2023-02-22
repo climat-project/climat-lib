@@ -1,16 +1,16 @@
 package e2e
 
 import com.climat.library.domain.action.TemplateActionValue
-import com.climat.library.toolchain.ToolchainProcessor
+import com.climat.library.toolchain.execute
 import kotlin.test.assertEquals
 
 abstract class E2ETestBase {
 
     private fun exec(args: String, cliDsl: String): String? {
         var ans: TemplateActionValue? = null
-        ToolchainProcessor(cliDsl, { act, _ ->
+        execute(args, cliDsl, { act, _ ->
             ans = act as TemplateActionValue
-        }).execute(args)
+        })
         return ans?.value
     }
 

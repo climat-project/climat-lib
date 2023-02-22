@@ -2,7 +2,7 @@ parser grammar DslParser;
 options { tokenVocab=DslLexer; }
 
 root: docstring? rootModifiers* IDENTIFIER (LPAREN params? RPAREN)? rootBody EOF;
-rootModifiers: MOD_SEAL;
+rootModifiers: MOD_SEAL | MOD_ALLOW_UNMATCHED;
 rootBody: LCURLY rootStatements* RCURLY;
 rootStatements: sub | action | constDef;
 
@@ -18,11 +18,10 @@ argument: ARGUMENT (QMARK)?;
 paramShort: IDENTIFIER;
 
 subBody: LCURLY subStatements* RCURLY;
-subStatements: rootStatements | defaultOverride;
+subStatements: rootStatements;
 
 action: ACTION_PROP actionValue;
 constDef: CONST IDENTIFIER EQ literal;
-defaultOverride: OVERRIDE DEFAULT IDENTIFIER EQ literal;
 
 actionValue: stringTemplate | SCOPE_PARAMS | customScript;
 customScript: IDENTIFIER? CUSTOM_SCRIPT_BEGIN CustomScript_SCRIPT? CustomScript_END;

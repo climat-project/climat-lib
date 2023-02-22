@@ -15,10 +15,10 @@ internal fun decodeSub(cliDsl: String, sub: DslParser.SubContext): DescendantToo
         name = sub.assertRequire(cliDsl) { IDENTIFIER() }.text,
         description = docstring.subDoc,
         parameters = decodeParameters(cliDsl, params, docstring.paramDoc),
-        parameterDefaults = decodeSubDefaults(cliDsl, statements, params),
         action = decodeSubAction(cliDsl, statements),
         children = decodeSubChildren(cliDsl, statements),
         constants = decodeSubConstants(cliDsl, statements),
+        allowUnmatched = modifiers.any { it.findRootModifiers()?.MOD_ALLOW_UNMATCHED() != null },
         aliases = decodeAliases(cliDsl, modifiers)
     )
 }

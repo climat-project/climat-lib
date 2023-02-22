@@ -5,49 +5,39 @@ import com.climat.library.domain.toolchain.RootToolchain
 import com.climat.library.domain.toolchain.Toolchain
 import com.climat.library.parser.dsl.decodeCliDsl
 import com.climat.library.validation.computeValidations
-import kotlin.js.ExperimentalJsExport
-import kotlin.js.JsExport
 import kotlin.js.JsName
-import com.climat.library.validation.validate as _validate
 
-@OptIn(ExperimentalJsExport::class)
-@JsExport
-class ToolchainProcessor {
-    companion object {
-        fun validate(toolchain: RootToolchain) = computeValidations(toolchain).toList().toTypedArray()
-        fun parse(cliDsl: String): RootToolchain =
-            decodeCliDsl(cliDsl)
-    }
+fun validate(toolchain: RootToolchain) = computeValidations(toolchain).toList().toTypedArray()
 
-    @JsName("createFromCliDslString")
-    constructor(cliDsl: String, actionHandler: (parsedAction: Action, context: Toolchain) -> Unit, skipValidation: Boolean = false) :
-        this(decodeCliDsl(cliDsl), actionHandler, skipValidation)
+fun parse(cliDsl: String): RootToolchain =
+    decodeCliDsl(cliDsl)
 
-    @JsName("create")
-    constructor(toolchain: RootToolchain, actionHandler: (parsedAction: Action, context: Toolchain) -> Unit, skipValidation: Boolean = false) {
-        if (!skipValidation)
-            _validate(toolchain)
-        this.toolchain = toolchain
-        this.actionHandler = actionHandler
-    }
+fun execute(args: Array<String>, toolchain: RootToolchain, actionHandler: (parsedAction: Action, context: Toolchain) -> Unit, skipValidation: Boolean = false) {
+    if (!skipValidation)
+        validate(toolchain)
+    val mutableArgs = args.toMutableList()
+    mutableArgs.add(0, toolchain.name)
+    processToolchain(toolchain, mutableArgs, actionHandler)
+}
 
-    private var actionHandler: (parsedAction: Action, context: Toolchain) -> Unit
-    private var toolchain: RootToolchain
+@JsName("executeFromCliDsl")
+fun execute(args: Array<String>, cliDsl: String, actionHandler: (parsedAction: Action, context: Toolchain) -> Unit, skipValidation: Boolean = false) {
+    execute(args, parse(cliDsl), actionHandler, skipValidation)
+}
 
-    fun execute(args: Array<String>) {
-        val mutableArgs = args.toMutableList()
-        mutableArgs.add(0, toolchain.name)
-        processToolchain(toolchain, mutableArgs, actionHandler)
-    }
+@JsName("executeWithStringArgsFromCliDsl")
+fun execute(args: String, cliDsl: String, actionHandler: (parsedAction: Action, context: Toolchain) -> Unit, skipValidation: Boolean = false) {
+    execute(args, parse(cliDsl), actionHandler, skipValidation)
+}
 
-    @JsName("executeFromString")
-    fun execute(args: String) {
-        execute(
-            if (args.isBlank()) {
-                emptyArray()
-            } else {
-                args.split(Regex("\\s+")).toTypedArray()
-            }
-        )
-    }
+@JsName("executeWithStringArgs")
+fun execute(args: String, toolchain: RootToolchain, actionHandler: (parsedAction: Action, context: Toolchain) -> Unit, skipValidation: Boolean = false) {
+    execute(
+        if (args.isBlank()) {
+            emptyArray()
+        } else {
+            args.split(Regex("\\s+")).toTypedArray()
+        },
+        toolchain, actionHandler, skipValidation
+    )
 }

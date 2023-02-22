@@ -12,9 +12,8 @@ internal class DefaultForFlag : ValidationBase() {
 
     override fun validate(ctx: ValidationContext): Sequence<String> =
         (
-            getScopeParams(ctx).filter { (_, v) -> v.last().type == Ref.Type.Flag }
+            getScopeParams(ctx).filter { (_, v) -> v.last().type == Ref.Type.Flag && v.last().default != null }
                 .keys
-                .intersect(getDefaultParamKeys(ctx))
             ).let { defaultForRequired ->
             defaultForRequired.map {
                 "Cannot set default to flag `$it`. For a flag the default" +
