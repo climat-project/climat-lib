@@ -13,7 +13,7 @@ internal class UselessToolchain : ValidationBase() {
     override fun validate(ctx: ValidationContext): Sequence<ValidationEntry> =
         ctx.toolchain.let {
             if (it.action is NoopActionValue && it.children.isEmpty()) {
-                sequenceOf(ValidationEntry("`${it.name}` toolchain is useless. Has no children or action", it.sourceMap))
+                sequenceOf(it.validationEntry("`${it.name}` toolchain is useless. Has no children or action"))
             } else {
                 emptySequence()
             }

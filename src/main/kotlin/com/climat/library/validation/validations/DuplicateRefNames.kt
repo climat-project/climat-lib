@@ -15,5 +15,5 @@ internal class DuplicateRefNames : ValidationBase() {
             .groupBy { it.name }
             .asSequence()
             .filter { (_, v) -> v.size >= 2 }
-            .map { (k, v) -> ValidationEntry("Duplicate parameter name `$k`", v.last().sourceMap /* TODO: put all parameters' sourcemap */) }
+            .map { (k, v) -> v.last().validationEntry("Duplicate parameter name `$k`" /* TODO: put all parameters' sourcemap */) }
 }

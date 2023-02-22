@@ -32,7 +32,7 @@ internal fun decodeCliDsl(cliDsl: String): RootToolchain {
         allowUnmatched = allowUnmatchedMod != null,
         resources = emptyArray(),
 
-        sourceMap = root.sourceInterval
+        sourceMap = root.position
     )
 }
 

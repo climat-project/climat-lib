@@ -1,6 +1,6 @@
 package com.climat.library.domain.ref
 
-import com.climat.library.domain.action.SourceTraceable
+import com.climat.library.domain.SourceTraceable
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 

@@ -16,7 +16,7 @@ internal fun decodeRootConstants(cliDsl: String, statements: List<DslParser.Root
                     name = context.assertRequire(cliDsl) { IDENTIFIER() }.text,
                     type = if (literal.findStringTemplate() != null) Ref.Type.Arg else Ref.Type.Flag,
                     value = decodeLiteral(cliDsl, literal),
-                    sourceMap = context.sourceInterval
+                    sourceMap = context.position
                 )
             }
         }.toTypedArray()

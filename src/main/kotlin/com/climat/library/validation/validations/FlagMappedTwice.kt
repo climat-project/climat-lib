@@ -19,7 +19,7 @@ internal class FlagMappedTwice : ValidationBase() {
                     .values.asSequence()
                     .filter { it.size >= 2 }
                     .map { it.first() } /* TODO: more granularity: sourceMap to reference and not to the whole action */
-                    .map { ValidationEntry("Flag ${it.mapping!!} was mapped more than once", act.sourceMap) }
+                    .map { act.validationEntry("Flag ${it.mapping!!} was mapped more than once") }
             } else { emptySequence() }
         }
 }

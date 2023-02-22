@@ -25,7 +25,7 @@ internal class BooleanFlippedMappings : ValidationBase() {
                             .map { it.name }
                             .toSet()
                     ).map { /* TODO: more granularity: sourceMap to reference and not to the whole action */
-                        ValidationEntry("Param `$it` cannot be flipped because it is not a flag", act.sourceMap)
+                        act.validationEntry("Param `$it` cannot be flipped because it is not a flag")
                     }.asSequence()
             } else {
                 emptySequence()

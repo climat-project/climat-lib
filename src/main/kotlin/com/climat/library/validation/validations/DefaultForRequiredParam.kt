@@ -18,7 +18,7 @@ internal class DefaultForRequiredParam : ValidationBase() {
                 .filter { !it.optional && it.default != null }
             ).let { defaultForRequired ->
             defaultForRequired.map {
-                ValidationEntry("Param `$it` is required, and should not have default", it.sourceMap)
+                it.validationEntry("Param `$it` is required, and should not have default")
             }
         }.asSequence()
 }

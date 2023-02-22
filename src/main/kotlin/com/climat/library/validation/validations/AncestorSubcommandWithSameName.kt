@@ -14,10 +14,7 @@ internal class AncestorSubcommandWithSameName : ValidationBase() {
             .find { it.name == ctx.toolchain.name }
             ?.let {
                 sequenceOf(
-                    ValidationEntry(
-                        message = "There is already an ancestor with name ${it.name}",
-                        sourceMap = it.sourceMap
-                    )
+                    it.validationEntry("There is already an ancestor with name ${it.name}")
                 )
             }
             ?: emptySequence()

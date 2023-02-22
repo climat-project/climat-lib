@@ -17,6 +17,6 @@ internal class ShadowedParams : ValidationBase() {
             .filter { it.size == 2 }
             .map {
                 val first = it.first()
-                ValidationEntry("Parameter `${first.name}` is shadowed", first.sourceMap)
+                first.validationEntry("Parameter `${first.name}` is shadowed")
             }
 }

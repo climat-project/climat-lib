@@ -26,14 +26,14 @@ internal fun decodeRootAction(cliDsl: String, statements: List<DslParser.RootSta
             it.findStringTemplate()?.let {
                 TemplateActionValue(
                     decodeTemplate(cliDsl, it),
-                    it.sourceInterval
+                    it.position
                 )
             } ?: it.SCOPE_PARAMS()?.text?.let { ScopeParamsActionValue() }
                 ?: it.assertRequire(cliDsl) { findCustomScript() }.let {
                     CustomScriptActionValue(
                         it.IDENTIFIER()?.text,
                         it.assertRequire(cliDsl) { CustomScript_SCRIPT() }.text,
-                        it.sourceInterval
+                        it.position
                     )
                 }
         }

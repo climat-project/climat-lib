@@ -19,10 +19,9 @@ internal class DefaultForFlag : ValidationBase() {
                 .filter { it.type == Ref.Type.Flag && it.default != null }
             ).let { defaultForRequired ->
             defaultForRequired.map {
-                ValidationEntry(
+                it.validationEntry(
                     "Cannot set default to flag `${it.name}`. For a flag the default" +
                         "value is always false. You flip param value when using the parameter",
-                    it.sourceMap
                 )
             }
         }.asSequence()

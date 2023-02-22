@@ -1,5 +1,6 @@
 package com.climat.library.validation
 
+import com.climat.library.domain.SourceTraceable
 import com.climat.library.domain.ref.ParamDefinition
 import com.climat.library.domain.ref.Ref
 import com.climat.library.domain.refs
@@ -18,4 +19,7 @@ internal abstract class ValidationBase {
         getScopeRefs(ctx)
             .mapValues { it.value.filterIsInstance<ParamDefinition>() }
             .filterValues { it.isNotEmpty() }
+
+    protected fun SourceTraceable.validationEntry(message: String) =
+        ValidationEntry(message, sourceMap)
 }

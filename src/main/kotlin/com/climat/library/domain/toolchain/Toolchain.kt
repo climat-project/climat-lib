@@ -1,7 +1,7 @@
 package com.climat.library.domain.toolchain
 
+import com.climat.library.domain.SourceTraceable
 import com.climat.library.domain.action.Action
-import com.climat.library.domain.action.SourceTraceable
 import com.climat.library.domain.ref.Constant
 import com.climat.library.domain.ref.ParamDefinition
 import kotlin.js.ExperimentalJsExport

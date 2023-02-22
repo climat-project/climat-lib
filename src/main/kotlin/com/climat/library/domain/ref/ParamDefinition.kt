@@ -1,6 +1,6 @@
 package com.climat.library.domain.ref
 
-import org.antlr.v4.kotlinruntime.misc.Interval
+import org.antlr.v4.kotlinruntime.ast.Position
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 
@@ -13,5 +13,5 @@ data class ParamDefinition internal constructor(
     val shorthand: String?,
     val description: String,
     val default: String?,
-    override val sourceMap: Interval
+    override val sourceMap: Position
 ) : Ref()

@@ -24,6 +24,6 @@ internal fun decodeSub(cliDsl: String, sub: DslParser.SubContext): DescendantToo
         allowUnmatched = allowUnmatchedMod != null,
         aliases = decodeAliases(cliDsl, modifiers),
 
-        sourceMap = sub.sourceInterval
+        sourceMap = sub.position!!
     )
 }

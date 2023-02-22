@@ -21,7 +21,7 @@ internal class UndefinedParams : ValidationBase() {
                     .distinct()
                     .filter(not(scopeParams::contains))
                     .map { /* TODO: more granularity: sourceMap to reference and not to the whole action */
-                        ValidationEntry("Parameter `$it` is not defined in the current scope", act.sourceMap)
+                        act.validationEntry("Parameter `$it` is not defined in the current scope")
                     }
             else emptySequence()
         }

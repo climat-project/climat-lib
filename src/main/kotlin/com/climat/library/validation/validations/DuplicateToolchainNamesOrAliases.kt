@@ -17,6 +17,6 @@ internal class DuplicateToolchainNamesOrAliases : ValidationBase() {
             .asSequence()
             .filter { (_, v) -> v.size >= 2 }
             .map { (k, v) ->
-                ValidationEntry("Duplicate child name or alias `$k`", v.last().sourceMap)
+                v.last().validationEntry("Duplicate child name or alias `$k`")
             }
 }
