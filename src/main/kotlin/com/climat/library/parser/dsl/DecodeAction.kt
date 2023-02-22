@@ -25,13 +25,15 @@ internal fun decodeRootAction(cliDsl: String, statements: List<DslParser.RootSta
         return child.assertRequire(cliDsl) { findActionValue() }.let {
             it.findStringTemplate()?.let {
                 TemplateActionValue(
-                    decodeTemplate(cliDsl, it)
+                    decodeTemplate(cliDsl, it),
+                    it.sourceInterval
                 )
             } ?: it.SCOPE_PARAMS()?.text?.let { ScopeParamsActionValue() }
                 ?: it.assertRequire(cliDsl) { findCustomScript() }.let {
                     CustomScriptActionValue(
                         it.IDENTIFIER()?.text,
-                        it.assertRequire(cliDsl) { CustomScript_SCRIPT() }.text
+                        it.assertRequire(cliDsl) { CustomScript_SCRIPT() }.text,
+                        it.sourceInterval
                     )
                 }
         }

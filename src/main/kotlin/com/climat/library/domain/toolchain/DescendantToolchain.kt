@@ -5,6 +5,7 @@ import com.climat.library.domain.ref.Constant
 import com.climat.library.domain.ref.ParamDefinition
 import com.climat.library.utils.emptyString
 import com.climat.library.utils.noopAction
+import org.antlr.v4.kotlinruntime.misc.Interval
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 
@@ -18,5 +19,11 @@ data class DescendantToolchain internal constructor(
     override val children: Array<DescendantToolchain> = emptyArray(),
     override val constants: Array<Constant> = emptyArray(),
     override val allowUnmatched: Boolean,
-    val aliases: Array<String> = emptyArray(),
+    val aliases: Array<Alias> = emptyArray(),
+    override val sourceMap: DescendantToolchainSourceMap,
 ) : Toolchain()
+
+internal data class DescendantToolchainSourceMap(
+    override val name: Interval,
+    override val allowUnmatched: Interval?,
+) : ToolchainSourceMap()

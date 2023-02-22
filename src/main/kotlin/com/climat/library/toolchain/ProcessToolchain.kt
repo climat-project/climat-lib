@@ -40,7 +40,7 @@ private fun processToolchain(
 ) {
     val c = params.removeFirst()
     val matching = children.filter {
-        it.name != "_" && (it.name == c || c in it.aliases)
+        it.name != "_" && (it.name == c || c in it.aliases.map { it.name })
     }
 
     val onlyMatching =

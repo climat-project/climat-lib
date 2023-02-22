@@ -1,6 +1,7 @@
 
 package com.climat.library.domain.action
 
+import org.antlr.v4.kotlinruntime.misc.Interval
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 
@@ -11,6 +12,7 @@ typealias Action = ActionValueBase<*>
 abstract class ActionValueBase<VType> internal constructor() {
 
     var value: VType? = null
+    internal abstract val sourceMap: Interval?
 
     val type: Type
         get() = when (this) {

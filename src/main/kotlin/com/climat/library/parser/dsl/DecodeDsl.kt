@@ -3,6 +3,7 @@ package com.climat.library.parser.dsl
 import climat.lang.DslLexer
 import climat.lang.DslParser
 import com.climat.library.domain.toolchain.RootToolchain
+import com.climat.library.domain.toolchain.RootToolchainSourceMap
 import com.climat.library.parser.docstring.decodeDocstring
 import com.climat.library.parser.exception.CliDslErrorListener
 import com.climat.library.parser.exception.assertRequire
@@ -17,15 +18,25 @@ internal fun decodeCliDsl(cliDsl: String): RootToolchain {
     val docstring = decodeDocstring(cliDsl, root.findDocstring())
     val modifiers = root.findRootModifiers()
 
+    val identifier = root.assertRequire(cliDsl) { IDENTIFIER() }
+    val allowUnmatchedMod = modifiers.firstNotNullOfOrNull { it.MOD_ALLOW_UNMATCHED() }
+
     return RootToolchain(
-        name = root.assertRequire(cliDsl) { IDENTIFIER() }.text,
+        name = identifier.text,
         description = docstring.subDoc,
         parameters = decodeParameters(cliDsl, params, docstring.paramDoc),
         action = decodeRootAction(cliDsl, statements),
         children = decodeRootChildren(cliDsl, statements),
         constants = decodeRootConstants(cliDsl, statements),
-        allowUnmatched = modifiers.any { it.MOD_ALLOW_UNMATCHED() != null },
-        resources = emptyArray()
+        allowUnmatched = allowUnmatchedMod != null,
+        resources = emptyArray(),
+
+        sourceMap = RootToolchainSourceMap(
+            name = identifier.sourceInterval,
+            allowUnmatched = allowUnmatchedMod?.sourceInterval,
+            resources = emptyArray()
+        )
+
     )
 }
 

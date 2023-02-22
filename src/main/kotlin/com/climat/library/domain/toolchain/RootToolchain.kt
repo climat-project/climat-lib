@@ -3,6 +3,7 @@ package com.climat.library.domain.toolchain
 import com.climat.library.domain.action.Action
 import com.climat.library.domain.ref.Constant
 import com.climat.library.domain.ref.ParamDefinition
+import org.antlr.v4.kotlinruntime.misc.Interval
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 
@@ -16,5 +17,12 @@ data class RootToolchain internal constructor(
     override val children: Array<DescendantToolchain>,
     override val constants: Array<Constant>,
     override val allowUnmatched: Boolean,
-    val resources: Array<String>
+    val resources: Array<String>,
+    override val sourceMap: RootToolchainSourceMap
 ) : Toolchain()
+
+internal data class RootToolchainSourceMap(
+    override val name: Interval,
+    override val allowUnmatched: Interval?,
+    val resources: Array<Interval>
+) : ToolchainSourceMap()
