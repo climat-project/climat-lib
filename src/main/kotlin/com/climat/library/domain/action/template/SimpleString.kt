@@ -1,4 +1,4 @@
-package com.climat.library.parser.template
+package com.climat.library.domain.action.template
 
 import com.climat.library.domain.ref.RefWithValue
 

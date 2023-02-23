@@ -10,7 +10,6 @@ enum class ValidationCode {
     BooleanFlippedMappings,
     DefaultForFlag,
     DefaultForRequiredParam,
-    DefaultForUndefinedParam,
     DuplicateToolchainNamesOrAliases,
     DuplicateRefNames,
     FlagMappedTwice,

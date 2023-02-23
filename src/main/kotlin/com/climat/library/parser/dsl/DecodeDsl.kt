@@ -17,15 +17,22 @@ internal fun decodeCliDsl(cliDsl: String): RootToolchain {
     val docstring = decodeDocstring(cliDsl, root.findDocstring())
     val modifiers = root.findRootModifiers()
 
+    val identifier = root.assertRequire(cliDsl) { IDENTIFIER() }
+    val allowUnmatchedMod = modifiers.firstNotNullOfOrNull { it.MOD_ALLOW_UNMATCHED() }
+
     return RootToolchain(
-        name = root.assertRequire(cliDsl) { IDENTIFIER() }.text,
+        sourceCode = cliDsl,
+
+        name = identifier.text,
         description = docstring.subDoc,
         parameters = decodeParameters(cliDsl, params, docstring.paramDoc),
         action = decodeRootAction(cliDsl, statements),
         children = decodeRootChildren(cliDsl, statements),
         constants = decodeRootConstants(cliDsl, statements),
-        allowUnmatched = modifiers.any { it.MOD_ALLOW_UNMATCHED() != null },
-        resources = emptyArray()
+        allowUnmatched = allowUnmatchedMod != null,
+        resources = emptyArray(),
+
+        sourceMap = root.position
     )
 }
 

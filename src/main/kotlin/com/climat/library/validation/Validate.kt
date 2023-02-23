@@ -27,10 +27,14 @@ private val validators = listOf(
     UselessToolchain()
 )
 
-// Made internal only for testing
 internal fun computeValidations(
+    current: RootToolchain
+) = computeValidations(current, current.sourceCode)
+
+private fun computeValidations(
     current: Toolchain,
-    pathToRoot: List<Toolchain> = emptyList()
+    sourceCode: String,
+    pathToRoot: List<Toolchain> = emptyList(),
 ): Sequence<ValidationResult> =
     (
         validators.flatMap { validator ->
@@ -40,11 +44,11 @@ internal fun computeValidations(
                     toolchain = current
                 )
             ).map {
-                ValidationResult(it, validator.code, validator.type, current)
+                ValidationResult(it.message, sourceCode, it.sourceMap, validator.code, validator.type, current)
             }
         } +
             current.children.flatMap {
-                computeValidations(it, pathToRoot + listOf(current))
+                computeValidations(it, sourceCode, pathToRoot + listOf(current))
             }
         ).asSequence()
 

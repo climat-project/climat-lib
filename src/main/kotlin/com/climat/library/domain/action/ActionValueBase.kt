@@ -1,6 +1,7 @@
 
 package com.climat.library.domain.action
 
+import com.climat.library.domain.SourceTraceable
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 
@@ -8,7 +9,7 @@ typealias Action = ActionValueBase<*>
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
-abstract class ActionValueBase<VType> internal constructor() {
+abstract class ActionValueBase<VType> internal constructor() : SourceTraceable() {
 
     var value: VType? = null
 

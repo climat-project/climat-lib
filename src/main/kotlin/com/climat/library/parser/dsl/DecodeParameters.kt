@@ -25,7 +25,8 @@ internal fun decodeParameters(cliDsl: String, params: List<DslParser.ParamContex
             optional = optional,
             shorthand = parsedParam.findParamShort()?.text,
             type = paramType,
-            default = parsedParam.findLiteral()?.let { decodeSimpleString(cliDsl, it) }
+            default = parsedParam.findLiteral()?.let { decodeSimpleString(cliDsl, it) },
+            sourceMap = parsedParam.position!!
         )
     }.toTypedArray()
 

@@ -1,6 +1,9 @@
 package com.climat.library.parser.template
 
 import climat.lang.DslParser
+import com.climat.library.domain.action.template.Interpolation
+import com.climat.library.domain.action.template.SimpleString
+import com.climat.library.domain.action.template.Template
 import com.climat.library.parser.exception.assertRequire
 import com.climat.library.parser.exception.throwUnexpected
 

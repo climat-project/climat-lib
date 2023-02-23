@@ -9,7 +9,7 @@ internal val Toolchain.refs: List<Ref>
         this.parameters.toList()
 
 internal val DescendantToolchain.eachAlias: List<DescendantToolchain>
-    get() = listOf(this) + this.aliases.map { this.copy(name = it) }
+    get() = listOf(this) + this.aliases.map { this.copy(name = it.name) }
 
 internal val Toolchain.isLeaf: Boolean
     get() = children.isEmpty()

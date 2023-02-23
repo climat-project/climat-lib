@@ -1,12 +1,12 @@
 package utils
 
-import com.climat.library.domain.toolchain.Toolchain
+import com.climat.library.domain.toolchain.RootToolchain
 import com.climat.library.validation.computeValidations
 import com.climat.library.validation.validations.ValidationCode
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-internal fun Toolchain.getValidationMessages(code: ValidationCode): List<String> =
+internal fun RootToolchain.getValidationMessages(code: ValidationCode): List<String> =
     computeValidations(
         this
     ).filter { it.code == code }

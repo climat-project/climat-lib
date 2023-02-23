@@ -11,14 +11,19 @@ internal fun decodeSub(cliDsl: String, sub: DslParser.SubContext): DescendantToo
     val docstring = decodeDocstring(cliDsl, sub.findDocstring())
     val modifiers = sub.findSubModifiers()
 
+    val name = sub.assertRequire(cliDsl) { IDENTIFIER() }
+    val allowUnmatchedMod = modifiers.firstNotNullOfOrNull { it.findRootModifiers()?.MOD_ALLOW_UNMATCHED() }
+
     return DescendantToolchain(
-        name = sub.assertRequire(cliDsl) { IDENTIFIER() }.text,
+        name = name.text,
         description = docstring.subDoc,
         parameters = decodeParameters(cliDsl, params, docstring.paramDoc),
         action = decodeSubAction(cliDsl, statements),
         children = decodeSubChildren(cliDsl, statements),
         constants = decodeSubConstants(cliDsl, statements),
-        allowUnmatched = modifiers.any { it.findRootModifiers()?.MOD_ALLOW_UNMATCHED() != null },
-        aliases = decodeAliases(cliDsl, modifiers)
+        allowUnmatched = allowUnmatchedMod != null,
+        aliases = decodeAliases(cliDsl, modifiers),
+
+        sourceMap = sub.position!!
     )
 }
