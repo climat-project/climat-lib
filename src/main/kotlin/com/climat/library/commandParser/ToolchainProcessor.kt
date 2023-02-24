@@ -1,9 +1,9 @@
-package com.climat.library.toolchain
+package com.climat.library.commandParser
 
 import com.climat.library.domain.action.Action
 import com.climat.library.domain.toolchain.RootToolchain
 import com.climat.library.domain.toolchain.Toolchain
-import com.climat.library.parser.dsl.decodeCliDsl
+import com.climat.library.dslParser.dsl.decodeCliDsl
 import com.climat.library.validation.computeValidations
 import kotlin.js.JsName
 

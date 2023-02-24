@@ -1,11 +1,11 @@
-package com.climat.library.parser.dsl
+package com.climat.library.dslParser.dsl
 
 import climat.lang.DslLexer
 import climat.lang.DslParser
 import com.climat.library.domain.toolchain.RootToolchain
-import com.climat.library.parser.docstring.decodeDocstring
-import com.climat.library.parser.exception.CliDslErrorListener
-import com.climat.library.parser.exception.assertRequire
+import com.climat.library.dslParser.docstring.decodeDocstring
+import com.climat.library.dslParser.exception.CliDslErrorListener
+import com.climat.library.dslParser.exception.assertRequire
 import org.antlr.v4.kotlinruntime.CharStreams
 import org.antlr.v4.kotlinruntime.CommonTokenStream
 

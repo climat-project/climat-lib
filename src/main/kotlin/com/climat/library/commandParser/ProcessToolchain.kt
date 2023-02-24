@@ -1,5 +1,7 @@
-package com.climat.library.toolchain
+package com.climat.library.commandParser
 
+import com.climat.library.commandParser.exception.ParameterMissingException
+import com.climat.library.commandParser.exception.ToolchainNotDefinedException
 import com.climat.library.domain.action.ActionValueBase
 import com.climat.library.domain.action.CustomScriptActionValue
 import com.climat.library.domain.action.NoopActionValue
@@ -10,9 +12,7 @@ import com.climat.library.domain.ref.RefWithValue
 import com.climat.library.domain.toolchain.DescendantToolchain
 import com.climat.library.domain.toolchain.RootToolchain
 import com.climat.library.domain.toolchain.Toolchain
-import com.climat.library.toolchain.exception.ParameterMissingException
-import com.climat.library.toolchain.exception.ToolchainNotDefinedException
-import com.climat.library.utils.newLines
+import com.climat.library.utils.newLine
 
 internal fun processRootToolchain(
     toolchain: RootToolchain,
@@ -41,7 +41,13 @@ private fun processToolchainDescendants(
     val toolchain = children.find {
         it.name != "_" && (it.name == next || it.aliases.any { it.name == next })
     } ?: children.find { it.name == "_" }
-        ?: throw ToolchainNotDefinedException(next) // TODO: proper error,
+        ?: throw Exception(
+            "Toolchain $next is not defined${newLine()}${
+            getUsageHint(
+                upperPathToRoot
+            )
+            }"
+        ) // TODO: proper error,
     processToolchain(
         params = params,
         toolchain = toolchain,
@@ -86,7 +92,14 @@ private fun processRefs(
 ) = try {
     processRefs(toolchain, params)
 } catch (ex: ParameterMissingException) {
-    throw Exception("Parameter ${ex.arg.name} is missing${newLines(1)}${toolchain.getUsageHint(pathToRoot)}", ex)
+    throw Exception(
+        "Parameter ${ex.arg.name} is missing${newLine()}${
+        getUsageHint(
+            toolchain.parameters, pathToRoot
+        )
+        }",
+        ex
+    )
 }
 
 private fun setActualCommand(

@@ -1,14 +1,18 @@
-package com.climat.library.parser.dsl
+package com.climat.library.dslParser.dsl
 
 import climat.lang.DslParser
 import com.climat.library.domain.ref.ParamDefinition
 import com.climat.library.domain.ref.Ref
-import com.climat.library.parser.exception.assertRequire
-import com.climat.library.parser.exception.throwExpected
-import com.climat.library.parser.exception.throwUnexpected
+import com.climat.library.dslParser.exception.assertRequire
+import com.climat.library.dslParser.exception.throwExpected
+import com.climat.library.dslParser.exception.throwUnexpected
 import com.climat.library.utils.emptyString
 
-internal fun decodeParameters(cliDsl: String, params: List<DslParser.ParamContext>, paramDescriptions: Map<String, String>): Array<ParamDefinition> =
+internal fun decodeParameters(
+    cliDsl: String,
+    params: List<DslParser.ParamContext>,
+    paramDescriptions: Map<String, String>
+): Array<ParamDefinition> =
     params.map { parsedParam ->
         val paramName = parsedParam.assertRequire(cliDsl) { IDENTIFIER() }.text
 

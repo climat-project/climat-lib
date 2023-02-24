@@ -1,9 +1,9 @@
-package com.climat.library.parser.dsl
+package com.climat.library.dslParser.dsl
 
 import climat.lang.DslParser
 import com.climat.library.domain.toolchain.DescendantToolchain
-import com.climat.library.parser.docstring.decodeDocstring
-import com.climat.library.parser.exception.assertRequire
+import com.climat.library.dslParser.docstring.decodeDocstring
+import com.climat.library.dslParser.exception.assertRequire
 
 internal fun decodeSub(cliDsl: String, sub: DslParser.SubContext): DescendantToolchain {
     val statements = sub.assertRequire(cliDsl) { findSubBody() }.findSubStatements()

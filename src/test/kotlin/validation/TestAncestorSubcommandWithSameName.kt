@@ -1,6 +1,6 @@
 package validation
 
-import com.climat.library.parser.dsl.decodeCliDsl
+import com.climat.library.dslParser.dsl.decodeCliDsl
 import com.climat.library.validation.validations.ValidationCode
 import utils.assertContainsInMessages
 import utils.getValidationMessages
@@ -19,7 +19,8 @@ class TestAncestorSubcommandWithSameName {
 
     @Test
     fun test() {
-        val validationResults = decodeCliDsl(toolchain).getValidationMessages(ValidationCode.AncestorSubcommandWithSameName)
+        val validationResults =
+            decodeCliDsl(toolchain).getValidationMessages(ValidationCode.AncestorSubcommandWithSameName)
         assertContainsInMessages(
             validationResults,
             "root",

@@ -6,7 +6,7 @@ internal fun <T> not(predicate: (T) -> Boolean): (T) -> Boolean = { it: T -> !pr
 internal fun emptyString(): String = ""
 
 internal fun newLine(): String = unixNewLine()
-internal fun newLines(number: Int) = (1..number).joinToString { newLine() }
+internal fun newLines(number: Int) = (1..number).joinToString(emptyString()) { newLine() }
 
 internal fun String?.tpl(template: (String) -> String): String =
     if (this != null) {

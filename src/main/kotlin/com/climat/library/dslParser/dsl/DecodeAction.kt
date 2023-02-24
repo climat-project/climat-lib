@@ -1,13 +1,13 @@
-package com.climat.library.parser.dsl
+package com.climat.library.dslParser.dsl
 
 import climat.lang.DslParser
 import com.climat.library.domain.action.ActionValueBase
 import com.climat.library.domain.action.CustomScriptActionValue
 import com.climat.library.domain.action.ScopeParamsActionValue
 import com.climat.library.domain.action.TemplateActionValue
-import com.climat.library.parser.exception.assertRequire
-import com.climat.library.parser.exception.throwExpected
-import com.climat.library.parser.template.decodeTemplate
+import com.climat.library.dslParser.exception.assertRequire
+import com.climat.library.dslParser.exception.throwExpected
+import com.climat.library.dslParser.template.decodeTemplate
 import com.climat.library.utils.noopAction
 
 internal fun decodeSubAction(cliDsl: String, statements: List<DslParser.SubStatementsContext>): ActionValueBase<*> =

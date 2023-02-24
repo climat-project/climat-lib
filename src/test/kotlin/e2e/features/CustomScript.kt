@@ -1,7 +1,7 @@
 package e2e.features
 
-import com.climat.library.toolchain.parse
-import com.climat.library.toolchain.validate
+import com.climat.library.commandParser.parse
+import com.climat.library.commandParser.validate
 import kotlin.test.Test
 
 class CustomScript {

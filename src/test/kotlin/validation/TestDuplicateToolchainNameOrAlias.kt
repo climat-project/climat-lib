@@ -1,6 +1,6 @@
 package validation
 
-import com.climat.library.parser.dsl.decodeCliDsl
+import com.climat.library.dslParser.dsl.decodeCliDsl
 import com.climat.library.validation.validations.ValidationCode
 import utils.assertContainsInMessages
 import utils.getValidationMessages
@@ -47,9 +47,11 @@ class TestDuplicateToolchainNameOrAlias {
             }
         }
     """
+
     @Test
     fun test() {
-        val validationResults = decodeCliDsl(toolchain).getValidationMessages(ValidationCode.DuplicateToolchainNamesOrAliases)
+        val validationResults =
+            decodeCliDsl(toolchain).getValidationMessages(ValidationCode.DuplicateToolchainNamesOrAliases)
         assertContainsInMessages(
             validationResults,
             "root_child",

@@ -1,6 +1,6 @@
 package parser
 
-import com.climat.library.parser.dsl.decodeCliDsl
+import com.climat.library.dslParser.dsl.decodeCliDsl
 import kotlin.test.Test
 
 class ParserSanityCheck {

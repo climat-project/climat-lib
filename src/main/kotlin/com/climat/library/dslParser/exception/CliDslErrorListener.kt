@@ -1,4 +1,4 @@
-package com.climat.library.parser.exception
+package com.climat.library.dslParser.exception
 
 import com.climat.library.utils.newLine
 import com.strumenta.kotlinmultiplatform.BitSet

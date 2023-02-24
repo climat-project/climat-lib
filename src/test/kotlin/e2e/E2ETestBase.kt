@@ -1,7 +1,8 @@
 package e2e
 
+import com.climat.library.commandParser.execute
 import com.climat.library.domain.action.TemplateActionValue
-import com.climat.library.toolchain.execute
+import kotlin.test.assertContains
 import kotlin.test.assertEquals
 import kotlin.test.assertFails
 import kotlin.test.fail
@@ -16,14 +17,15 @@ abstract class E2ETestBase {
         return ans?.value
     }
 
-    protected fun String.assertResults(vararg commandToResult: Pair<String, String?>) {
+    protected fun String.assertResults(vararg commandToResult: Pair<String, String?>): String {
         commandToResult.forEach { (command, expectedResult) ->
             val actualResult = exec(command, this)
             assertEquals(expectedResult?.trim(), actualResult?.trim(), "Unexpected result for command `$command`")
         }
+        return this
     }
 
-    protected fun <T : Throwable> String.assertThrows(vararg commantToResult: Pair<String, (T) -> Unit>) {
+    protected fun <T : Throwable> String.assertThrows(vararg commantToResult: Pair<String, (T) -> Unit>): String {
         commantToResult.forEach { (command, exceptionHandler) ->
             val ex = assertFails("Command `$command` did not throw any exception") {
                 exec(command, this)
@@ -33,6 +35,14 @@ abstract class E2ETestBase {
             } else {
                 fail("Command `$command` did not throw the expected exception type")
             }
+        }
+        return this
+    }
+
+    protected fun <T : Throwable> assertMessageContains(vararg tokens: String): (T) -> Unit {
+        return {
+            val message = it.message.orEmpty()
+            tokens.forEach { assertContains(message, it) }
         }
     }
 }

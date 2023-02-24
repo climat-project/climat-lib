@@ -1,4 +1,4 @@
-package com.climat.library.parser.exception
+package com.climat.library.dslParser.exception
 
 import com.climat.library.utils.crossPlatformLineSplit
 import com.climat.library.utils.newLine
@@ -26,24 +26,30 @@ private fun encase(lines: List<String>, lineNumberingStart: Int, lineSkipStart: 
     val maxLineNumberLength = (lineNumberingStart + mutLines.size - 1 - lineSkipCount).toString().length
 
     (0 until lineSkipStart).forEach { i ->
-        mutLines[i] = (lineNumberingStart + i).toString().padEnd(maxLineNumberLength) + lineNumberSeparator + mutLines[i]
+        mutLines[i] =
+            (lineNumberingStart + i).toString().padEnd(maxLineNumberLength) + lineNumberSeparator + mutLines[i]
     }
     (lineSkipStart until lineSkipStart + lineSkipCount * 2 step 2).forEach { i ->
-        mutLines[i] = (lineNumberingStart + lineSkipStart + (i - lineSkipStart) / 2).toString().padEnd(maxLineNumberLength) + lineNumberSeparator + mutLines[i]
+        mutLines[i] = (lineNumberingStart + lineSkipStart + (i - lineSkipStart) / 2).toString()
+            .padEnd(maxLineNumberLength) + lineNumberSeparator + mutLines[i]
         mutLines[i + 1] = " ".repeat(maxLineNumberLength) + lineNumberSeparator + mutLines[i + 1]
     }
     (lineSkipStart + lineSkipCount * 2 until mutLines.size).forEach { i ->
-        mutLines[i] = (lineNumberingStart + i - lineSkipCount).toString().padEnd(maxLineNumberLength) + lineNumberSeparator + mutLines[i]
+        mutLines[i] = (lineNumberingStart + i - lineSkipCount).toString()
+            .padEnd(maxLineNumberLength) + lineNumberSeparator + mutLines[i]
     }
 
     val maxLineLength = mutLines.maxOf { it.length }
 
     (0 until mutLines.size).forEach { i ->
-        mutLines[i] = mutLines[i].padEnd(maxLineLength + lineNumberSeparator.length + maxLineNumberLength - 1) + lineNumberSeparator
+        mutLines[i] =
+            mutLines[i].padEnd(maxLineLength + lineNumberSeparator.length + maxLineNumberLength - 1) + lineNumberSeparator
     }
 
-    val hrTop = hr.repeat(maxLineNumberLength + lineNumberSeparator.length - 1) + t + hr.repeat(maxLineLength) + topRightCorner
-    val hrBottom = hr.repeat(maxLineNumberLength + lineNumberSeparator.length - 1) + botT + hr.repeat(maxLineLength) + bottomRightCorner
+    val hrTop =
+        hr.repeat(maxLineNumberLength + lineNumberSeparator.length - 1) + t + hr.repeat(maxLineLength) + topRightCorner
+    val hrBottom =
+        hr.repeat(maxLineNumberLength + lineNumberSeparator.length - 1) + botT + hr.repeat(maxLineLength) + bottomRightCorner
     return (listOf(hrTop) + mutLines + listOf(hrBottom)).joinToString(newLine())
 }
 

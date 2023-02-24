@@ -1,4 +1,4 @@
-package com.climat.library.parser.docstring
+package com.climat.library.dslParser.docstring
 
 import com.climat.library.utils.emptyString
 
