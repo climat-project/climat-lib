@@ -4,6 +4,8 @@ import com.climat.library.domain.ref.ParamDefinition
 import com.climat.library.domain.ref.Ref
 import com.climat.library.domain.ref.RefWithValue
 import com.climat.library.domain.toolchain.Toolchain
+import com.climat.library.toolchain.exception.ParameterMissingException
+import com.climat.library.toolchain.exception.ParameterNotDefinedException
 import com.climat.library.utils.emptyString
 
 const val ARG_PREFIX = "--"
@@ -67,7 +69,7 @@ private fun getParamsFromSingleShorthand(
     next: String,
     params: MutableList<String>
 ): Map<String, RefWithValue> {
-    val ref = shortHandToOptionals[next] ?: throw Exception("Argument $next not defined") // TODO: proper error
+    val ref = shortHandToOptionals[next] ?: throw ParameterNotDefinedException(next)
     return mapOf(
         ref.name to RefWithValue(
             ref,
@@ -84,10 +86,10 @@ private fun getFlagsFromManyShorthands(
     shortHandToOptionals: Map<String?, ParamDefinition>,
     next: String
 ) = next.map {
-    shortHandToOptionals[it.toString()] ?: throw Exception("Argument $next not defined") // TODO: proper error
+    shortHandToOptionals[it.toString()] ?: throw ParameterNotDefinedException(next)
 }.onEach {
     if (it.type != Ref.Type.Flag) {
-        throw Exception("Argument ${it.name} needs a value") // TODO: proper error
+        throw ParameterMissingException(it)
     }
 }
     .associate {
@@ -105,14 +107,13 @@ private fun getParamsFromNamePrefixed(
     if (next.isEmpty()) {
         throw Exception("Cannot pass empty arg name")
     }
-    val ref = nameToOptionals[next] ?: throw Exception("Argument $next not defined") // TODO: proper error
+    val ref = nameToOptionals[next] ?: throw ParameterNotDefinedException(next)
     return mapOf(
         next to RefWithValue(
             ref,
-            if (ref.type == Ref.Type.Flag) {
-                true.toString()
-            } else {
-                params.removeFirst()
+            when (ref.type) {
+                Ref.Type.Arg -> params.removeFirst()
+                Ref.Type.Flag -> true.toString()
             }
         )
     )
