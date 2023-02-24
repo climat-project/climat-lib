@@ -8,6 +8,7 @@ import com.climat.library.toolchain.exception.ParameterMissingException
 import com.climat.library.toolchain.exception.ParameterNotDefinedException
 import com.climat.library.utils.emptyString
 
+// TODO: make those configurable
 const val ARG_PREFIX = "--"
 const val SHORTHAND_ARG_PREFIX = "-"
 internal fun processRefs(
@@ -31,7 +32,7 @@ internal fun processRefs(
             else -> break
         }
         ans += newParams
-        optionalsSet.removeAll(newParams.values.map { it.ref })
+        optionalsSet.removeAll(newParams.values.map { it.ref }.toSet())
     }
 
     ans +=

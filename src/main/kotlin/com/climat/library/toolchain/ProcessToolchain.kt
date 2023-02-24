@@ -12,7 +12,6 @@ import com.climat.library.domain.toolchain.RootToolchain
 import com.climat.library.domain.toolchain.Toolchain
 import com.climat.library.toolchain.exception.ParameterMissingException
 import com.climat.library.toolchain.exception.ToolchainNotDefinedException
-import com.climat.library.toolchain.exception.getUsageHint
 import com.climat.library.utils.newLines
 
 internal fun processToolchain(
@@ -96,15 +95,19 @@ private fun setActualCommand(
         is TemplateActionValue -> {
             action.value = action.template.str(values)
         }
+
         is CustomScriptActionValue -> {
             action.value = values.associate { it.ref.name to it.value }
         }
+
         is ScopeParamsActionValue -> {
             action.value = values.associate { it.ref.name to it.value }
         }
+
         is NoopActionValue -> {
             // By definition, do nothing
         }
+
         else -> throw Exception("Type `${action::class}` not supported")
     }
 }
