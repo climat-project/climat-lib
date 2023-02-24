@@ -12,26 +12,46 @@ fun validate(toolchain: RootToolchain) = computeValidations(toolchain).toList().
 fun parse(cliDsl: String): RootToolchain =
     decodeCliDsl(cliDsl)
 
-fun execute(args: Array<String>, toolchain: RootToolchain, actionHandler: (parsedAction: Action, context: Toolchain) -> Unit, skipValidation: Boolean = false) {
+fun execute(
+    args: Array<String>,
+    toolchain: RootToolchain,
+    actionHandler: (parsedAction: Action, context: Toolchain) -> Unit,
+    skipValidation: Boolean = false
+) {
     if (!skipValidation)
         validate(toolchain)
     val mutableArgs = args.toMutableList()
     mutableArgs.add(0, toolchain.name)
-    processToolchain(toolchain, mutableArgs, actionHandler)
+    processRootToolchain(toolchain, mutableArgs, actionHandler)
 }
 
 @JsName("executeFromCliDsl")
-fun execute(args: Array<String>, cliDsl: String, actionHandler: (parsedAction: Action, context: Toolchain) -> Unit, skipValidation: Boolean = false) {
+fun execute(
+    args: Array<String>,
+    cliDsl: String,
+    actionHandler: (parsedAction: Action, context: Toolchain) -> Unit,
+    skipValidation: Boolean = false
+) {
     execute(args, parse(cliDsl), actionHandler, skipValidation)
 }
 
 @JsName("executeWithStringArgsFromCliDsl")
-fun execute(args: String, cliDsl: String, actionHandler: (parsedAction: Action, context: Toolchain) -> Unit, skipValidation: Boolean = false) {
+fun execute(
+    args: String,
+    cliDsl: String,
+    actionHandler: (parsedAction: Action, context: Toolchain) -> Unit,
+    skipValidation: Boolean = false
+) {
     execute(args, parse(cliDsl), actionHandler, skipValidation)
 }
 
 @JsName("executeWithStringArgs")
-fun execute(args: String, toolchain: RootToolchain, actionHandler: (parsedAction: Action, context: Toolchain) -> Unit, skipValidation: Boolean = false) {
+fun execute(
+    args: String,
+    toolchain: RootToolchain,
+    actionHandler: (parsedAction: Action, context: Toolchain) -> Unit,
+    skipValidation: Boolean = false
+) {
     execute(
         if (args.isBlank()) {
             emptyArray()

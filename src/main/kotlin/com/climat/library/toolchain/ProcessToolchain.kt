@@ -14,16 +14,52 @@ import com.climat.library.toolchain.exception.ParameterMissingException
 import com.climat.library.toolchain.exception.ToolchainNotDefinedException
 import com.climat.library.utils.newLines
 
-internal fun processToolchain(
+internal fun processRootToolchain(
     toolchain: RootToolchain,
     params: MutableList<String>,
     handler: (parsedAction: ActionValueBase<*>, context: Toolchain) -> Unit
 ) {
     val next = params.removeFirst()
     if (toolchain.name != next) throw ToolchainNotDefinedException(next)
+    processToolchain(
+        params = params,
+        toolchain = toolchain,
+        upperScopeRefs = emptyMap(),
+        upperPathToRoot = emptyList(),
+        handler = handler
+    )
+}
 
-    val scopeRefs = processRefs(toolchain, params, emptyList())
+private fun processToolchainDescendants(
+    children: Array<DescendantToolchain>,
+    params: MutableList<String>,
+    upperScopeRefs: Map<String, RefWithValue>,
+    upperPathToRoot: List<Toolchain>,
+    handler: (parsedAction: ActionValueBase<*>, context: Toolchain) -> Unit,
+) {
+    val next = params.removeFirst()
+    val toolchain = children.find {
+        it.name != "_" && (it.name == next || it.aliases.any { it.name == next })
+    } ?: children.find { it.name == "_" }
+        ?: throw ToolchainNotDefinedException(next) // TODO: proper error,
+    processToolchain(
+        params = params,
+        toolchain = toolchain,
+        upperScopeRefs = upperScopeRefs,
+        upperPathToRoot = upperPathToRoot,
+        handler = handler,
+    )
+}
 
+private fun processToolchain(
+    params: MutableList<String>,
+    toolchain: Toolchain,
+    upperScopeRefs: Map<String, RefWithValue>,
+    upperPathToRoot: List<Toolchain>,
+    handler: (parsedAction: ActionValueBase<*>, context: Toolchain) -> Unit
+) {
+    val pathToRoot = upperPathToRoot + toolchain
+    val scopeRefs = upperScopeRefs + processRefs(toolchain, params, pathToRoot)
     if (params.isEmpty()) {
         val act = toolchain.action
         if (act.type != ActionValueBase.Type.Noop) {
@@ -33,46 +69,12 @@ internal fun processToolchain(
     } else if (toolchain.isLeaf) {
         throw Exception() // TODO: proper error
     } else {
-        processToolchain(
+        processToolchainDescendants(
             children = toolchain.children,
             params = params,
             upperScopeRefs = scopeRefs,
-            handler = handler,
-            pathToRoot = listOf(toolchain)
-        )
-    }
-}
-
-private fun processToolchain(
-    children: Array<DescendantToolchain>,
-    params: MutableList<String>,
-    upperScopeRefs: Map<String, RefWithValue>,
-    handler: (parsedAction: ActionValueBase<*>, context: Toolchain) -> Unit,
-    pathToRoot: List<Toolchain>
-) {
-    val next = params.removeFirst()
-    val matchingToolchain = children.find {
-        it.name != "_" && (it.name == next || it.aliases.any { it.name == next })
-    } ?: children.find { it.name == "_" }
-        ?: throw Exception("No sub matching with $next") // TODO: proper error
-
-    val scopeRefs = upperScopeRefs + processRefs(matchingToolchain, params, emptyList())
-
-    if (params.isEmpty()) {
-        val act = matchingToolchain.action
-        if (act.type != ActionValueBase.Type.Noop) {
-            setActualCommand(act, scopeRefs.values)
-            handler(act, matchingToolchain)
-        }
-    } else if (matchingToolchain.isLeaf) {
-        throw Exception() // TODO: proper error
-    } else {
-        processToolchain(
-            children = matchingToolchain.children,
-            params = params,
-            upperScopeRefs = scopeRefs,
-            handler = handler,
-            pathToRoot = pathToRoot + matchingToolchain
+            upperPathToRoot = pathToRoot,
+            handler = handler
         )
     }
 }

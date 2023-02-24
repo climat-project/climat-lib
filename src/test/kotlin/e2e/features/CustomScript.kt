@@ -1,4 +1,4 @@
-package e2e
+package e2e.features
 
 import com.climat.library.toolchain.parse
 import com.climat.library.toolchain.validate

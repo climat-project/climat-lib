@@ -21,7 +21,7 @@ internal fun processRefs(
     val optionalsSet = optionals.toMutableSet()
 
     val ans = required.associate {
-        it.name to RefWithValue(it, params.removeFirst())
+        it.name to RefWithValue(it, params.removeFirst(it))
     }.toMutableMap()
 
     while (optionalsSet.isNotEmpty() && params.isNotEmpty()) {
@@ -90,7 +90,7 @@ private fun getFlagsFromManyShorthands(
     shortHandToOptionals[it.toString()] ?: throw ParameterNotDefinedException(next)
 }.onEach {
     if (it.type != Ref.Type.Flag) {
-        throw ParameterMissingException(it)
+        throw Exception("Parameter ${it.name} cannot be used as a flag")
     }
 }
     .associate {
@@ -119,3 +119,6 @@ private fun getParamsFromNamePrefixed(
         )
     )
 }
+
+private fun MutableList<String>.removeFirst(param: ParamDefinition): String =
+    removeFirstOrNull() ?: throw ParameterMissingException(param)

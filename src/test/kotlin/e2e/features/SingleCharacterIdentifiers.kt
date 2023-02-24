@@ -1,5 +1,6 @@
-package e2e
+package e2e.features
 
+import e2e.E2ETestBase
 import kotlin.test.Test
 
 class SingleCharacterIdentifiers : E2ETestBase() {

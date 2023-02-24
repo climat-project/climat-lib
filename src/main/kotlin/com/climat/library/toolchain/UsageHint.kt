@@ -14,7 +14,9 @@ internal fun Toolchain.getUsageHint(pathToRoot: List<Toolchain>): String {
 }
 
 private fun getRequiredPlaceholders(required: List<ParamDefinition>, pathToRoot: List<Toolchain>) =
-    pathToRoot.joinToString(" ") { it.name } +
+    "usage: " +
+        pathToRoot.joinToString(" ") { it.name } +
+        " " +
         required.joinToString(" ") { "<${it.name}>" }
 
 private fun getOptionalsUsage(optionals: List<ParamDefinition>) =
