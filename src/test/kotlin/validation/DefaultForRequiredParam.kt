@@ -6,7 +6,6 @@ import utils.assertContainsInMessages
 import utils.getValidationMessages
 import kotlin.test.Test
 
-// TODO delegate to parser
 class DefaultForRequiredParam {
 
     private val toolchain = """

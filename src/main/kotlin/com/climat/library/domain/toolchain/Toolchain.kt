@@ -4,6 +4,7 @@ import com.climat.library.domain.SourceTraceable
 import com.climat.library.domain.action.Action
 import com.climat.library.domain.ref.Constant
 import com.climat.library.domain.ref.ParamDefinition
+import com.climat.library.domain.ref.PredefinedParamDefinition
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 
@@ -18,4 +19,5 @@ abstract class Toolchain : SourceTraceable() {
     abstract val constants: Array<Constant>
     abstract val allowUnmatched: Boolean
     abstract val aliases: Array<Alias>
+    abstract val predefinedParameters: Array<PredefinedParamDefinition>
 }

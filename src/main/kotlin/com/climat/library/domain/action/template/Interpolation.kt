@@ -4,7 +4,7 @@ import com.climat.library.domain.ref.ArgDefinition
 import com.climat.library.domain.ref.Constant
 import com.climat.library.domain.ref.FlagDefinition
 import com.climat.library.domain.ref.PredefinedParamDefinition
-import com.climat.library.domain.ref.RefWithValue
+import com.climat.library.domain.ref.RefWithAnyValue
 import com.climat.library.utils.emptyString
 
 internal class Interpolation(
@@ -12,9 +12,9 @@ internal class Interpolation(
     val mapping: String?,
     val isFlipped: Boolean
 ) : IPiece {
-    override fun str(values: Collection<RefWithValue>): String {
+    override fun str(values: Collection<RefWithAnyValue>): String {
         val refWithValue = values.find { it.ref.name == name }!!
-        val value = refWithValue.value
+        val value = getStringValueFrom(refWithValue.value)
         return if (mapping != null) {
             when (val ref = refWithValue.ref) {
                 is FlagDefinition -> mapBoolean(value, mapping)
@@ -32,6 +32,12 @@ internal class Interpolation(
             value
         }
     }
+
+    private fun getStringValueFrom(value: Any): String =
+        when (value) {
+            is Array<*> -> value.joinToString(" ")
+            else -> value.toString()
+        }
 
     private fun mapString(value: String, mapping: String): String = if (value.isNotEmpty()) {
         "$mapping=$value"

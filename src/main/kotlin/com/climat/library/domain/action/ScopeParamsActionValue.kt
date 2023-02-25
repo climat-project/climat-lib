@@ -7,8 +7,8 @@ import kotlin.js.JsExport
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
-class ScopeParamsActionValue internal constructor() : ActionValueBase<Map<String, String>>() {
-    val valueForJs: JsExportableMap<String, String>? = value?.let(::JsExportableMap)
+class ScopeParamsActionValue internal constructor() : ActionValueBase<Map<String, Any>>() {
+    val valueForJs: JsExportableMap<String, Any>? = value?.let(::JsExportableMap)
     override val sourceMap: Position?
         get() = null
 }

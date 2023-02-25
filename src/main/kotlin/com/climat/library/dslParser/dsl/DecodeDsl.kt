@@ -25,13 +25,13 @@ internal fun decodeCliDsl(cliDsl: String): RootToolchain {
 
         name = identifier.text,
         description = docstring.subDoc,
-        parameters = decodeParameters(cliDsl, params, docstring.paramDoc),
+        parameters = decodeParams(cliDsl, params, docstring.paramDoc),
         action = decodeRootAction(cliDsl, statements),
         children = decodeRootChildren(cliDsl, statements),
         constants = decodeRootConstants(cliDsl, statements),
         allowUnmatched = allowUnmatchedMod != null,
         resources = emptyArray(),
-
+        predefinedParameters = decodeRootPredefinedParams(modifiers),
         sourceMap = root.position
     )
 }

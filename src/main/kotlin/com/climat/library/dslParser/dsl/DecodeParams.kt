@@ -9,7 +9,7 @@ import com.climat.library.dslParser.exception.throwExpected
 import com.climat.library.dslParser.exception.throwUnexpected
 import com.climat.library.utils.emptyString
 
-internal fun decodeParameters(
+internal fun decodeParams(
     cliDsl: String,
     params: List<DslParser.ParamContext>,
     paramDescriptions: Map<String, String>

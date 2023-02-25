@@ -5,6 +5,7 @@ import com.climat.library.commandParser.exception.ParameterNotDefinedException
 import com.climat.library.domain.ref.ArgDefinition
 import com.climat.library.domain.ref.FlagDefinition
 import com.climat.library.domain.ref.ParamDefinition
+import com.climat.library.domain.ref.RefWithAnyValue
 import com.climat.library.domain.ref.RefWithValue
 import com.climat.library.domain.toolchain.Toolchain
 import com.climat.library.utils.emptyString
@@ -15,14 +16,14 @@ const val SHORTHAND_ARG_PREFIX = "-"
 internal fun processRefs(
     toolchain: Toolchain,
     params: MutableList<String>
-): Map<String, RefWithValue> {
+): Map<String, RefWithAnyValue> {
     val (optionals, required) = toolchain.parameters.partition { it.optional }
     val nameToOptionals = optionals.associateBy { it.name }
     val shortHandToOptionals = optionals.associateBy { it.shorthand }
     val optionalsSet = optionals.toMutableSet()
 
     val ans = required.associate {
-        it.name to RefWithValue(it, params.removeFirst(it))
+        it.name to RefWithValue(it, params.removeFirst(it)) as RefWithAnyValue
     }.toMutableMap()
 
     while (optionalsSet.isNotEmpty() && params.isNotEmpty()) {
@@ -35,6 +36,8 @@ internal fun processRefs(
         ans += newParams
         optionalsSet.removeAll(newParams.values.map { it.ref }.toSet())
     }
+
+    processPredefined(toolchain, ans, params)
 
     ans +=
         optionalsSet
@@ -49,15 +52,26 @@ internal fun processRefs(
                 )
             }
 
-    return ans + toolchain.constants.fold(emptyList<RefWithValue>()) { acc, it ->
+    return ans + toolchain.constants.fold(emptyList<RefWithValue<String>>()) { acc, it ->
         acc + listOf(RefWithValue(it, it.value.str(acc)))
     }.associateBy { it.ref.name }
+}
+
+private fun processPredefined(
+    toolchain: Toolchain,
+    ans: MutableMap<String, RefWithAnyValue>,
+    params: MutableList<String>
+) {
+    // Process unmatched
+    val unmatchedPredefined = toolchain.predefinedParameters.find { it.name == "__UNMATCHED" } ?: return
+    ans[unmatchedPredefined.name] = RefWithValue(unmatchedPredefined, params.toTypedArray())
+    params.clear()
 }
 
 private fun getParamsFromShorthandPrefixed(
     params: MutableList<String>,
     shortHandToOptionals: Map<String?, ParamDefinition>
-): Map<String, RefWithValue> {
+): Map<String, RefWithValue<String>> {
     val next = params.removeFirst().drop(SHORTHAND_ARG_PREFIX.length)
 
     return when {
@@ -71,7 +85,7 @@ private fun getParamsFromSingleShorthand(
     shortHandToOptionals: Map<String?, ParamDefinition>,
     next: String,
     params: MutableList<String>
-): Map<String, RefWithValue> {
+): Map<String, RefWithValue<String>> {
     val ref = shortHandToOptionals[next] ?: throw ParameterNotDefinedException(next)
     return mapOf(
         ref.name to RefWithValue(
@@ -105,7 +119,7 @@ private fun getFlagsFromManyShorthands(
 private fun getParamsFromNamePrefixed(
     params: MutableList<String>,
     nameToOptionals: Map<String, ParamDefinition>
-): Map<String, RefWithValue> {
+): Map<String, RefWithValue<String>> {
     val next = params.removeFirst().drop(ARG_PREFIX.length)
     if (next.isEmpty()) {
         throw Exception("Cannot pass empty arg name") // TODO proper error

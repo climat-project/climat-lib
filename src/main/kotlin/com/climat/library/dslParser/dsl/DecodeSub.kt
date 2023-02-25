@@ -17,12 +17,13 @@ internal fun decodeSub(cliDsl: String, sub: DslParser.SubContext): DescendantToo
     return DescendantToolchain(
         name = name.text,
         description = docstring.subDoc,
-        parameters = decodeParameters(cliDsl, params, docstring.paramDoc),
+        parameters = decodeParams(cliDsl, params, docstring.paramDoc),
         action = decodeSubAction(cliDsl, statements),
         children = decodeSubChildren(cliDsl, statements),
         constants = decodeSubConstants(cliDsl, statements),
         allowUnmatched = allowUnmatchedMod != null,
         aliases = decodeAliases(cliDsl, modifiers),
+        predefinedParameters = decodeSubPredefinedParams(modifiers),
 
         sourceMap = sub.position!!
     )

@@ -8,7 +8,7 @@ import com.climat.library.domain.action.NoopActionValue
 import com.climat.library.domain.action.ScopeParamsActionValue
 import com.climat.library.domain.action.TemplateActionValue
 import com.climat.library.domain.isLeaf
-import com.climat.library.domain.ref.RefWithValue
+import com.climat.library.domain.ref.RefWithAnyValue
 import com.climat.library.domain.toolchain.DescendantToolchain
 import com.climat.library.domain.toolchain.RootToolchain
 import com.climat.library.domain.toolchain.Toolchain
@@ -33,7 +33,7 @@ internal fun processRootToolchain(
 private fun processToolchainDescendants(
     children: Array<DescendantToolchain>,
     params: MutableList<String>,
-    upperScopeRefs: Map<String, RefWithValue>,
+    upperScopeRefs: Map<String, RefWithAnyValue>,
     upperPathToRoot: List<Toolchain>,
     handler: (parsedAction: ActionValueBase<*>, context: Toolchain) -> Unit,
 ) {
@@ -60,7 +60,7 @@ private fun processToolchainDescendants(
 private fun processToolchain(
     params: MutableList<String>,
     toolchain: Toolchain,
-    upperScopeRefs: Map<String, RefWithValue>,
+    upperScopeRefs: Map<String, RefWithAnyValue>,
     upperPathToRoot: List<Toolchain>,
     handler: (parsedAction: ActionValueBase<*>, context: Toolchain) -> Unit
 ) {
@@ -89,7 +89,7 @@ private fun processRefs(
     toolchain: Toolchain,
     params: MutableList<String>,
     pathToRoot: List<Toolchain>
-) = try {
+): Map<String, RefWithAnyValue> = try {
     processRefs(toolchain, params)
 } catch (ex: ParameterMissingException) {
     throw Exception(
@@ -104,7 +104,7 @@ private fun processRefs(
 
 private fun setActualCommand(
     action: ActionValueBase<*>,
-    values: Collection<RefWithValue>
+    values: Collection<RefWithAnyValue>
 ) {
     when (action) {
         is TemplateActionValue -> {

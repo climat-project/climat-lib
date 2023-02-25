@@ -3,6 +3,7 @@ package com.climat.library.domain.toolchain
 import com.climat.library.domain.action.Action
 import com.climat.library.domain.ref.Constant
 import com.climat.library.domain.ref.ParamDefinition
+import com.climat.library.domain.ref.PredefinedParamDefinition
 import org.antlr.v4.kotlinruntime.ast.Position
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
@@ -19,7 +20,8 @@ data class RootToolchain internal constructor(
     override val constants: Array<Constant>,
     override val allowUnmatched: Boolean,
     val resources: Array<String>,
-    override val sourceMap: Position?
+    override val sourceMap: Position?,
+    override val predefinedParameters: Array<PredefinedParamDefinition>
 ) : Toolchain() {
     override val aliases: Array<Alias>
         get() = emptyArray()

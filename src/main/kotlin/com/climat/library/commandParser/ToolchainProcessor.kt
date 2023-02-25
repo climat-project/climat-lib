@@ -5,9 +5,10 @@ import com.climat.library.domain.toolchain.RootToolchain
 import com.climat.library.domain.toolchain.Toolchain
 import com.climat.library.dslParser.dsl.decodeCliDsl
 import com.climat.library.validation.computeValidations
+import com.climat.library.validation.validate
 import kotlin.js.JsName
 
-fun validate(toolchain: RootToolchain) = computeValidations(toolchain).toList().toTypedArray()
+fun getValidations(toolchain: RootToolchain) = computeValidations(toolchain).toList().toTypedArray()
 
 fun parse(cliDsl: String): RootToolchain =
     decodeCliDsl(cliDsl)

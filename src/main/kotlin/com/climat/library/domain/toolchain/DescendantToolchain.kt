@@ -3,6 +3,7 @@ package com.climat.library.domain.toolchain
 import com.climat.library.domain.action.Action
 import com.climat.library.domain.ref.Constant
 import com.climat.library.domain.ref.ParamDefinition
+import com.climat.library.domain.ref.PredefinedParamDefinition
 import com.climat.library.utils.emptyString
 import com.climat.library.utils.noopAction
 import org.antlr.v4.kotlinruntime.ast.Position
@@ -21,4 +22,5 @@ data class DescendantToolchain internal constructor(
     override val allowUnmatched: Boolean,
     override val sourceMap: Position,
     override val aliases: Array<Alias>,
+    override val predefinedParameters: Array<PredefinedParamDefinition>,
 ) : Toolchain()

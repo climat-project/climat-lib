@@ -1,14 +1,14 @@
 package e2e.features
 
+import com.climat.library.commandParser.getValidations
 import com.climat.library.commandParser.parse
-import com.climat.library.commandParser.validate
 import kotlin.test.Test
 
 class CustomScript {
 
     @Test
     fun testCompiles() {
-        validate(
+        getValidations(
             parse(
                 """
                 hello-world(location l: arg) {
