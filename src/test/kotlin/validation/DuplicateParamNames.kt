@@ -6,7 +6,7 @@ import utils.assertContainsInMessages
 import utils.getValidationMessages
 import kotlin.test.Test
 
-class TestDuplicateParamNames {
+class DuplicateParamNames {
 
     private val toolchain = """
         root(param: flag, param: arg?) {

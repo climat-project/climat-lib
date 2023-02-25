@@ -6,7 +6,7 @@ import utils.assertContainsInMessages
 import utils.getValidationMessages
 import kotlin.test.Test
 
-class TestDuplicateToolchainNameOrAlias {
+class DuplicateToolchainNameOrAlias {
 
     private val toolchain = """
         root {

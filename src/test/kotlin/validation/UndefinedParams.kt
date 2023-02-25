@@ -6,7 +6,7 @@ import utils.assertContainsInMessages
 import utils.getValidationMessages
 import kotlin.test.Test
 
-class TestUndefinedParams {
+class UndefinedParams {
     private val toolchain = """
         root(param1: flag, param2: arg?) {
             action "dummy $(undef)"

@@ -6,7 +6,7 @@ import utils.assertContainsInMessages
 import utils.getValidationMessages
 import kotlin.test.Test
 
-class TestBooleanFlippedMappings {
+class BooleanFlippedMappings {
     private val toolchain = """
         root(arg1: arg, arg2: arg, arg3: flag) {
             action "dummy command $(!arg1)"

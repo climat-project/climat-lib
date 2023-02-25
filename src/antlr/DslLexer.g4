@@ -24,7 +24,6 @@ FALSE: 'false';
 // Parameters
 FLAG: 'flag';
 ARGUMENT: 'arg';
-VARARG: 'vararg';
 
 // Props
 ACTION_PROP: 'action';

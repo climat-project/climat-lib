@@ -6,7 +6,7 @@ import utils.assertContainsInMessages
 import utils.getValidationMessages
 import kotlin.test.Test
 
-class TestFlagMappedTwice {
+class FlagMappedTwice {
     private val toolchain = """
         root(root_param1: arg, root_param2: arg) {
             action "dummy command $(root_param) $(root_param1:dummyCommandParam) $(root_param2:dummyCommandParam)"

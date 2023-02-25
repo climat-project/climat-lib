@@ -6,7 +6,7 @@ import utils.assertContainsInMessages
 import utils.getValidationMessages
 import kotlin.test.Test
 
-class TestUselessToolchain {
+class UselessToolchain {
     private val toolchain = """
         root(param1: flag, param2: arg?) {
             sub root_child() { action "dummy $(param1) $(param2) $(param_2) $(undef) $(undef2)" }

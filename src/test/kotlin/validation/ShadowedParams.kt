@@ -6,25 +6,24 @@ import utils.assertContainsInMessages
 import utils.getValidationMessages
 import kotlin.test.Test
 
-class TestAncestorSubcommandWithSameName {
+class ShadowedParams {
     private val toolchain = """
-        root {
-            sub child {
-                sub root() {
-                    sub child {}
-                }
+        root(param1: arg, param2: arg) {
+            sub child1(param1: arg, param3: arg) {
+                    sub grandchild(param1: flag, param3: flag) {}
             }
+            sub child2(param2: flag, param4: flag) {}
         }
     """
 
     @Test
     fun test() {
-        val validationResults =
-            decodeCliDsl(toolchain).getValidationMessages(ValidationCode.AncestorSubcommandWithSameName)
+        val validationResults = decodeCliDsl(toolchain).getValidationMessages(ValidationCode.ShadowedParams)
         assertContainsInMessages(
             validationResults,
-            "root",
-            "child"
+            "param1",
+            "param3",
+            "param2"
         )
     }
 }

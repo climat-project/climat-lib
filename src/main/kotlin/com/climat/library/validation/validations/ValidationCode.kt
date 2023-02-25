@@ -6,9 +6,9 @@ import kotlin.js.JsExport
 @OptIn(ExperimentalJsExport::class)
 @JsExport
 enum class ValidationCode {
+    AllowUnmatchedOnNonLeaf,
     AncestorSubcommandWithSameName,
     BooleanFlippedMappings,
-    DefaultForFlag,
     DefaultForRequiredParam,
     DuplicateToolchainNamesOrAliases,
     DuplicateRefNames,

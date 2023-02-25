@@ -13,7 +13,7 @@ aliasModifier: MOD_ALIAS LPAREN IDENTIFIER RPAREN;
 aliasesModifier: MOD_ALIASES LPAREN IDENTIFIER+ RPAREN;
 params: param (COMMA param)* COMMA?;
 param: IDENTIFIER paramShort? COLON paramType;
-paramType: FLAG | argument | VARARG;
+paramType: FLAG | argument;
 argument: ARGUMENT (QMARK)? (EQ literal)?;
 paramShort: IDENTIFIER;
 

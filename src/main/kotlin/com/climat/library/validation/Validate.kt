@@ -3,6 +3,7 @@ package com.climat.library.validation
 import com.climat.library.domain.toolchain.RootToolchain
 import com.climat.library.domain.toolchain.Toolchain
 import com.climat.library.utils.newLine
+import com.climat.library.validation.validations.AllowUnmatchedOnNonLeaf
 import com.climat.library.validation.validations.AncestorSubcommandWithSameName
 import com.climat.library.validation.validations.BooleanFlippedMappings
 import com.climat.library.validation.validations.DefaultForRequiredParam
@@ -14,6 +15,7 @@ import com.climat.library.validation.validations.UndefinedParams
 import com.climat.library.validation.validations.UselessToolchain
 
 private val validators = listOf(
+    AllowUnmatchedOnNonLeaf(),
     AncestorSubcommandWithSameName(),
     BooleanFlippedMappings(),
     DefaultForRequiredParam(),
