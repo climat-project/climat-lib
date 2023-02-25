@@ -1,8 +1,9 @@
 package com.climat.library.dslParser.dsl
 
 import climat.lang.DslParser
+import com.climat.library.domain.ref.ArgDefinition
+import com.climat.library.domain.ref.FlagDefinition
 import com.climat.library.domain.ref.ParamDefinition
-import com.climat.library.domain.ref.Ref
 import com.climat.library.dslParser.exception.assertRequire
 import com.climat.library.dslParser.exception.throwExpected
 import com.climat.library.dslParser.exception.throwUnexpected
@@ -15,23 +16,34 @@ internal fun decodeParameters(
 ): Array<ParamDefinition> =
     params.map { parsedParam ->
         val paramName = parsedParam.assertRequire(cliDsl) { IDENTIFIER() }.text
-
-        val (paramType, optional) = parsedParam.assertRequire(cliDsl) { findParamType() }.let {
+        val description = paramDescriptions[paramName] ?: emptyString()
+        val shorthand = parsedParam.findParamShort()?.text
+        parsedParam.assertRequire(cliDsl) { findParamType() }.let {
             when {
-                it.FLAG() != null -> Ref.Type.Flag to true
-                it.findArgument() != null -> Ref.Type.Arg to (it.findArgument()!!.QMARK() != null)
+                it.FLAG() != null -> {
+                    FlagDefinition(
+                        name = paramName,
+                        shorthand = shorthand,
+                        description = description,
+                        sourceMap = parsedParam.position!!
+                    )
+                }
+
+                it.findArgument() != null -> {
+                    val arg = it.findArgument()!!
+                    ArgDefinition(
+                        name = paramName,
+                        shorthand = shorthand,
+                        description = description,
+                        optional = (arg.QMARK() != null),
+                        default = arg.findLiteral()?.let { decodeSimpleString(cliDsl, it) },
+                        sourceMap = parsedParam.position!!,
+                    )
+                }
+
                 else -> it.throwUnexpected("Could not parse parameter type", cliDsl)
             }
         }
-        ParamDefinition(
-            name = parsedParam.assertRequire(cliDsl) { IDENTIFIER() }.text,
-            description = paramDescriptions[paramName] ?: emptyString(),
-            optional = optional,
-            shorthand = parsedParam.findParamShort()?.text,
-            type = paramType,
-            default = parsedParam.findLiteral()?.let { decodeSimpleString(cliDsl, it) },
-            sourceMap = parsedParam.position!!
-        )
     }.toTypedArray()
 
 internal fun decodeSimpleString(cliDsl: String, literal: DslParser.LiteralContext): String {

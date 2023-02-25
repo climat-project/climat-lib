@@ -17,4 +17,5 @@ abstract class Toolchain : SourceTraceable() {
     abstract val children: Array<DescendantToolchain>
     abstract val constants: Array<Constant>
     abstract val allowUnmatched: Boolean
+    abstract val aliases: Array<Alias>
 }

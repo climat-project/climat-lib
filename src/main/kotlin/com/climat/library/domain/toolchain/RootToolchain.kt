@@ -20,4 +20,7 @@ data class RootToolchain internal constructor(
     override val allowUnmatched: Boolean,
     val resources: Array<String>,
     override val sourceMap: Position?
-) : Toolchain()
+) : Toolchain() {
+    override val aliases: Array<Alias>
+        get() = emptyArray()
+}

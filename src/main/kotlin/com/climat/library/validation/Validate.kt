@@ -5,7 +5,6 @@ import com.climat.library.domain.toolchain.Toolchain
 import com.climat.library.utils.newLine
 import com.climat.library.validation.validations.AncestorSubcommandWithSameName
 import com.climat.library.validation.validations.BooleanFlippedMappings
-import com.climat.library.validation.validations.DefaultForFlag
 import com.climat.library.validation.validations.DefaultForRequiredParam
 import com.climat.library.validation.validations.DuplicateRefNames
 import com.climat.library.validation.validations.DuplicateToolchainNamesOrAliases
@@ -17,7 +16,6 @@ import com.climat.library.validation.validations.UselessToolchain
 private val validators = listOf(
     AncestorSubcommandWithSameName(),
     BooleanFlippedMappings(),
-    DefaultForFlag(),
     DefaultForRequiredParam(),
     DuplicateToolchainNamesOrAliases(),
     DuplicateRefNames(),

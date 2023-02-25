@@ -9,11 +9,9 @@ class Command : E2ETestBase() {
         """
             hello-world(location l: arg) {
                 action "echo Hello World from $(location)"
-
                 sub child {
                     action "echo Hello Child from $(location)"
                 }
-                
                 sub child2(param1: arg, param2: arg) {
                     
                 }

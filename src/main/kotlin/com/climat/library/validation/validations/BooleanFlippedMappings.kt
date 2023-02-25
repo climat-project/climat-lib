@@ -1,7 +1,7 @@
 package com.climat.library.validation.validations
 
 import com.climat.library.domain.action.TemplateActionValue
-import com.climat.library.domain.ref.Ref
+import com.climat.library.domain.ref.ArgDefinition
 import com.climat.library.validation.ValidationBase
 import com.climat.library.validation.ValidationContext
 import com.climat.library.validation.ValidationEntry
@@ -17,7 +17,7 @@ internal class BooleanFlippedMappings : ValidationBase() {
                 getScopeRefs(ctx)
                     .values
                     .map { it.last() }
-                    .filter { it.type != Ref.Type.Flag }
+                    .filterIsInstance<ArgDefinition>()
                     .map { it.name }
                     .intersect(
                         act.template.refReferences

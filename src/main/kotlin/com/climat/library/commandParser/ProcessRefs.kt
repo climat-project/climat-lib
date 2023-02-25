@@ -2,8 +2,9 @@ package com.climat.library.commandParser
 
 import com.climat.library.commandParser.exception.ParameterMissingException
 import com.climat.library.commandParser.exception.ParameterNotDefinedException
+import com.climat.library.domain.ref.ArgDefinition
+import com.climat.library.domain.ref.FlagDefinition
 import com.climat.library.domain.ref.ParamDefinition
-import com.climat.library.domain.ref.Ref
 import com.climat.library.domain.ref.RefWithValue
 import com.climat.library.domain.toolchain.Toolchain
 import com.climat.library.utils.emptyString
@@ -40,9 +41,10 @@ internal fun processRefs(
             .associate {
                 it.name to RefWithValue(
                     it,
-                    when (it.type) {
-                        Ref.Type.Arg -> it.default ?: emptyString()
-                        Ref.Type.Flag -> false.toString()
+                    when (it) {
+                        is ArgDefinition -> it.default ?: emptyString()
+                        is FlagDefinition -> false.toString()
+                        else -> throw Exception("Type `${it::class.simpleName}` is not supported")
                     }
                 )
             }
@@ -74,10 +76,10 @@ private fun getParamsFromSingleShorthand(
     return mapOf(
         ref.name to RefWithValue(
             ref,
-            if (ref.type == Ref.Type.Flag) {
-                true.toString()
-            } else {
-                params.removeFirst()
+            when (ref) {
+                is FlagDefinition -> true.toString()
+                is ArgDefinition -> params.removeFirst()
+                else -> throw Exception("Type is not supported") // TODO proper error
             }
         )
     )
@@ -89,7 +91,7 @@ private fun getFlagsFromManyShorthands(
 ) = next.map {
     shortHandToOptionals[it.toString()] ?: throw ParameterNotDefinedException(next)
 }.onEach {
-    if (it.type != Ref.Type.Flag) {
+    if (it is FlagDefinition) {
         throw Exception("Parameter ${it.name} cannot be used as a flag")
     }
 }
@@ -106,15 +108,16 @@ private fun getParamsFromNamePrefixed(
 ): Map<String, RefWithValue> {
     val next = params.removeFirst().drop(ARG_PREFIX.length)
     if (next.isEmpty()) {
-        throw Exception("Cannot pass empty arg name")
+        throw Exception("Cannot pass empty arg name") // TODO proper error
     }
     val ref = nameToOptionals[next] ?: throw ParameterNotDefinedException(next)
     return mapOf(
         next to RefWithValue(
             ref,
-            when (ref.type) {
-                Ref.Type.Arg -> params.removeFirst()
-                Ref.Type.Flag -> true.toString()
+            when (ref) {
+                is ArgDefinition -> params.removeFirst()
+                is FlagDefinition -> true.toString()
+                else -> throw Exception("Type is not supported")
             }
         )
     )

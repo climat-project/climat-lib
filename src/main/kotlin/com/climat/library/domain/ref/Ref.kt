@@ -8,10 +8,4 @@ import kotlin.js.JsExport
 @JsExport
 abstract class Ref : SourceTraceable() {
     abstract val name: String
-    abstract val type: Type
-
-    enum class Type {
-        Flag,
-        Arg
-    }
 }

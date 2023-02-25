@@ -19,6 +19,6 @@ data class DescendantToolchain internal constructor(
     override val children: Array<DescendantToolchain> = emptyArray(),
     override val constants: Array<Constant> = emptyArray(),
     override val allowUnmatched: Boolean,
-    val aliases: Array<Alias> = emptyArray(),
     override val sourceMap: Position,
+    override val aliases: Array<Alias>,
 ) : Toolchain()

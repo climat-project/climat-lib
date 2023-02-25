@@ -47,7 +47,7 @@ private fun processToolchainDescendants(
                 upperPathToRoot
             )
             }"
-        ) // TODO: proper error,
+        )
     processToolchain(
         params = params,
         toolchain = toolchain,

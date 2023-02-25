@@ -2,7 +2,6 @@ package com.climat.library.dslParser.dsl
 
 import climat.lang.DslParser
 import com.climat.library.domain.ref.Constant
-import com.climat.library.domain.ref.Ref
 import com.climat.library.dslParser.exception.assertRequire
 
 internal fun decodeSubConstants(cliDsl: String, statements: List<DslParser.SubStatementsContext>): Array<Constant> =
@@ -14,9 +13,9 @@ internal fun decodeRootConstants(cliDsl: String, statements: List<DslParser.Root
             context.assertRequire(cliDsl) { findLiteral() }.let { literal ->
                 Constant(
                     name = context.assertRequire(cliDsl) { IDENTIFIER() }.text,
-                    type = if (literal.findStringTemplate() != null) Ref.Type.Arg else Ref.Type.Flag,
                     value = decodeLiteral(cliDsl, literal),
-                    sourceMap = context.position
+                    sourceMap = context.position,
+                    isBoolean = literal.findStringTemplate() == null
                 )
             }
         }.toTypedArray()
