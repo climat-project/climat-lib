@@ -5,8 +5,9 @@ import com.climat.library.domain.toolchain.DescendantToolchain
 import com.climat.library.domain.toolchain.Toolchain
 
 internal val Toolchain.refs: List<Ref>
-    get() = this.constants.toList() +
-        this.parameters.toList()
+    get() = constants.toList() +
+        parameters.toList() +
+        predefinedParameters.toList()
 
 internal val DescendantToolchain.eachAlias: List<DescendantToolchain>
     get() = listOf(this) + this.aliases.map { this.copy(name = it.name) }
