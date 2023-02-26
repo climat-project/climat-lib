@@ -11,7 +11,10 @@ abstract class E2ETestBase {
 
     private fun exec(args: String, cliDsl: String): String? {
         var ans: TemplateActionValue? = null
-        execute(args, cliDsl, { act, _ ->
+        val argv =
+            if (args.isEmpty()) emptyArray()
+            else args.split(" ").toTypedArray()
+        execute(argv, cliDsl, { act, _ ->
             ans = act as TemplateActionValue
         })
         return ans?.value
