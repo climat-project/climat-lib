@@ -1,3 +1,6 @@
+@file:OptIn(ExperimentalJsExport::class)
+@file:JsExport
+
 package com.climat.library.commandParser
 
 import com.climat.library.domain.action.Action
@@ -6,6 +9,8 @@ import com.climat.library.domain.toolchain.Toolchain
 import com.climat.library.dslParser.dsl.decodeCliDsl
 import com.climat.library.validation.computeValidations
 import com.climat.library.validation.validate
+import kotlin.js.ExperimentalJsExport
+import kotlin.js.JsExport
 import kotlin.js.JsName
 
 fun getValidations(toolchain: RootToolchain) = computeValidations(toolchain).toList().toTypedArray()
@@ -34,31 +39,4 @@ fun execute(
     skipValidation: Boolean = false
 ) {
     execute(args, parse(cliDsl), actionHandler, skipValidation)
-}
-
-@JsName("executeWithStringArgsFromCliDsl")
-fun execute(
-    args: String,
-    cliDsl: String,
-    actionHandler: (parsedAction: Action, context: Toolchain) -> Unit,
-    skipValidation: Boolean = false
-) {
-    execute(args, parse(cliDsl), actionHandler, skipValidation)
-}
-
-@JsName("executeWithStringArgs")
-fun execute(
-    args: String,
-    toolchain: RootToolchain,
-    actionHandler: (parsedAction: Action, context: Toolchain) -> Unit,
-    skipValidation: Boolean = false
-) {
-    execute(
-        if (args.isBlank()) {
-            emptyArray()
-        } else {
-            args.split(Regex("\\s+")).toTypedArray()
-        },
-        toolchain, actionHandler, skipValidation
-    )
 }
