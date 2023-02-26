@@ -79,7 +79,7 @@ ktlint.filter {
 npmPublish {
     readme.set(File("./README.md"))
     packages.getByName("js") {
-        this.files.setFrom("./LICENSE.md")
+        files.from.add("./LICENSE.md")
     }
     registries {
         npmjs {
