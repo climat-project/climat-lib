@@ -80,6 +80,9 @@ npmPublish {
     readme.set(File("./README.md"))
     packages.getByName("js") {
         files.from.add("./LICENSE.md")
+        packageJson {
+            license.set("LGPL-2.1-only")
+        }
     }
     registries {
         npmjs {
