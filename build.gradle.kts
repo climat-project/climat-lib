@@ -82,11 +82,22 @@ npmPublish {
         files.from.add("./LICENSE.md")
         packageJson {
             license.set("LGPL-2.1-only")
+            description.set("Library used by CLiMAT tool")
+            repository
+            repository {
+                type.set("git")
+                url.set("https://github.com/climat-project/climat-lib")
+            }
+            homepage.set("https://climat-project.github.io")
+            author {
+                name.set("Marius Aiordăchioaei")
+            }
+            keywords.addAll("cli", "macros")
         }
     }
     registries {
         npmjs {
-            authToken.set(npmToken)
+            authToken.set("abcd")
         }
     }
 }
