@@ -15,13 +15,17 @@ class Command : E2ETestBase() {
                 sub child2(param1: arg, param2: arg) {
                     
                 }
+                sub child3(param1: arg?, param2: arg?) {
+                }
             }
         """
             .assertThrows<Exception>(
                 "" to assertMessageContains("hello-world", "location"),
                 "qwe er" to assertMessageContains("er", "child", "child2"),
-                "--location qwe child" to assertMessageContains("qwe", "child", "child2"),
-                "-l childbb" to assertMessageContains("childbb", "child", "child2")
+                "--location qwe child" to assertMessageContains("location"),
+                "-l childbb" to assertMessageContains("location"),
+                "--location" to assertMessageContains("location"),
+                "NewYork child3 --param1 --param2" to { print(it.message) }, print = true
             )
     }
 }

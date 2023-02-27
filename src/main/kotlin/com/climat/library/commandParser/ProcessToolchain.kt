@@ -1,6 +1,6 @@
 package com.climat.library.commandParser
 
-import com.climat.library.commandParser.exception.ParameterMissingException
+import com.climat.library.commandParser.exception.ParameterException
 import com.climat.library.commandParser.exception.ToolchainNotDefinedException
 import com.climat.library.domain.action.ActionValueBase
 import com.climat.library.domain.action.CustomScriptActionValue
@@ -43,7 +43,7 @@ private fun processToolchainDescendants(
     } ?: children.find { it.name == "_" }
         ?: throw Exception(
             "Toolchain $next is not defined${newLine()}${
-            getUsageHint(
+            getSubcommandUsageHint(
                 upperPathToRoot
             )
             }"
@@ -91,12 +91,10 @@ private fun processRefs(
     pathToRoot: List<Toolchain>
 ): Map<String, RefWithAnyValue> = try {
     processRefs(toolchain, params)
-} catch (ex: ParameterMissingException) {
+} catch (ex: ParameterException) {
     throw Exception(
-        "Parameter ${ex.arg.name} is missing${newLine()}${
-        getUsageHint(
-            toolchain.parameters, pathToRoot
-        )
+        "${ex.message}${newLine()}${
+        getParameterUsageHint(pathToRoot)
         }",
         ex
     )

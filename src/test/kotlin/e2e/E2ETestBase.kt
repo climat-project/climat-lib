@@ -28,12 +28,16 @@ abstract class E2ETestBase {
         return this
     }
 
-    protected fun <T : Throwable> String.assertThrows(vararg commantToResult: Pair<String, (T) -> Unit>): String {
-        commantToResult.forEach { (command, exceptionHandler) ->
+    protected fun <T : Throwable> String.assertThrows(
+        vararg commandToResult: Pair<String, (T) -> Unit>,
+        print: Boolean = false
+    ): String {
+        commandToResult.forEach { (command, exceptionHandler) ->
             val ex = assertFails("Command `$command` did not throw any exception") {
-                exec(command, this)
+                val res = exec(command, this)
             } as? T
             if (ex != null) {
+                if (print) println(ex.message)
                 exceptionHandler(ex)
             } else {
                 fail("Command `$command` did not throw the expected exception type")

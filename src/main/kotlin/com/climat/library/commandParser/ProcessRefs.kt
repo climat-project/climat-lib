@@ -1,6 +1,6 @@
 package com.climat.library.commandParser
 
-import com.climat.library.commandParser.exception.ParameterMissingException
+import com.climat.library.commandParser.exception.ParameterException
 import com.climat.library.commandParser.exception.ParameterNotDefinedException
 import com.climat.library.domain.ref.ArgDefinition
 import com.climat.library.domain.ref.FlagDefinition
@@ -22,8 +22,8 @@ internal fun processRefs(
     val shortHandToOptionals = optionals.associateBy { it.shorthand }
     val optionalsSet = optionals.toMutableSet()
 
-    val ans = required.associate {
-        it.name to RefWithValue(it, params.removeFirst(it)) as RefWithAnyValue
+    val ans = required.associate { paramDef ->
+        paramDef.name to RefWithValue(paramDef, getNextValue(paramDef, params)) as RefWithAnyValue
     }.toMutableMap()
 
     while (optionalsSet.isNotEmpty() && params.isNotEmpty()) {
@@ -57,6 +57,21 @@ internal fun processRefs(
     }.associateBy { it.ref.name }
 }
 
+fun getNextValue(paramDef: ParamDefinition, params: MutableList<String>): String {
+    val paramValue =
+        params.removeFirstOrNull() ?: throw ParameterException(
+            paramDef,
+            "Parameter ${paramDef.name} needs a value"
+        )
+    if (paramValue.startsWith(ARG_PREFIX) || paramValue.startsWith(SHORTHAND_ARG_PREFIX)) {
+        throw ParameterException(
+            paramDef,
+            "Parameter ${paramDef.name} is not a flag, and needs an appropriate value."
+        )
+    }
+    return paramValue
+}
+
 private fun processPredefined(
     toolchain: Toolchain,
     ans: MutableMap<String, RefWithAnyValue>,
@@ -83,16 +98,16 @@ private fun getParamsFromShorthandPrefixed(
 
 private fun getParamsFromSingleShorthand(
     shortHandToOptionals: Map<String?, ParamDefinition>,
-    next: String,
+    name: String,
     params: MutableList<String>
 ): Map<String, RefWithValue<String>> {
-    val ref = shortHandToOptionals[next] ?: throw ParameterNotDefinedException(next)
+    val paramDef = shortHandToOptionals[name] ?: throw ParameterNotDefinedException(name)
     return mapOf(
-        ref.name to RefWithValue(
-            ref,
-            when (ref) {
+        paramDef.name to RefWithValue(
+            paramDef,
+            when (paramDef) {
                 is FlagDefinition -> true.toString()
-                is ArgDefinition -> params.removeFirst()
+                is ArgDefinition -> getNextValue(paramDef, params)
                 else -> throw Exception("Type is not supported") // TODO proper error
             }
         )
@@ -120,22 +135,19 @@ private fun getParamsFromNamePrefixed(
     params: MutableList<String>,
     nameToOptionals: Map<String, ParamDefinition>
 ): Map<String, RefWithValue<String>> {
-    val next = params.removeFirst().drop(ARG_PREFIX.length)
-    if (next.isEmpty()) {
+    val name = params.removeFirst().drop(ARG_PREFIX.length)
+    if (name.isEmpty()) {
         throw Exception("Cannot pass empty arg name") // TODO proper error
     }
-    val ref = nameToOptionals[next] ?: throw ParameterNotDefinedException(next)
+    val paramDef = nameToOptionals[name] ?: throw ParameterNotDefinedException(name)
     return mapOf(
-        next to RefWithValue(
-            ref,
-            when (ref) {
-                is ArgDefinition -> params.removeFirst()
+        name to RefWithValue(
+            paramDef,
+            when (paramDef) {
+                is ArgDefinition -> getNextValue(paramDef, params)
                 is FlagDefinition -> true.toString()
                 else -> throw Exception("Type is not supported")
             }
         )
     )
 }
-
-private fun MutableList<String>.removeFirst(param: ParamDefinition): String =
-    removeFirstOrNull() ?: throw ParameterMissingException(param)
