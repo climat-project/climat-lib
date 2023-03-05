@@ -6,6 +6,7 @@ import kotlin.test.Test
 class ParserSanityCheck {
 
     val cliDsl = """
+        @alias(root2)
         root {
             const rootConst = "rootConst"
             
