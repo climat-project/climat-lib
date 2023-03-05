@@ -97,7 +97,7 @@ npmPublish {
     }
     registries {
         npmjs {
-            authToken.set("abcd")
+            authToken.set(npmToken)
         }
     }
 }
