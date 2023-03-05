@@ -1,14 +1,14 @@
 package e2e.features
 
-import com.climat.library.commandParser.getValidations
 import com.climat.library.commandParser.parse
+import com.climat.library.validation.validate
 import kotlin.test.Test
 
 class CustomScript {
 
     @Test
     fun testCompiles() {
-        getValidations(
+        validate(
             parse(
                 """
                 hello-world(location l: arg) {
@@ -20,6 +20,26 @@ class CustomScript {
                     >
                     
                 }
+                """
+            )
+        )
+    }
+
+    @Test
+    fun escapeSequence() {
+        validate(
+            parse(
+                """
+                    hello-world {
+                    
+                        // The ">>" gets escaped to just ">"
+                        action js <
+                            const a = 3
+                            const b = 2
+                            if (a >> b) { console.log("a is greater than b") } 
+                        >
+                        
+                    }
                 """
             )
         )

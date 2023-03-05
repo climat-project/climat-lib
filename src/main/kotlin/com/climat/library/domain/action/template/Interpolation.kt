@@ -5,6 +5,7 @@ import com.climat.library.domain.ref.Constant
 import com.climat.library.domain.ref.FlagDefinition
 import com.climat.library.domain.ref.PredefinedParamDefinition
 import com.climat.library.domain.ref.RefWithAnyValue
+import com.climat.library.domain.ref.RefWithValue
 import com.climat.library.utils.emptyString
 
 internal class Interpolation(
@@ -13,24 +14,32 @@ internal class Interpolation(
     val isFlipped: Boolean
 ) : IPiece {
     override fun str(values: Collection<RefWithAnyValue>): String {
-        val refWithValue = values.find { it.ref.name == name }!!
+        val refWithValue = values.find { it.ref.name == name }
+            ?: throw IllegalArgumentException("Could not find ref named `$name` inside the collection")
+
         val value = getStringValueFrom(refWithValue.value)
         return if (mapping != null) {
-            when (val ref = refWithValue.ref) {
-                is FlagDefinition -> mapBoolean(value, mapping)
-                is ArgDefinition -> mapString(value, mapping)
-                is Constant -> if (ref.isBoolean) {
-                    mapBoolean(value, mapping)
-                } else {
-                    mapString(value, mapping)
-                }
-
-                is PredefinedParamDefinition -> throw Exception("Cannot map vararg argument type") // TODO proper error
-                else -> throw Exception("Type type not supported") // TODO proper error
-            }
+            mapValue(refWithValue, value, mapping)
         } else {
             value
         }
+    }
+
+    private fun mapValue(
+        refWithValue: RefWithValue<*>,
+        value: String,
+        mapping: String
+    ) = when (val ref = refWithValue.ref) {
+        is FlagDefinition -> mapBoolean(value, mapping)
+        is ArgDefinition -> mapString(value, mapping)
+        is Constant -> if (ref.isBoolean) {
+            mapBoolean(value, mapping)
+        } else {
+            mapString(value, mapping)
+        }
+
+        is PredefinedParamDefinition -> throw Exception("Cannot map vararg argument type") // TODO proper error
+        else -> throw Exception("Type type not supported") // TODO proper error
     }
 
     private fun getStringValueFrom(value: Any): String =

@@ -41,13 +41,7 @@ private fun processToolchainDescendants(
     val toolchain = children.find {
         it.name != "_" && (it.name == next || it.aliases.any { it.name == next })
     } ?: children.find { it.name == "_" }
-        ?: throw Exception(
-            "Toolchain $next is not defined${newLine()}${
-            getSubcommandUsageHint(
-                upperPathToRoot
-            )
-            }"
-        )
+        ?: throw Exception("Toolchain $next is not defined" + newLine() + getSubcommandUsageHint(upperPathToRoot))
     processToolchain(
         params = params,
         toolchain = toolchain,
@@ -93,9 +87,7 @@ private fun processRefs(
     processRefs(toolchain, params)
 } catch (ex: ParameterException) {
     throw Exception(
-        "${ex.message}${newLine()}${
-        getParameterUsageHint(pathToRoot)
-        }",
+        ex.message + newLine() + getParameterUsageHint(pathToRoot),
         ex
     )
 }

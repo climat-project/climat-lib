@@ -55,4 +55,16 @@ class Constants : E2ETestBase() {
                 "my-child" to "echo 'Child My Dear Constant Value'"
             )
     }
+
+    @Test
+    fun escapeSequences() {
+        """
+           my-toolchain {
+                const c = "echo \"HelloWorld!\""
+                action "$(c);echo \"from Cluj-Napoca\""
+           }
+        """.assertResults(
+            "" to "echo \"HelloWorld!\";echo \"from Cluj-Napoca\""
+        )
+    }
 }

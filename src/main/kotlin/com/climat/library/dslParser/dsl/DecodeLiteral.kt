@@ -10,4 +10,8 @@ internal fun decodeLiteral(cliDsl: String, literal: DslParser.LiteralContext): T
     literal
         .findStringTemplate()
         ?.let { decodeTemplate(cliDsl, it) }
-        ?: Template(listOf(SimpleString(literal.assertRequire(cliDsl) { findBooleanLiteral() }.text)))
+        ?: Template(
+            listOf(
+                SimpleString.create(literal.assertRequire(cliDsl) { findBooleanLiteral() }.text)
+            )
+        )
