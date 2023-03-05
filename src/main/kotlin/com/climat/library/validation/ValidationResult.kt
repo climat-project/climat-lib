@@ -1,6 +1,5 @@
 package com.climat.library.validation
 
-import com.climat.library.domain.toolchain.Toolchain
 import com.climat.library.dslParser.exception.getSourceCodeErrorCaretIndicator
 import com.climat.library.utils.emptyString
 import com.climat.library.utils.newLine
@@ -11,13 +10,12 @@ import kotlin.js.JsExport
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
-data class ValidationResult(
-    private val _message: String,
+class ValidationResult internal constructor(
+    message: String,
     private val sourceCode: String,
-    private val sourceMap: Position?,
+    sourceMap: Position?,
     val code: ValidationCode,
-    val type: ValidationEntryType,
-    private val toolchain: Toolchain
+    val type: ValidationEntryType
 ) {
     private var repr: String
 
@@ -27,7 +25,7 @@ data class ValidationResult(
             ValidationEntryType.Error -> "Error"
             ValidationEntryType.Warning -> "Warning"
         }
-        }: $_message ${
+        }: $message ${
         sourceMap?.let {
             newLine() + getSourceCodeErrorCaretIndicator(
                 sourceCode,

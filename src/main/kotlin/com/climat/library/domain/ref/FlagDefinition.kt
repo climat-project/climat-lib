@@ -6,7 +6,7 @@ import kotlin.js.JsExport
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
-data class FlagDefinition internal constructor(
+class FlagDefinition internal constructor(
     override val sourceMap: Position?,
     override val shorthand: String?,
     override val description: String,

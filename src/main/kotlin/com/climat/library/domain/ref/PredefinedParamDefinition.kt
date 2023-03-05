@@ -6,7 +6,7 @@ import kotlin.js.JsExport
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
-data class PredefinedParamDefinition internal constructor(
+class PredefinedParamDefinition internal constructor(
     override val sourceMap: Position?,
     override val name: String,
 ) : Ref()

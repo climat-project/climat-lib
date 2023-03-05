@@ -5,6 +5,6 @@ import kotlin.js.JsExport
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
-data class Alias(
+class Alias(
     val name: String,
 )

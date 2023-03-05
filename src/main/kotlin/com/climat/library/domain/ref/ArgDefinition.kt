@@ -6,7 +6,7 @@ import kotlin.js.JsExport
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
-data class ArgDefinition internal constructor(
+class ArgDefinition internal constructor(
     override val sourceMap: Position?,
     override val shorthand: String?,
     override val description: String,

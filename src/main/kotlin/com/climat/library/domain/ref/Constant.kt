@@ -7,7 +7,7 @@ import kotlin.js.JsExport
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
-data class Constant internal constructor(
+class Constant internal constructor(
     override val name: String,
     internal val value: Template,
     override val sourceMap: Position?,
