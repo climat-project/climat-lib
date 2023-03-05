@@ -32,7 +32,8 @@ internal fun decodeCliDsl(cliDsl: String): RootToolchain {
         allowUnmatched = allowUnmatchedMod != null,
         resources = emptyArray(),
         predefinedParameters = decodeRootPredefinedParams(modifiers),
-        sourceMap = root.position
+        sourceMap = root.position,
+        aliases = decodeAliases(cliDsl, modifiers)
     )
 }
 

@@ -2,13 +2,13 @@ parser grammar DslParser;
 options { tokenVocab=DslLexer; }
 
 root: docstring? rootModifiers* IDENTIFIER (LPAREN params? RPAREN)? rootBody EOF;
-rootModifiers: MOD_SEAL | MOD_ALLOW_UNMATCHED;
+rootModifiers: MOD_SEAL | MOD_ALLOW_UNMATCHED | aliasModifier | aliasesModifier;
 rootBody: LCURLY rootStatements* RCURLY;
 rootStatements: sub | action | constDef;
 
 sub: docstring? subModifiers* SUB IDENTIFIER (LPAREN params? RPAREN)? subBody;
 // TODO implement functionality for SEALED and SHIFTED modifiers
-subModifiers: rootModifiers | MOD_SHIFT | aliasModifier | aliasesModifier;
+subModifiers: rootModifiers | MOD_SHIFT;
 aliasModifier: MOD_ALIAS LPAREN IDENTIFIER RPAREN;
 aliasesModifier: MOD_ALIASES LPAREN IDENTIFIER+ RPAREN;
 params: param (COMMA param)* COMMA?;

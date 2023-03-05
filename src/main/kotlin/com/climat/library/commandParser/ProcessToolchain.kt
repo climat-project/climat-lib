@@ -1,7 +1,6 @@
 package com.climat.library.commandParser
 
 import com.climat.library.commandParser.exception.ParameterException
-import com.climat.library.commandParser.exception.ToolchainNotDefinedException
 import com.climat.library.domain.action.ActionValueBase
 import com.climat.library.domain.action.CustomScriptActionValue
 import com.climat.library.domain.action.NoopActionValue
@@ -9,7 +8,6 @@ import com.climat.library.domain.action.ScopeParamsActionValue
 import com.climat.library.domain.action.TemplateActionValue
 import com.climat.library.domain.isLeaf
 import com.climat.library.domain.ref.RefWithAnyValue
-import com.climat.library.domain.toolchain.DescendantToolchain
 import com.climat.library.domain.toolchain.RootToolchain
 import com.climat.library.domain.toolchain.Toolchain
 import com.climat.library.utils.newLine
@@ -18,25 +16,25 @@ internal fun processRootToolchain(
     toolchain: RootToolchain,
     params: MutableList<String>,
     handler: (parsedAction: ActionValueBase<*>, context: Toolchain) -> Unit
-) {
-    val next = params.removeFirst()
-    if (toolchain.name != next) throw ToolchainNotDefinedException(next)
-    processToolchain(
-        params = params,
-        toolchain = toolchain,
-        upperScopeRefs = emptyMap(),
-        upperPathToRoot = emptyList(),
-        handler = handler
-    )
-}
+) = processToolchainDescendants(
+    children = listOf(toolchain),
+    params = params,
+    upperScopeRefs = emptyMap(),
+    upperPathToRoot = emptyList(),
+    handler = handler
+)
 
 private fun processToolchainDescendants(
-    children: Array<DescendantToolchain>,
+    children: List<Toolchain>,
     params: MutableList<String>,
     upperScopeRefs: Map<String, RefWithAnyValue>,
     upperPathToRoot: List<Toolchain>,
     handler: (parsedAction: ActionValueBase<*>, context: Toolchain) -> Unit,
 ) {
+    require(params.any()) {
+        "`params` must have at least one element"
+    }
+
     val next = params.removeFirst()
     val toolchain = children.find {
         it.name != "_" && (it.name == next || it.aliases.any { it.name == next })
@@ -70,7 +68,7 @@ private fun processToolchain(
         throw Exception() // TODO: proper error
     } else {
         processToolchainDescendants(
-            children = toolchain.children,
+            children = toolchain.children.toList(),
             params = params,
             upperScopeRefs = scopeRefs,
             upperPathToRoot = pathToRoot,

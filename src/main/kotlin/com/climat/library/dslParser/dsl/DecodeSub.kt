@@ -9,10 +9,10 @@ internal fun decodeSub(cliDsl: String, sub: DslParser.SubContext): DescendantToo
     val statements = sub.assertRequire(cliDsl) { findSubBody() }.findSubStatements()
     val params = sub.findParams()?.findParam().orEmpty()
     val docstring = decodeDocstring(cliDsl, sub.findDocstring())
-    val modifiers = sub.findSubModifiers()
+    val rootModifiers = sub.findSubModifiers().mapNotNull { it.findRootModifiers() }
 
     val name = sub.assertRequire(cliDsl) { IDENTIFIER() }
-    val allowUnmatchedMod = modifiers.firstNotNullOfOrNull { it.findRootModifiers()?.MOD_ALLOW_UNMATCHED() }
+    val allowUnmatchedMod = rootModifiers.firstNotNullOfOrNull { it.MOD_ALLOW_UNMATCHED() }
 
     return DescendantToolchain(
         name = name.text,
@@ -22,8 +22,8 @@ internal fun decodeSub(cliDsl: String, sub: DslParser.SubContext): DescendantToo
         children = decodeSubChildren(cliDsl, statements),
         constants = decodeSubConstants(cliDsl, statements),
         allowUnmatched = allowUnmatchedMod != null,
-        aliases = decodeAliases(cliDsl, modifiers),
-        predefinedParameters = decodeSubPredefinedParams(modifiers),
+        aliases = decodeAliases(cliDsl, rootModifiers),
+        predefinedParameters = decodeRootPredefinedParams(rootModifiers),
 
         sourceMap = sub.position!!
     )

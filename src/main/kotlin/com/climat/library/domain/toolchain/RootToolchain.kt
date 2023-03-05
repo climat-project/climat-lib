@@ -21,8 +21,6 @@ class RootToolchain internal constructor(
     override val allowUnmatched: Boolean,
     val resources: Array<String>,
     override val sourceMap: Position?,
+    override val aliases: Array<Alias>,
     override val predefinedParameters: Array<PredefinedParamDefinition>
-) : Toolchain() {
-    override val aliases: Array<Alias>
-        get() = emptyArray()
-}
+) : Toolchain()
